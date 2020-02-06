@@ -11,18 +11,31 @@ from labels import REQUIRED_LABELS
 
 
 BRANCH_PROTECTION_EXEMPT_REPOSITORIES = [
+    # non-engineering repo
     'australian-chapter',
+    # non-engineering repo
     'cc-cert-core',
+    # non-engineering repo
     'cc-cert-edu',
+    # non-engineering repo
     'cc-cert-gov',
+    # non-engineering repo
     'cc-cert-lib',
+    # exempted to allow community maintainer to self-merge PRs
     'ccsearch-browser-extension',
+    # exempted for bot pushes to master
     'creativecommons.github.io',
+    # non-engineering repo
     'global-network-strategy',
+    # non-engineering repo
     'network-platforms',
+    # non-engineering repo
     'sre-wiki-js',
+    # non-engineering repo
     'tech-support',
+    # exempted to allow community maintainer to self-merge PRs
     'vocabulary',
+    # exempted to allow community maintainer to self-merge PRs
     'vue-vocabulary',
 ]
 
