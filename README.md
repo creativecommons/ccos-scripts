@@ -8,3 +8,4 @@ Please see the individual README files in the folder for each script for informa
 | Script name          | Script purpose                                                         |
 |----------------------|------------------------------------------------------------------------|
 | `normalize_repos`   | Ensures that all CC repos have standard labels and branch protections. |
+| `generate_projects_page` | Generates the ["Projects" page on CC Open Source](https://opensource.creativecommons.org/contributing-code/projects/). |
