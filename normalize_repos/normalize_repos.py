@@ -24,6 +24,8 @@ BRANCH_PROTECTION_EXEMPT_REPOSITORIES = [
     # exempted to allow community maintainer to self-merge PRs
     'ccsearch-browser-extension',
     # exempted for bot pushes to master
+    'creativecommons.github.io-source',
+    # exempted for bot pushes to master
     'creativecommons.github.io',
     # non-engineering repo
     'global-network-strategy',
