@@ -6,6 +6,7 @@ from base64 import b64decode
 import boto3
 import git
 import yaml
+import emoji
 from github import Github
 from github.GithubException import UnknownObjectException
 
@@ -63,7 +64,7 @@ def get_repo_github_data(repo):
         'id': repo.id,
         'name': repo.name,
         'url': repo.html_url,
-        'description': repo.description,
+        'description': emoji.emojize(repo.description),
         'website': repo.homepage,
         'language': repo.language,
         'created': repo.created_at.isoformat(),
