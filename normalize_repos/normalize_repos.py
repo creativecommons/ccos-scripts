@@ -35,10 +35,6 @@ BRANCH_PROTECTION_EXEMPT_REPOSITORIES = [
     'sre-wiki-js',
     # non-engineering repo
     'tech-support',
-    # exempted to allow community maintainer to self-merge PRs
-    'vocabulary',
-    # exempted to allow community maintainer to self-merge PRs
-    'vue-vocabulary',
 ]
 
 BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP = {
