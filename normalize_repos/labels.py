@@ -1,7 +1,15 @@
 REQUIRED_LABELS = {
+    'blocked': {
+        'color': 'b60205',
+        'description': 'Waiting on other ticket/work to be completed'
+    },
     'bug': {
         'color': 'd73a4a',
         'description': 'Something isn\'t working'
+    },
+    'CC staff only': {
+        'color': 'fb7729',
+        'description': 'This issue cannot be worked on by community contributors'
     },
     'duplicate':  {
         'color': 'cfd3d7',
@@ -34,6 +42,10 @@ REQUIRED_LABELS = {
     'question': {
         'color': 'd876e3',
         'description': 'Further information is requested'
+    },
+    'ticket work required': {
+        'color': 'fc9fe6',
+        'description': 'This issue needs more context or information'
     },
     'urgent': {
         'color': 'd93f0b',
