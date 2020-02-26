@@ -36,7 +36,7 @@ REQUIRED_LABELS = {
         'description': 'This doesn\'t seem right'
     },
     'meta': {
-        'color': 'ff8c00',
+        'color': '04338c',
         'description': 'This issue works on abstract goals or meta disscusion'
     },
     'not ready for work': {
