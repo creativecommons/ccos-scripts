@@ -50,7 +50,7 @@ BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP = {
     ],
     'vocabulary': [
         'ci/circleci: lint',
-        'ci/circleci: unit',
+        'ci/circleci: build',
         'netlify/cc-vocabulary/deploy-preview'
     ],
     'vue-vocabulary': [
@@ -58,6 +58,11 @@ BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP = {
         'ci/circleci: unit',
         'netlify/cc-vue-vocabulary/deploy-preview'
     ],
+    'fonts': [
+        'ci/circleci: lint',
+        'ci/circleci: build',
+        'netlify/cc-fonts/deploy-preview'
+    ]
 }
 
 
