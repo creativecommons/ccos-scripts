@@ -37,7 +37,7 @@ REQUIRED_LABELS = {
     },
     'meta': {
         'color': '04338c',
-        'description': 'This issue works on abstract goals or meta disscusion'
+        'description': 'This issue is related to abstract goals or meta disscusion'
     },
     'not ready for work': {
         'color': 'd3ef86',
