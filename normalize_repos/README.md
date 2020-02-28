@@ -11,4 +11,4 @@ This script will only update color and description of existing labels or create 
 1. Install [Pipenv](https://pipenv.readthedocs.io/en/latest/)
 2. Navigate to the `normalize_repos` folder and run `pipenv install`
 3. Set the `GITHUB_TOKEN` environment variable with your GitHub token. You will need a GitHub token with admin permissions to the `creativecommons` GitHub organization.
-4. Run the script: `python3 standardize_labels.py`
+4. Run the script: `python3 normalize_repos.py`
