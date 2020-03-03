@@ -17,12 +17,12 @@ jobs:
         python-version: 3.7
     - name: Install dependencies
       run: |
+        sudo pip3 install pipenv
         cd normalize_repos
-        python -m pip install --upgrade pip
-        pip install pipenv
         pipenv install
     - name: Export token to env and run normalize script
+      env:
+        GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
       run: |
-        export GITHUB_TOKEN=${{ secrets.ADMIN_GITHUB_TOKEN }}
-        python3 normalize_repos.py
-        
+        cd normalize_repos
+        pipenv run normalize_repos.py
