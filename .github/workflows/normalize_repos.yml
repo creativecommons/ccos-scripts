@@ -1,0 +1,28 @@
+name: Normalize Repos
+
+on: 
+  schedule:
+  - cron: '0 0 * * *'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        sudo pip3 install pipenv
+        cd normalize_repos
+        pipenv install
+    - name: Export token to env and run normalize script
+      env:
+        GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+      run: |
+        cd normalize_repos
+        pipenv run normalize_repos.py
