@@ -3,6 +3,7 @@ name: Normalize Repos
 on: 
   schedule:
   - cron: '0 0 * * *'
+  push:
 
 jobs:
   build:
@@ -17,12 +18,13 @@ jobs:
         python-version: 3.7
     - name: Install dependencies
       run: |
-        sudo pip3 install pipenv
+        python -m pip install --upgrade pip
+        python -m pip install pipenv
         cd normalize_repos
         pipenv install
     - name: Export token to env and run normalize script
-      env:
-        GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
       run: |
         cd normalize_repos
-        pipenv run normalize_repos.py
+        pipenv run python normalize_repos.py
+      env:
+        ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}

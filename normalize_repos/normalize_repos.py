@@ -67,8 +67,8 @@ BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP = {
 
 
 def set_up_github_client():
-    GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
-    github = Github(GITHUB_TOKEN)
+    ADMIN_GITHUB_TOKEN = os.environ['ADMIN_GITHUB_TOKEN']
+    github = Github(ADMIN_GITHUB_TOKEN)
     return github
 
 
