@@ -27,4 +27,4 @@ jobs:
         cd generate_projects_page
         pipenv run python generate_projects_page.py
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
