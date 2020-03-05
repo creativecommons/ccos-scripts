@@ -1,0 +1,30 @@
+name: generate_projects_page_action
+
+on: 
+  schedule:
+  - cron: '0 0 * * *'
+  push:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pipenv
+        cd generate_projects_page
+        pipenv install
+    - name: Export token to env and run the script
+      run: |
+        cd generate_projects_page
+        pipenv run python generate_projects_page.py
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
