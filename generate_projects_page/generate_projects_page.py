@@ -1,13 +1,11 @@
 import json
 import os
-from base64 import b64decode
 
 import git
 import yaml
 import emoji
 from github import Github
 from github.GithubException import UnknownObjectException
-from cryptography.fernet import Fernet
 
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
@@ -18,19 +16,8 @@ GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_REPO_NAME = "creativecommons.github.io-source"
 
 
-def decrypt(secret):
-    key_file = open("key_file", "rb")
-    key = key_file.read()
-    key_file.close()
-    cipher_suite = Fernet(key)
-    return cipher_suite.decrypt(b64decode(secret))
-
-
-ENCRYPTED_ADMIN_GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
-# Decrypt code should run once and variables stored outside of the function
-# handler so that these are decrypted once per container
-DECRYPTED_ADMIN_GITHUB_TOKEN = decrypt(ENCRYPTED_ADMIN_GITHUB_TOKEN)
-GITHUB_REPO_URL_WITH_CREDENTIALS = f"https://{GITHUB_USERNAME}:{DECRYPTED_ADMIN_GITHUB_TOKEN}@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
+GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
+GITHUB_REPO_URL_WITH_CREDENTIALS = f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
 LAMBDA_WORKING_DIRECTORY = "/tmp"
@@ -54,7 +41,7 @@ def set_up_git_user():
 
 
 def set_up_github_client():
-    github_client = Github(DECRYPTED_ADMIN_GITHUB_TOKEN)
+    github_client = Github(GITHUB_TOKEN)
     return github_client
 
 
