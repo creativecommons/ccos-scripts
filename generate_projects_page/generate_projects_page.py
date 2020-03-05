@@ -3,12 +3,12 @@ import json
 import os
 from base64 import b64decode
 
-import boto3
 import git
 import yaml
 import emoji
 from github import Github
 from github.GithubException import UnknownObjectException
+from cryptography.fernet import Fernet
 
 
 GIT_USER_NAME = 'CC creativecommons.github.io Bot'
@@ -20,7 +20,7 @@ GITHUB_REPO_NAME = 'creativecommons.github.io-source'
 ENCRYPTED_GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
 # Decrypt code should run once and variables stored outside of the function
 # handler so that these are decrypted once per container
-DECRYPTED_GITHUB_TOKEN = boto3.client('kms').decrypt(CiphertextBlob=b64decode(ENCRYPTED_GITHUB_TOKEN))['Plaintext'].decode('ascii')
+DECRYPTED_GITHUB_TOKEN = decrypt(ENCRYPTED_GITHUB_TOKEN)
 GITHUB_REPO_URL_WITH_CREDENTIALS = f'https://{GITHUB_USERNAME}:{DECRYPTED_GITHUB_TOKEN}@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git'
 CC_METADATA_FILE_NAME = '.cc-metadata.yml'
 
@@ -28,12 +28,19 @@ LAMBDA_WORKING_DIRECTORY = '/tmp'
 GIT_WORKING_DIRECTORY = f'{LAMBDA_WORKING_DIRECTORY}/{GITHUB_REPO_NAME}'
 JSON_FILE_DIRECTORY = f'{GIT_WORKING_DIRECTORY}/databags'
 
+def decrypt(secret):
+    key_file = open('key_file', 'rb')
+    key = key_file.read()
+    key_file.close()
+    cipher_suite = Fernet(key)
+    return cipher_suite.decrypt(secret)
+
 
 def set_up_repo():
     # Lambda seems to reuse resources sometimes and the clone already exists.
     if not os.path.isdir(GIT_WORKING_DIRECTORY):
-        git.exec_command('clone', GITHUB_REPO_URL_WITH_CREDENTIALS)
-    git.exec_command('pull', GITHUB_REPO_URL_WITH_CREDENTIALS, cwd=GIT_WORKING_DIRECTORY)
+        git.Repo.clone_from(url=GITHUB_REPO_URL_WITH_CREDENTIALS, to_path=".")
+    git.Remote.pull(GITHUB_REPO_URL_WITH_CREDENTIALS)
     return f'{LAMBDA_WORKING_DIRECTORY}/{GITHUB_REPO_NAME}'
 
 
@@ -135,11 +142,12 @@ def commit_and_push_changes(json_filename):
     #     now = now.replace(char, '_')
     # branch_name = f'{now}_sync'
     # git.exec_command('checkout', f'-b{branch_name}', cwd=GIT_WORKING_DIRECTORY)
-    git_diff = git.exec_command('diff', cwd=GIT_WORKING_DIRECTORY)
+    git_diff = git.IndexFile.diff(GIT_WORKING_DIRECTORY)
     if git_diff != (b'', b''):
-        git.exec_command('add', f'{json_filename}', cwd=GIT_WORKING_DIRECTORY)
-        git.exec_command('commit', '-m Syncing new repository changes.', cwd=GIT_WORKING_DIRECTORY)
-        git.exec_command('push', GITHUB_REPO_URL_WITH_CREDENTIALS, cwd=GIT_WORKING_DIRECTORY)
+        repo = git.Repo(GIT_WORKING_DIRECTORY)
+        repo.index.add(items=f'{json_filename}')
+        repo.index.commit(message='Syncing new repository changes.')
+        git.Remote.push(GITHUB_REPO_URL_WITH_CREDENTIALS)
 
 
 def lambda_handler(*args, **kwargs):
