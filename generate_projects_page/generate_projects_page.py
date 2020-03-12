@@ -26,14 +26,20 @@ JSON_FILE_DIRECTORY = f"{GIT_WORKING_DIRECTORY}/databags"
 
 
 def set_up_repo():
-    # Lambda seems to reuse resources sometimes and the clone already exists.
     if not os.path.isdir(GIT_WORKING_DIRECTORY):
-        git.Repo.clone_from(url=GITHUB_REPO_URL_WITH_CREDENTIALS, to_path=".")
-    git.Remote.pull(GITHUB_REPO_URL_WITH_CREDENTIALS)
+        print("Cloning repo...")
+        repo = git.Repo.clone_from(url=GITHUB_REPO_URL_WITH_CREDENTIALS, to_path=GIT_WORKING_DIRECTORY)
+    else:
+        print("Setting up repo...")
+        repo = git.Repo(GIT_WORKING_DIRECTORY)
+    origin = repo.remotes.origin 
+    print("Pulling latest code...")
+    origin.pull()
     return f"{WORKING_DIRECTORY}/{GITHUB_REPO_NAME}"
 
 
 def set_up_git_user():
+    print("Setting up git user...")
     os.environ["GIT_AUTHOR_NAME"] = GIT_USER_NAME
     os.environ["GIT_AUTHOR_EMAIL"] = GIT_USER_EMAIL
     os.environ["GIT_COMMITTER_NAME"] = GIT_USER_NAME
@@ -41,26 +47,30 @@ def set_up_git_user():
 
 
 def set_up_github_client():
+    print("Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
     return github_client
 
 
 def get_cc_organization(github_client):
+    print("Getting CC's GitHub organization...")
     cc = github_client.get_organization(GITHUB_ORGANIZATION)
     return cc
 
 
 def get_repositories(organization):
+    print("Getting CC's repos...")
     repos = organization.get_repos()
     return repos
 
 
 def get_repo_github_data(repo):
+    print("\tGetting data for this repo...")
     repo_github_data = {
         "id": repo.id,
         "name": repo.name,
         "url": repo.html_url,
-        "description": emoji.emojize(repo.description),
+        "description": emoji.emojize(repo.description) if repo.description else '',
         "website": repo.homepage,
         "language": repo.language,
         "created": repo.created_at.isoformat(),
@@ -80,11 +90,12 @@ def get_repo_github_data(repo):
 
 
 def get_repo_cc_metadata(repo):
+    print("\tGetting CC metadata for this repo...")
     try:
         cc_metadata_file = repo.get_contents(CC_METADATA_FILE_NAME)
     except UnknownObjectException:
         return {}
-    cc_metadata = yaml.load(cc_metadata_file.decoded_content)
+    cc_metadata = yaml.load(cc_metadata_file.decoded_content, Loader=yaml.FullLoader)
     if "technologies" in cc_metadata:
         cc_metadata["technologies"] = [
             technology.strip()
@@ -121,6 +132,7 @@ def get_repo_data_dict(repo_data_list):
 
 
 def generate_json_file(repo_data_dict):
+    print("Generating JSON file...")
     json_filename = f"{JSON_FILE_DIRECTORY}/repos.json"
     with open(json_filename, "w") as json_file:
         json.dump(repo_data_dict, json_file, sort_keys=True, indent=4)
@@ -128,21 +140,22 @@ def generate_json_file(repo_data_dict):
 
 
 def commit_and_push_changes(json_filename):
-    # Leaving this in here because it's useful to test on separate branches sometimes.
-    # now = datetime.datetime.now().isoformat()
-    # for char in ['-', ':', '.', 'T']:
-    #     now = now.replace(char, '_')
-    # branch_name = f'{now}_sync'
-    # git.exec_command('checkout', f'-b{branch_name}', cwd=GIT_WORKING_DIRECTORY)
-    git_diff = git.IndexFile.diff(GIT_WORKING_DIRECTORY)
-    if git_diff != (b"", b""):
-        repo = git.Repo(GIT_WORKING_DIRECTORY)
+    repo = git.Repo(GIT_WORKING_DIRECTORY)
+    git_diff = repo.index.diff(None)
+    print('\n\n\n')
+    print(git_diff)
+    print('\n\n\n')
+    if git_diff != []:
         repo.index.add(items=f"{json_filename}")
         repo.index.commit(message="Syncing new repository changes.")
-        git.Remote.push(GITHUB_REPO_URL_WITH_CREDENTIALS)
+        origin = repo.remotes.origin 
+        print("Pushing latest code...")
+        origin.push()
+    else:
+        print("No changes to push...")
 
 
-def lambda_handler(*args, **kwargs):
+if __name__ == '__main__':
     set_up_repo()
     set_up_git_user()
     github_client = set_up_github_client()
