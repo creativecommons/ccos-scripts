@@ -17,7 +17,10 @@ GITHUB_REPO_NAME = "creativecommons.github.io-source"
 
 
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
-GITHUB_REPO_URL_WITH_CREDENTIALS = f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
+GITHUB_REPO_URL_WITH_CREDENTIALS = (
+    f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}"
+    "@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
+)
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
 WORKING_DIRECTORY = "/tmp"
@@ -28,11 +31,13 @@ JSON_FILE_DIRECTORY = f"{GIT_WORKING_DIRECTORY}/databags"
 def set_up_repo():
     if not os.path.isdir(GIT_WORKING_DIRECTORY):
         print("Cloning repo...")
-        repo = git.Repo.clone_from(url=GITHUB_REPO_URL_WITH_CREDENTIALS, to_path=GIT_WORKING_DIRECTORY)
+        repo = git.Repo.clone_from(
+            url=GITHUB_REPO_URL_WITH_CREDENTIALS, to_path=GIT_WORKING_DIRECTORY
+        )
     else:
         print("Setting up repo...")
         repo = git.Repo(GIT_WORKING_DIRECTORY)
-    origin = repo.remotes.origin 
+    origin = repo.remotes.origin
     print("Pulling latest code...")
     origin.pull()
     return f"{WORKING_DIRECTORY}/{GITHUB_REPO_NAME}"
@@ -70,7 +75,9 @@ def get_repo_github_data(repo):
         "id": repo.id,
         "name": repo.name,
         "url": repo.html_url,
-        "description": emoji.emojize(repo.description) if repo.description else '',
+        "description": emoji.emojize(repo.description)
+        if repo.description
+        else "",
         "website": repo.homepage,
         "language": repo.language,
         "created": repo.created_at.isoformat(),
@@ -95,7 +102,7 @@ def get_repo_cc_metadata(repo):
         cc_metadata_file = repo.get_contents(CC_METADATA_FILE_NAME)
     except UnknownObjectException:
         return {}
-    cc_metadata = yaml.load(cc_metadata_file.decoded_content, Loader=yaml.FullLoader)
+    cc_metadata = yaml.safe_load(cc_metadata_file.decoded_content)
     if "technologies" in cc_metadata:
         cc_metadata["technologies"] = [
             technology.strip()
@@ -127,7 +134,8 @@ def get_repo_data_list(repos):
 
 
 def get_repo_data_dict(repo_data_list):
-    # This is needed because Lektor needs a top level object (not array) in the JSON file.
+    # This is needed because Lektor needs a top level object
+    # (not array) in the JSON file.
     return {"repos": repo_data_list}
 
 
@@ -145,14 +153,14 @@ def commit_and_push_changes(json_filename):
     if git_diff != []:
         repo.index.add(items=f"{json_filename}")
         repo.index.commit(message="Syncing new repository changes.")
-        origin = repo.remotes.origin 
+        origin = repo.remotes.origin
         print("Pushing latest code...")
         origin.push()
     else:
         print("No changes to push...")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     set_up_repo()
     set_up_git_user()
     github_client = set_up_github_client()
