@@ -1,11 +1,26 @@
 # CC Open Source Scripts
 
-These are scripts used to maintain various pieces of CC's open source community infrastructure.
+These are scripts used to maintain various pieces of CC's open source community
+infrastructure.
 
-Please see the individual README files in the folder for each script for information about that script.
+
+## Scripts
+
+Please see the individual README files in the folder for each script for
+information about that script.
+
+| Directory Name                   | Script Purpose                                                        |
+| -------------------------------- | --------------------------------------------------------------------- |
+| [`normalize_repos`][norm]        | Ensures that all CC repos have standard labels and branch protections |
+| [`generate_projects_page`][proj] | Generates the ["Projects" page on CC Open Source][osproj]             |
+
+[norm]:normalize_repos/
+[proj]:generate_projects_page/
+[osproj]:https://opensource.creativecommons.org/contributing-code/projects/
 
 
-| Script name          | Script purpose                                                         |
-|----------------------|------------------------------------------------------------------------|
-| `normalize_repos`   | Ensures that all CC repos have standard labels and branch protections. |
-| `generate_projects_page` | Generates the ["Projects" page on CC Open Source](https://opensource.creativecommons.org/contributing-code/projects/). |
+## License
+
+- [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
+
+[mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
