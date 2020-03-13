@@ -3,10 +3,13 @@
 """
 Please see README.md.
 """
+# Standard library
 import os
 
+# Third-party
 from github import Github
 
+# Local/library specific
 from labels import REQUIRED_LABELS
 
 
