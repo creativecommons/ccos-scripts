@@ -1,13 +1,19 @@
 # Generate Projects Page
 
-This script is run on AWS Lambda and generates the [Projects page on CC Open
-Source](https://opensource.creativecommons.org/contributing-code/projects/).
+This script is run iva GitHub Actions and generates the [Projects page on CC
+Open Source][osproj].
+
+[osproj]:https://opensource.creativecommons.org/contributing-code/projects/
 
 
 ## Running the Script
 
-This script needs to be manually synced to AWS Lambda and run there. You cannot
-run it locally.
+1. Install [Pipenv](https://pipenv.readthedocs.io/en/latest/)
+2. Navigate to the `generate_projects_page` folder and run `pipenv install`
+3. Set the `ADMIN_GITHUB_TOKEN` environment variable with your GitHub token.
+   You will need a GitHub token with admin permissions to the `creativecommons`
+   GitHub organization.
+4. Run the script: `python3 normalize_repos.py`
 
 
 ## Repository README
