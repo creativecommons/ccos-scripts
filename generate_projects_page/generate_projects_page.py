@@ -1,11 +1,15 @@
+#!/usr/bin/env python3
+# vim: set fileencoding=utf-8:
+# Standard library
 import json
 import os
 
-import git
-import yaml
-import emoji
+# Third-party
 from github import Github
 from github.GithubException import UnknownObjectException
+import emoji
+import git
+import yaml
 
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
