@@ -21,5 +21,5 @@ new labels. It will never delete labels.
 
 ## Repository README
 
-See [top level](../) of repository for README containing licensing information,
-etc.
+See repository README for licensing information, etc:
+- [`../README.md`](../README.md)
