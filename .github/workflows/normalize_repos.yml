@@ -1,15 +1,13 @@
 name: Normalize Repos
-
 on: 
   schedule:
   - cron: '0 0 * * *'
   push:
-
+    branches:
+      - master
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.7
