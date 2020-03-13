@@ -1,11 +1,15 @@
+#!/usr/bin/env python3
+# vim: set fileencoding=utf-8:
+# Standard library
 import json
 import os
 
-import git
-import yaml
-import emoji
+# Third-party
 from github import Github
 from github.GithubException import UnknownObjectException
+import emoji
+import git
+import yaml
 
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
@@ -19,7 +23,7 @@ GITHUB_REPO_NAME = "creativecommons.github.io-source"
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
 GITHUB_REPO_URL_WITH_CREDENTIALS = (
     f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}"
-    "@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
+    f"@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
 )
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
@@ -134,8 +138,8 @@ def get_repo_data_list(repos):
 
 
 def get_repo_data_dict(repo_data_list):
-    # This is needed because Lektor needs a top level object
-    # (not array) in the JSON file.
+    # This is needed because Lektor needs a top level object (not array) in the
+    # JSON file.
     return {"repos": repo_data_list}
 
 
