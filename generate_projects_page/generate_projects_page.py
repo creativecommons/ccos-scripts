@@ -17,7 +17,10 @@ GITHUB_REPO_NAME = "creativecommons.github.io-source"
 
 
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
-GITHUB_REPO_URL_WITH_CREDENTIALS = f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
+GITHUB_REPO_URL_WITH_CREDENTIALS = (
+    f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}"
+    f"@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
+)
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
 WORKING_DIRECTORY = "/tmp"
@@ -116,7 +119,8 @@ def get_repo_data_list(repos):
 
 
 def get_repo_data_dict(repo_data_list):
-    # This is needed because Lektor needs a top level object (not array) in the JSON file.
+    # This is needed because Lektor needs a top level object (not array) in the
+    # JSON file.
     return {"repos": repo_data_list}
 
 
@@ -128,12 +132,15 @@ def generate_json_file(repo_data_dict):
 
 
 def commit_and_push_changes(json_filename):
-    # Leaving this in here because it's useful to test on separate branches sometimes.
+    # Leaving this in here because it's useful to test on separate branches
+    # sometimes.
     # now = datetime.datetime.now().isoformat()
-    # for char in ['-', ':', '.', 'T']:
-    #     now = now.replace(char, '_')
-    # branch_name = f'{now}_sync'
-    # git.exec_command('checkout', f'-b{branch_name}', cwd=GIT_WORKING_DIRECTORY)
+    # for char in ["-", ":", ".", "T"]:
+    #     now = now.replace(char, "_")
+    # branch_name = f"{now}_sync"
+    # git.exec_command(
+    #     "checkout", f"-b{branch_name}", cwd=GIT_WORKING_DIRECTORY
+    # )
     git_diff = git.IndexFile.diff(GIT_WORKING_DIRECTORY)
     if git_diff != (b"", b""):
         repo = git.Repo(GIT_WORKING_DIRECTORY)
