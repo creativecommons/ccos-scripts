@@ -3,6 +3,9 @@
 These are scripts used to maintain various pieces of CC's open source community
 infrastructure.
 
+
+## Scripts
+
 Please see the individual README files in the folder for each script for
 information about that script.
 
@@ -14,3 +17,10 @@ information about that script.
 [norm]:normalize_repos/README.md
 [proj]:generate_projects_page/README.md
 [osproj]:https://opensource.creativecommons.org/contributing-code/projects/
+
+
+## License
+
+- [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
+
+[mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
