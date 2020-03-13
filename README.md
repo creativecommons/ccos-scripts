@@ -14,8 +14,8 @@ information about that script.
 | [`normalize_repos`][norm]        | Ensures that all CC repos have standard labels and branch protections |
 | [`generate_projects_page`][proj] | Generates the ["Projects" page on CC Open Source][osproj]             |
 
-[norm]:normalize_repos/README.md
-[proj]:generate_projects_page/README.md
+[norm]:normalize_repos/
+[proj]:generate_projects_page/
 [osproj]:https://opensource.creativecommons.org/contributing-code/projects/
 
 
