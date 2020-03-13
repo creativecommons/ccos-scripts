@@ -25,6 +25,8 @@ BRANCH_PROTECTION_EXEMPT_REPOSITORIES = [
     "cc-cert-gov",
     # non-engineering repo
     "cc-cert-lib",
+    # exempted to allow transifex updates
+    "cc.i18n",
     # exempted to allow community maintainer to self-merge PRs
     "ccsearch-browser-extension",
     # exempted for bot pushes to master
