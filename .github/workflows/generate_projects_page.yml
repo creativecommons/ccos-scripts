@@ -1,15 +1,13 @@
-name: generate_projects_page_action
-
+name: Generate Projects Page
 on: 
   schedule:
   - cron: '0 0 * * *'
   push:
-
+    branches:
+      - master
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.7
@@ -28,4 +26,3 @@ jobs:
         pipenv run python generate_projects_page.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-        
