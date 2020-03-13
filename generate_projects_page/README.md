@@ -1,6 +1,6 @@
 # Generate Projects Page
 
-This script is run iva GitHub Actions and generates the [Projects page on CC
+This script is run via GitHub Actions and generates the [Projects page on CC
 Open Source][osproj].
 
 [osproj]:https://opensource.creativecommons.org/contributing-code/projects/
