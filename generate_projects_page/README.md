@@ -12,5 +12,5 @@ run it locally.
 
 ## Repository README
 
-See repository README for licensing information, etc:
-- [`../README.md`](../README.md)
+See [top level](../) of repository for README containing licensing information,
+etc.
