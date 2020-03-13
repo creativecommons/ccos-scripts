@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# vim: set fileencoding=utf-8  :
+# vim: set fileencoding=utf-8:
 """
 This script ensures that all active repositories in the creativecommons GitHub
 organization are consistent. Please see README.md.
