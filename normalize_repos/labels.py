@@ -1,4 +1,8 @@
 REQUIRED_LABELS = {
+    "awaiting triage": {
+        "color": "ff8858",
+        "description": "This issue needs to be triaged"
+    },
     "blocked": {
         "color": "b60205",
         "description": "Waiting on other ticket/work to be completed",
