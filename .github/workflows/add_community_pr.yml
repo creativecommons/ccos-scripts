@@ -1,0 +1,30 @@
+name: Add Community PRs to Project
+on:
+  schedule:
+  # cron schedule expression to run at 5 minutes past every hour 
+    - cron: "5 * * * *"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Handle cccatalog Repo
+      uses: subhamX/github-project-bot@v1.0.0
+      with:
+        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        COLUMN_NAME: "In Progress (Community)"
+        PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
+        REPO_URL: https://github.com/creativecommons/cccatalog
+    - name: Handle cccatalog-api Repo
+      uses: subhamX/github-project-bot@v1.0.0
+      with:
+        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        COLUMN_NAME: "In Progress (Community)"
+        PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
+        REPO_URL: https://github.com/creativecommons/cccatalog-api
+    - name: Handle cccatalog-frontend Repo
+      uses: subhamX/github-project-bot@v1.0.0
+      with:
+        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        COLUMN_NAME: "In Progress (Community)"
+        PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
+        REPO_URL: https://github.com/creativecommons/cccatalog-frontend
