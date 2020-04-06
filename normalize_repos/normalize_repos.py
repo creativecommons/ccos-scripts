@@ -4,16 +4,21 @@
 This script ensures that all active repositories in the creativecommons GitHub
 organization are consistent. Please see README.md.
 """
+# Standard library
+import os
+
 # Third-party
 from github import Github
 
 # Local/library specific
 from labels import REQUIRED_LABELS
-from constants import ADMIN_GITHUB_TOKEN, BRANCH_PROTECTION_EXEMPT_REPOSITORIES, \
+from branch_protections import ADMIN_GITHUB_TOKEN, \
+    BRANCH_PROTECTION_EXEMPT_REPOSITORIES, \
     BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP
 
 
 def set_up_github_client():
+    ADMIN_GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
     github = Github(ADMIN_GITHUB_TOKEN)
     return github
 

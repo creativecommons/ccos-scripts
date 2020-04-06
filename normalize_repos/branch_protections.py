@@ -1,8 +1,3 @@
-# Standard library
-import os
-
-ADMIN_GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
-
 BRANCH_PROTECTION_EXEMPT_REPOSITORIES = [
     # non-engineering repo
     "australian-chapter",
