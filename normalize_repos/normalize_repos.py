@@ -12,8 +12,7 @@ from github import Github
 
 # Local/library specific
 from labels import REQUIRED_LABELS
-from branch_protections import ADMIN_GITHUB_TOKEN, \
-    BRANCH_PROTECTION_EXEMPT_REPOSITORIES, \
+from branch_protections import BRANCH_PROTECTION_EXEMPT_REPOSITORIES, \
     BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP
 
 
