@@ -159,7 +159,12 @@ def commit_and_push_changes(json_filename):
         repo.index.commit(message="Syncing new repository changes.")
         origin = repo.remotes.origin
         print("Pushing latest code...")
-        origin.push()
+        try:
+            origin.push()
+        except Exception as e:
+            print(f"Got exception {e} \n Trying manual push...")
+            g = git.Git(GIT_WORKING_DIRECTORY)
+            print(g.execute(["git", "push", f"{GITHUB_REPO_URL_WITH_CREDENTIALS}", "master"]))
     else:
         print("No changes to push...")
 
