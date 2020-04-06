@@ -53,10 +53,10 @@ BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP = {
         "netlify/cc-fonts/deploy-preview",
     ],
     "vocabulary": [
-        "ci/circleci: lint",
-        "ci/circleci: unit",
-        "ci/circleci: build",
-        "netlify/cc-vocabulary/deploy-preview",
+        "vocabulary-ci/Setup",
+        "vocabulary-ci/Lint",
+        "vocabulary-ci/Unit tests",
+        "vocabulary-ci/Build",
     ],
     "vue-vocabulary": [
         "ci/circleci: lint",
