@@ -12,8 +12,7 @@ from github import Github
 
 # Local/library specific
 from labels import REQUIRED_LABELS
-from branch_protections import BRANCH_PROTECTION_EXEMPT_REPOSITORIES, \
-    BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP
+import branch_protections
 
 
 def set_up_github_client():
@@ -78,13 +77,13 @@ def update_labels(repo):
 
 def update_branch_protection(repo):
     master = repo.get_branch("master")
-    if repo.name not in BRANCH_PROTECTION_EXEMPT_REPOSITORIES:
-        if repo.name in BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP:
+    if repo.name not in branch_protections.EXEMPT_REPOSITORIES:
+        if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             master.edit_protection(
                 required_approving_review_count=1,
                 user_push_restrictions=[],
                 strict=True,
-                contexts=BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP[
+                contexts=branch_protections.REQUIRED_STATUS_CHECK_MAP[
                     repo.name
                 ],
             )

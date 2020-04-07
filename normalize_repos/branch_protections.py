@@ -1,4 +1,4 @@
-BRANCH_PROTECTION_EXEMPT_REPOSITORIES = [
+EXEMPT_REPOSITORIES = [
     # non-engineering repo
     "australian-chapter",
     # non-engineering repo
@@ -27,7 +27,7 @@ BRANCH_PROTECTION_EXEMPT_REPOSITORIES = [
     "tech-support",
 ]
 
-BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP = {
+REQUIRED_STATUS_CHECK_MAP = {
     "cccatalog-api": ["continuous-integration/travis-ci"],
     "cccatalog-frontend": ["ci/circleci: lint", "ci/circleci: unit"],
     "creativecommons.github.io-source": ["continuous-integration/travis-ci"],
@@ -37,9 +37,9 @@ BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP = {
         "netlify/cc-fonts/deploy-preview",
     ],
     "vocabulary": [
-        "ci/circleci: lint",
-        "ci/circleci: test",
-        "ci/circleci: build",
+        "Lint",
+        "Unit tests",
+        "Build",
         "netlify/cc-vocabulary/deploy-preview",
     ],
     "vue-vocabulary": [
