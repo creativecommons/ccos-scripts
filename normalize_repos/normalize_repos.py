@@ -12,58 +12,7 @@ from github import Github
 
 # Local/library specific
 from labels import REQUIRED_LABELS
-
-
-BRANCH_PROTECTION_EXEMPT_REPOSITORIES = [
-    # non-engineering repo
-    "australian-chapter",
-    # non-engineering repo
-    "cc-cert-core",
-    # non-engineering repo
-    "cc-cert-edu",
-    # non-engineering repo
-    "cc-cert-gov",
-    # non-engineering repo
-    "cc-cert-lib",
-    # exempted to allow transifex updates
-    "cc.i18n",
-    # exempted to allow community maintainer to self-merge PRs
-    "ccsearch-browser-extension",
-    # exempted for bot pushes to master
-    "creativecommons.github.io-source",
-    # exempted for bot pushes to master
-    "creativecommons.github.io",
-    # non-engineering repo
-    "global-network-strategy",
-    # non-engineering repo
-    "network-platforms",
-    # non-engineering repo
-    "sre-wiki-js",
-    # non-engineering repo
-    "tech-support",
-]
-
-BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP = {
-    "cccatalog-api": ["continuous-integration/travis-ci"],
-    "cccatalog-frontend": ["ci/circleci: lint", "ci/circleci: unit"],
-    "creativecommons.github.io-source": ["continuous-integration/travis-ci"],
-    "fonts": [
-        "ci/circleci: lint",
-        "ci/circleci: build",
-        "netlify/cc-fonts/deploy-preview",
-    ],
-    "vocabulary": [
-        "Lint",
-        "Unit tests",
-        "Build",
-        "netlify/cc-vocabulary/deploy-preview",
-    ],
-    "vue-vocabulary": [
-        "ci/circleci: lint",
-        "ci/circleci: unit",
-        "netlify/cc-vue-vocabulary/deploy-preview",
-    ],
-}
+import branch_protections
 
 
 def set_up_github_client():
@@ -128,13 +77,13 @@ def update_labels(repo):
 
 def update_branch_protection(repo):
     master = repo.get_branch("master")
-    if repo.name not in BRANCH_PROTECTION_EXEMPT_REPOSITORIES:
-        if repo.name in BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP:
+    if repo.name not in branch_protections.EXEMPT_REPOSITORIES:
+        if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             master.edit_protection(
                 required_approving_review_count=1,
                 user_push_restrictions=[],
                 strict=True,
-                contexts=BRANCH_PROTECTION_REQUIRED_STATUS_CHECK_MAP[
+                contexts=branch_protections.REQUIRED_STATUS_CHECK_MAP[
                     repo.name
                 ],
             )
