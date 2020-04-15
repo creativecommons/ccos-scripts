@@ -43,8 +43,9 @@ REQUIRED_STATUS_CHECK_MAP = {
         "netlify/cc-vocabulary/deploy-preview",
     ],
     "vue-vocabulary": [
-        "ci/circleci: lint",
-        "ci/circleci: unit",
+        "Lint",
+        "Unit tests",
+        "Build",
         "netlify/cc-vue-vocabulary/deploy-preview",
     ],
 }
