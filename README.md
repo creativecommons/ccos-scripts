@@ -18,8 +18,8 @@ information about that script.
 ## Workflows
 | YML File Name                   | Workflow Purpose                                                        |
 | -------------------------------- | --------------------------------------------------------------------- |
-| [`generate_projects_page.yml`][gen_proj_yml]        |  Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`normalize_repos`][norm]   |
-| [`normalize_repos.yml`][norm_pr_yml]        | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`generate_projects_page`][proj] |
+| [`normalize_repos.yml`][norm_pr_yml]        |  Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`normalize_repos`][norm]   |
+| [`generate_projects_page.yml`][gen_proj_yml]        | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`generate_projects_page`][proj] |
 | [`add_community_pr.yml`][community_pr_yml]        |  Runs hourly at 5 minutes past every hour UTC and add community PRs to [Active Sprint – CC Search](https://github.com/orgs/creativecommons/projects/7) |
 
 
