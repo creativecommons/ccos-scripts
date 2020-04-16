@@ -32,8 +32,9 @@ REQUIRED_STATUS_CHECK_MAP = {
     "cccatalog-frontend": ["ci/circleci: lint", "ci/circleci: unit"],
     "creativecommons.github.io-source": ["continuous-integration/travis-ci"],
     "fonts": [
-        "ci/circleci: lint",
-        "ci/circleci: build",
+        "Lint",
+        "Unit tests",
+        "Build",
         "netlify/cc-fonts/deploy-preview",
     ],
     "vocabulary": [
