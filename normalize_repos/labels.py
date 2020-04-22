@@ -54,4 +54,8 @@ REQUIRED_LABELS = {
         "color": "ffffff",
         "description": "This will not be worked on",
     },
+    "Great Contribution": {
+        "color": "ffbf00",
+        "description": "This was a great contribution!"
+    }
 }
