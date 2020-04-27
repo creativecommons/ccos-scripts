@@ -6,71 +6,44 @@ creativecommons/creativecommons.github.io-source.
 
 # Standard Library
 import os
-import json
 
 # Third-party
 import asana
 from github import Github
 
-from config import CONFIG
+import asana_pull
+import github_push
+
+def build_content(templates, asana_data):
+    quarters = ""
+    for quarter_name, quarter_tasks in asana_data.items():
+        quarter_content = templates["quarter"].replace("{{quarter.name}}", quarter_name)
+        quarter_tasks_table = ""
+        for task in quarter_tasks:
+            quarter_tasks_table += templates["task"].replace("{{task.name}}", task["name"]).replace("{{task.description}}", task["public_description"])
+
+        quarters += quarter_content.replace("{{quarter.tasks}}", quarter_tasks_table)
+
+    return templates["page"].replace("{{quarters}}", quarters)
+
 
 ASANA_CLIENT = asana.Client.access_token(os.environ["ASANA_TOKEN"])
+print("Pulling from Asana...")
+sections = asana_pull.tasks_by_section(ASANA_CLIENT)
+print("Pull successful.")
 
-"""
-RETURN SCHEMA:
+GITHUB_CLIENT = Github(os.environ["GITHUB_TOKEN_CC"])
+print("Pulling GitHub content templates...")
+content_templates = github_push.get_templates(GITHUB_CLIENT)
+print("Pull successful.")
 
-{
-    'Q12020': [
-        {
-            'gid': '...',
-            'name': '...',
-            'public_description: '...'
-        },
-        ...
-    ],
-    ...
-}
+print("Generating open source page content...")
+new_content = build_content(content_templates, sections)
+print("Generated.")
 
-"""
-def tasks_by_section():
-    sections = {
-        'Q12020': [],
-        'Q22020': [],
-        'Q32020': [],
-        'Q42020': []
-    }
+with open("test_content.txt", "w") as f:
+    f.write(new_content)
 
-    for section_name, section_gid in CONFIG['ROADMAP_SECTIONS'].items(): # for section in included sections
-        tasks = ASANA_CLIENT.tasks.find_by_section(
-            CONFIG['ROADMAP_SECTIONS'][section_name],
-            opt_fields=['name', 'custom_fields', 'tags.name', 'completed']
-        )
-        for task in tasks:
-            if has_filtering_tag(task, optin=False) and not task['completed']:
-                print(json.dumps(task))
-                sections[section_name].append({
-                    'gid': task['gid'],
-                    'name': task['name'],
-                    'public_description': get_public_description(task)
-                })
-
-    return sections
-
-"""
-optin: {bool} Whether to filter on an opt in or opt out basis.
-    If True, only tasks with the 'roadmap_public' tag will be returned
-    If False, all tasks, except those with the roadmap_ignore tag will be returned
-"""
-def has_filtering_tag(task, optin):
-    TAG = 'roadmap_public' if optin else 'roadmap_ignore'
-    for tag in task['tags']:
-        if tag['name'] == TAG:
-            return True
-
-def get_public_description(task):
-    for field in task['custom_fields']:
-        if field['name'] == 'Public Description':
-            return field['text_value']
-
-
-sections = tasks_by_section()
+print("Pushing page content to open source repo...")
+push_data = github_push.push_to_repo(GITHUB_CLIENT, new_content)
+print("Pushed successfully. Commit Info: {}".format(push_data))
