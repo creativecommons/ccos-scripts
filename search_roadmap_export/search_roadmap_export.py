@@ -6,44 +6,110 @@ creativecommons/creativecommons.github.io-source.
 
 # Standard Library
 import os
+import json
 
 # Third-party
 import asana
 from github import Github
 
-import asana_pull
-import github_push
+from config import CONFIG
 
-def build_content(templates, asana_data):
-    quarters = ""
-    for quarter_name, quarter_tasks in asana_data.items():
-        quarter_content = templates["quarter"].replace("{{quarter.name}}", quarter_name)
-        quarter_tasks_table = ""
-        for task in quarter_tasks:
-            quarter_tasks_table += templates["task"].replace("{{task.name}}", task["name"]).replace("{{task.description}}", task["public_description"])
+ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
+GITHUB_CLIENT = Github(os.environ["ADMIN_GITHUB_TOKEN"])
 
-        quarters += quarter_content.replace("{{quarter.tasks}}", quarter_tasks_table)
+"""
+databag schema
+{
+    "quarters": [
+        {
+            "name": "Q1 2020",
+            "tasks": [
+                {
+                    "gid": "",
+                    "name": "",
+                    "description": ""
+                },
+                ...
+            ]
+        },
+        {
+            "name": "Q2 2020",
+            "tasks": []
+        },
+        ...
+    ]
+}
 
-    return templates["page"].replace("{{quarters}}", quarters)
+"""
+def generate_databag():
+    databag = {
+        "quarters": []
+    }
 
+    print('Generating Databag...')
+    for section_name, section_gid in CONFIG['ROADMAP_SECTIONS'].items(): # for section in included sections
+        print('    Pulling tasks for quarter - {}...'.format(section_name))
+        tasks = ASANA_CLIENT.tasks.find_by_section( # Get tasks in section
+            CONFIG['ROADMAP_SECTIONS'][section_name],
+            opt_fields=['name', 'custom_fields', 'tags.name', 'completed']
+        )
+        print('    Done.')
+        quarter = {
+            "name": section_name,
+            "tasks": []
+        }
 
-ASANA_CLIENT = asana.Client.access_token(os.environ["ASANA_TOKEN"])
+        print('    Processing tasks...')
+        for task in tasks:
+            # if task does not have opt out flag, and is not complete
+            if has_filtering_tag(task) and not task['completed']:
+                quarter['tasks'].append({
+                    'gid': task['gid'],
+                    'name': task['name'],
+                    'description': get_public_description(task)
+                })
+        print('    Done.')
+
+        databag['quarters'].append(quarter)
+
+    print('    Pruning quarters...') # remove quarter if it has no tasks
+    databag['quarters'] = [quarter for quarter in databag['quarters'] if len(quarter['tasks']) != 0]
+    print('    Done.')
+
+    return databag
+
+"""
+Indicates if an Asana task has the opt-out tag
+"""
+def has_filtering_tag(task):
+    for tag in task['tags']:
+        if tag['name'] == 'roadmap_ignore':
+            return False
+        return True
+
+"""
+Gets the Public Description field of an Asana Task
+"""
+def get_public_description(task):
+    for field in task['custom_fields']:
+        if field['name'] == 'Public Description':
+            return field['text_value']
+
+def push_to_repo(databag):
+    oss_repo = GITHUB_CLIENT.get_repo("creativecommons/creativecommons.github.io-source")
+    update = oss_repo.update_file(
+        path="databags/search_roadmap.json",
+        message="Update Search Roadmap Databag",
+        content=json.dumps(databag),
+        sha=oss_repo.get_contents("databags/search_roadmap.json").sha,
+        branch="master"
+    )
+    return update
+
 print("Pulling from Asana...")
-sections = asana_pull.tasks_by_section(ASANA_CLIENT)
+databag = generate_databag()
 print("Pull successful.")
-
-GITHUB_CLIENT = Github(os.environ["GITHUB_TOKEN_CC"])
-print("Pulling GitHub content templates...")
-content_templates = github_push.get_templates(GITHUB_CLIENT)
-print("Pull successful.")
-
-print("Generating open source page content...")
-new_content = build_content(content_templates, sections)
-print("Generated.")
-
-with open("test_content.txt", "w") as f:
-    f.write(new_content)
 
 print("Pushing page content to open source repo...")
-push_data = github_push.push_to_repo(GITHUB_CLIENT, new_content)
+push_data = push_to_repo(databag)
 print("Pushed successfully. Commit Info: {}".format(push_data))
