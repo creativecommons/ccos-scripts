@@ -13,6 +13,8 @@ import asana
 from github import Github
 
 ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
+ASANA_PROJECT_GID = "1172465506923661"
+
 GITHUB_CLIENT = Github(os.environ["ADMIN_GITHUB_TOKEN"])
 
 """
@@ -36,28 +38,28 @@ def generate_databag():
     }
 
     tasks = ASANA_CLIENT.tasks.find_by_section(
-        '1172465506923661',
-        opt_fields=['name', 'custom_fields']
+        ASANA_PROJECT_GID,
+        opt_fields=["name", "custom_fields"]
     )
-    print('    Team members pulled.')
+    print("    Team members pulled.")
 
     members_seen = []
 
-    print('    Processing team members...')
+    print("    Processing team members...")
     for task in tasks:
-        if task['name'] == '': continue # Sometimes blank names come up
-        role = get_custom_field(task, 'Role')
-        project_name = get_custom_field(task, 'Project Name')
-        repos = get_custom_field(task, 'Repo(s)')
+        if task["name"] == "": continue # Sometimes blank names come up
+        role = get_custom_field(task, "Role")
+        project_name = get_custom_field(task, "Project Name")
+        repos = get_custom_field(task, "Repo(s)")
 
         # If the member has different roles in different projects
-        # then we've seen them before, so instead of adding a new
+        # then we"ve seen them before, so instead of adding a new
         # member, add the new project
-        if task['name'] in members_seen:
-            print('    Member "{}" already seen, appending to projects'.format(task['name']))
-            for member in databag['team_members']:
-                if task['name'] == member['name']: # Find member data in databag
-                    member['projects'].append( # Add project line to projects
+        if task["name"] in members_seen:
+            print("    Member "{}" already seen, appending to projects".format(task["name"]))
+            for member in databag["team_members"]:
+                if task["name"] == member["name"]: # Find member data in databag
+                    member["projects"].append( # Add project line to projects
                         format_project(
                             role,
                             project_name,
@@ -67,8 +69,8 @@ def generate_databag():
                     break
         else: # If not seen before
             member = {
-                'name': task['name'],
-                'projects': [
+                "name": task["name"],
+                "projects": [
                     format_project(
                         role,
                         project_name,
@@ -76,10 +78,10 @@ def generate_databag():
                     )
                 ]
             }
-            databag['team_members'].append(member)
+            databag["team_members"].append(member)
 
-        members_seen.append(task['name'])
-    print('    Done.')
+        members_seen.append(task["name"])
+    print("    Done.")
 
     return databag
 
@@ -88,7 +90,7 @@ def generate_databag():
 Formats data about member roles into a nice pretty string
 """
 def format_project(role, project, repos):
-    return '{} for the {} project{}'.format(
+    return "{} for the {} project{}".format(
         role,
         project,
         format_repo(repos)
@@ -99,25 +101,24 @@ The formatting for the repo part of the project string needs a
 little extra doing, this function does that doing.
 """
 def format_repo(repos):
-    base = ', has privileges for the {} {}'
+    base = ", has privileges for the {} {}"
     if repos is None:
-        return ''
+        return ""
     else:
-        print(str(len(repos.split(','))) + " " + str(repos.split(',')) + '\n')
         return base.format(
             repos,
-            'repository' if len(repos.split(',')) == 1 else 'repositories'
+            "repository" if len(repos.split(",")) == 1 else "repositories"
         )
 
 """
 Gets the value of a custom field
 """
 def get_custom_field(task, field_name):
-    for field in task['custom_fields']:
-        if field['name'] == 'Repo(s)' and field_name == 'Repo(s)':
-            return field['text_value']
-        elif field['name'] == field_name:
-            return field['enum_value']['name']
+    for field in task["custom_fields"]:
+        if field["name"] == "Repo(s)" and field_name == "Repo(s)":
+            return field["text_value"]
+        elif field["name"] == field_name:
+            return field["enum_value"]["name"]
 
 """
 Pushes the generated databag to GitHub
@@ -135,7 +136,6 @@ def push_to_repo(databag):
 
 print("Pulling from Asana and generating databag...")
 databag = generate_databag()
-print(json.dumps(databag))
 print("Pull successful.")
 
 print("Pushing page content to open source repo...")
