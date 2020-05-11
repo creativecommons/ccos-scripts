@@ -1,6 +1,6 @@
 """
 This script pulls selected tasks from the CC Search Roadmap Asana project, then
-fills that information into a lektor template, and pushes it to a file in
+fills that information into a lektor databag, and pushes it to a file in
 creativecommons/creativecommons.github.io-source.
 """
 
@@ -12,9 +12,16 @@ import json
 import asana
 from github import Github
 
-from config import CONFIG
-
 ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
+ASANA_GIDS = { # GIDs are unique IDs for Asana resources, each task, tag, project, section, etc. has one.
+    'ROADMAP_SECTIONS': {
+        # No Q1 section because all tasks are completed
+        'Q2 2020': '1144184402700458',
+        'Q3 2020': '1144184404806427',
+        'Q4 2020': '1144184406321401'
+    }
+}
+
 GITHUB_CLIENT = Github(os.environ["ADMIN_GITHUB_TOKEN"])
 
 """
@@ -47,10 +54,10 @@ def generate_databag():
     }
 
     print('Generating Databag...')
-    for section_name, section_gid in CONFIG['ROADMAP_SECTIONS'].items(): # for section in included sections
+    for section_name, section_gid in ASANA_GIDS['ROADMAP_SECTIONS'].items(): # for section in included sections
         print('    Pulling tasks for quarter - {}...'.format(section_name))
         tasks = ASANA_CLIENT.tasks.find_by_section( # Get tasks in section
-            CONFIG['ROADMAP_SECTIONS'][section_name],
+            ASANA_GIDS['ROADMAP_SECTIONS'][section_name],
             opt_fields=['name', 'custom_fields', 'tags.name', 'completed']
         )
         print('    Done.')

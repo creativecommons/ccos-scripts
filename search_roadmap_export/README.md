@@ -10,8 +10,7 @@ content to [creativecommons/creativecommons.github.io-source](https://github.com
 2. Navigate to the `search_roadmap_export` folder and run `pipenv install`.
 3. Set the ADMIN_GITHUB_TOKEN environment variable with your GitHub token. You will need a GitHub token with read and write permissions to the `creativecommons` GitHub organization.
 4. Set the ADMIN_ASANA_TOKEN environment variable with your Asana token.
-5. Rename `config.example.py` to `config.py` and insert the proper Asana GIDs and GitHub SHA(s).
-6. Run the script: `python3 search_roadmap_export.py`.
+5. Run the script: `python3 search_roadmap_export.py`.
 
 ## Repository README
 
