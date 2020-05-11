@@ -13,6 +13,7 @@ information about that script.
 | -------------------------------- | --------------------------------------------------------------------- |
 | [`normalize_repos`][norm]        | Ensures that all CC repos have standard labels and branch protections |
 | [`generate_projects_page`][proj] | Generates the ["Projects" page on CC Open Source][osproj]             |
+| [`communityteams_list_page`][ctlist] | Generates the ["Community Teams Members" page on CC Open Source][ctlistpage] |
 
 
 ## Workflows
@@ -29,7 +30,9 @@ information about that script.
 
 [norm]:normalize_repos/
 [proj]:generate_projects_page/
+[ctlist]:communityteams_list_page/
 [osproj]:https://opensource.creativecommons.org/contributing-code/projects/
+[ctlistpage]: httpe://opensource.creativecommons.org/community/community-teams/members
 
 
 ## License
