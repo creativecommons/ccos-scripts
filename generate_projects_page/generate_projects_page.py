@@ -130,6 +130,8 @@ def get_repo_data_list(repos):
             if is_engineering_project:
                 repo_github_data = get_repo_github_data(repo)
                 repo_data = {**repo_github_data, **repo_cc_metadata}
+                if "slack" not in repo_cc_metadata:
+                    repo_cc_metadata["slack"] = ""
                 repo_data_list.append(repo_data)
             else:
                 print("\tNot an active engineering project, skipping")
