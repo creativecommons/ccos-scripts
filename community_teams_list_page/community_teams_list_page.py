@@ -19,14 +19,23 @@ GITHUB_CLIENT = Github(os.environ["ADMIN_GITHUB_TOKEN"])
 
 def generate_databag():
     """
+    This method pulls the team members from Asana and
+    loads them into the databag after a little
+    formatting. The output of this method still needs
+    pruning. The databag schema is below.
+
     databag schema
     {
-        "team_members": [
+        "projects": [
             {
                 "name": "",
-                "projects": [
-                    "",
-                    ""
+                "repos": "",
+                "members": [
+                    {
+                        "name": "",
+                        "role": ""
+                    },
+                    ...
                 ]
             },
             ...
@@ -54,7 +63,8 @@ def generate_databag():
         if project_name not in seen_projects:
             databag["projects"].append({
                 "name": project_name,
-                "members": []
+                "members": [],
+                "repos": get_custom_field(member, "Repo(s)")
             })
             seen_projects.append(project_name)
 
@@ -64,10 +74,25 @@ def generate_databag():
                     "name": member["name"],
                     "role": role
                 })
+                break
 
     print("    Done.")
-
     return databag
+
+def prune_databag(databag):
+    """
+    Sometimes empty projects find their way into the databag.
+    This function prunes out the empty ones.
+    """
+    pruned = {
+        "projects": []
+    }
+
+    for project in databag["projects"]:
+        if len(project["members"]) > 0:
+            pruned["projects"].append(project)
+
+    return pruned
 
 def format_project(role, project, repos):
     """
@@ -78,20 +103,6 @@ def format_project(role, project, repos):
         project,
         format_repo(repos)
     )
-
-def format_repo(repos):
-    """
-    The formatting for the repo part of the project string needs a
-    little extra doing, this function does that doing.
-    """
-    base = ", has privileges for the {} {}"
-    if repos is None:
-        return ""
-    else:
-        return base.format(
-            repos,
-            "repository" if len(repos.split(",")) == 1 else "repositories"
-        )
 
 def get_custom_field(task, field_name):
     """
@@ -118,7 +129,7 @@ def push_to_repo(databag):
     return update
 
 print("Pulling from Asana and generating databag...")
-databag = generate_databag()
+databag = prune_databag(generate_databag())
 print("Pull successful.")
 
 print("Pushing page content to open source repo...")
