@@ -7,22 +7,34 @@ creativecommons/creativecommons.github.io-source.
 # Standard Library
 import os
 import json
+import re
 
 # Third-party
 import asana
 from github import Github
 
-ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
-ASANA_GIDS = {  # GIDs are unique IDs for Asana resources, each task, tag, project, section, etc. has one.
-    "ROADMAP_SECTIONS": {
-        # No Q1 section because all tasks are completed
-        "Q2 2020": "1144184402700458",
-        "Q3 2020": "1144184404806427",
-        "Q4 2020": "1144184406321401",
-    }
-}
+ASANA_ROADMAP_PROJECT_GID = "1140559033201049"
 
+ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
 GITHUB_CLIENT = Github(os.environ["ADMIN_GITHUB_TOKEN"])
+
+
+def fetch_quarters():
+    """
+    This method fetches all sections in the roadmap project, then
+    using some regex magic, filters out all sections that are not
+    named like quarter names. For example:
+
+    Q1 2020
+    q1 2021
+    q3 2020
+
+    are all matches.
+    """
+    sections = ASANA_CLIENT.sections.find_by_project(ASANA_ROADMAP_PROJECT_GID)
+    for section in sections:
+        if re.match("Q\d{1}\s\d{4}", section["name"], re.IGNORECASE):
+            yield {"name": section["name"], "gid": section["gid"]}
 
 
 def generate_databag():
@@ -53,16 +65,14 @@ def generate_databag():
     databag = {"quarters": []}
 
     print("Generating Databag...")
-    for section_name, section_gid in ASANA_GIDS[
-        "ROADMAP_SECTIONS"
-    ].items():  # for section in included sections
-        print("    Pulling tasks for quarter - {}...".format(section_name))
+    for quarter in fetch_quarters():
+        print("    Pulling tasks for quarter - {}...".format(quarter["name"]))
         tasks = ASANA_CLIENT.tasks.find_by_section(  # Get tasks in section
-            ASANA_GIDS["ROADMAP_SECTIONS"][section_name],
+            quarter["gid"],
             opt_fields=["name", "custom_fields", "tags.name", "completed"],
         )
         print("    Done.")
-        quarter = {"name": section_name, "tasks": []}
+        quarter = {"name": quarter["name"], "tasks": []}
 
         print("    Processing tasks...")
         for task in tasks:
