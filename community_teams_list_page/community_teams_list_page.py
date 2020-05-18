@@ -17,6 +17,7 @@ ASANA_PROJECT_GID = "1172465506923661"
 
 GITHUB_CLIENT = Github(os.environ["ADMIN_GITHUB_TOKEN"])
 
+
 def generate_databag():
     """
     This method pulls the team members from Asana and
@@ -43,50 +44,46 @@ def generate_databag():
     }
     """
 
-    databag = {
-        "projects": []
-    }
+    databag = {"projects": []}
 
     members = ASANA_CLIENT.tasks.find_by_section(
-        ASANA_PROJECT_GID,
-        opt_fields=["name", "custom_fields"]
+        ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
     )
     print("    Team members pulled.")
 
     print("    Processing team members...")
     for member in members:
-        if member["name"] == "": continue # Sometimes blank names come up
+        if member["name"] == "":
+            continue  # Sometimes blank names come up
         role = get_custom_field(member, "Role")
         project_name = get_custom_field(member, "Project Name")
         seen_projects = []
-        
+
         if project_name not in seen_projects:
-            databag["projects"].append({
-                "name": project_name,
-                "members": [],
-                "repos": get_custom_field(member, "Repo(s)")
-            })
+            databag["projects"].append(
+                {
+                    "name": project_name,
+                    "members": [],
+                    "repos": get_custom_field(member, "Repo(s)"),
+                }
+            )
             seen_projects.append(project_name)
 
         for project in databag["projects"]:
             if project["name"] == project_name:
-                project["members"].append({
-                    "name": member["name"],
-                    "role": role
-                })
+                project["members"].append({"name": member["name"], "role": role})
                 break
 
     print("    Done.")
     return databag
+
 
 def prune_databag(databag):
     """
     Sometimes empty projects find their way into the databag.
     This function prunes out the empty ones.
     """
-    pruned = {
-        "projects": []
-    }
+    pruned = {"projects": []}
 
     for project in databag["projects"]:
         if len(project["members"]) > 0:
@@ -94,15 +91,13 @@ def prune_databag(databag):
 
     return pruned
 
+
 def format_project(role, project, repos):
     """
     Formats data about member roles into a nice pretty string
     """
-    return "{} for the {} project{}".format(
-        role,
-        project,
-        format_repo(repos)
-    )
+    return "{} for the {} project{}".format(role, project, format_repo(repos))
+
 
 def get_custom_field(task, field_name):
     """
@@ -114,19 +109,23 @@ def get_custom_field(task, field_name):
         elif field["name"] == field_name:
             return field["enum_value"]["name"]
 
-def push_to_repo(databag):    
+
+def push_to_repo(databag):
     """
     Pushes the generated databag to GitHub
     """
-    oss_repo = GITHUB_CLIENT.get_repo("creativecommons/creativecommons.github.io-source")
+    oss_repo = GITHUB_CLIENT.get_repo(
+        "creativecommons/creativecommons.github.io-source"
+    )
     update = oss_repo.update_file(
         path="databags/community_team_list.json",
         message="Update Community Team List Databag",
         content=json.dumps(databag, sort_keys=True, indent=4),
         sha=oss_repo.get_contents("databags/community_team_list.json").sha,
-        branch="master"
+        branch="master",
     )
     return update
+
 
 print("Pulling from Asana and generating databag...")
 databag = prune_databag(generate_databag())
