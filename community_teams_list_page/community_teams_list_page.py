@@ -102,7 +102,6 @@ def get_custom_field(task, field_name):
     Gets the value of a custom field
     """
     for field in task["custom_fields"]:
-        print(field)
         if field is None:
             return None
         elif field["name"] == "Repo(s)" and field_name == "Repo(s)":
