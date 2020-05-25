@@ -44,15 +44,7 @@ def generate_databag():
     }
     """
 
-    databag = {
-        "projects": [
-            {
-                "name": "Community Roles",
-                "repos": None,
-                "members": []
-            }
-        ]
-    }
+    databag = {"projects": [{"name": "Community Roles", "repos": None, "members": []}]}
 
     members = ASANA_CLIENT.tasks.find_by_section(
         ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
@@ -65,9 +57,9 @@ def generate_databag():
             continue  # Sometimes blank names come up
         role = get_custom_field(member, "Role")
         if "Community" in role:
-            databag["projects"][0]["members"].append({
-                "name": member["name"], "role": role
-            })
+            databag["projects"][0]["members"].append(
+                {"name": member["name"], "role": role}
+            )
             continue
 
         project_name = get_custom_field(member, "Project Name")
@@ -104,13 +96,14 @@ def prune_databag(databag):
 
     return pruned
 
+
 def get_custom_field(task, field_name):
     """
     Gets the value of a custom field
     """
     for field in task["custom_fields"]:
         print(field)
-        if field is None: 
+        if field is None:
             return None
         elif field["name"] == "Repo(s)" and field_name == "Repo(s)":
             return field["text_value"]
