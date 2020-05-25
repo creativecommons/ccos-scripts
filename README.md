@@ -34,6 +34,7 @@ information about that script.
 [search]:search_roadmap_export/
 [ctlistpage]: httpe://opensource.creativecommons.org/community/community-teams/members
 [osproj]:https://opensource.creativecommons.org/contributing-code/projects/
+[ctlistpage]: httpe://opensource.creativecommons.org/community/community-teams/members
 
 
 ## License
