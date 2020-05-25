@@ -13,6 +13,7 @@ information about that script.
 | --------------------------------- | ------------------------------------------------------------------------------- |
 | [`normalize_repos`][norm]         | Ensures that all CC repos have standard labels and branch protections           |
 | [`generate_projects_page`][proj]  | Generates the ["Projects" page on CC Open Source][osproj]                       |
+| [`communityteams_list_page`][ctlist] | Generates the ["Community Teams Members" page on CC Open Source][ctlistpage] |
 | [`search_roadmap_export`][search] | Exports the `CC Search Roadmap` Asana project to opensource.creativecommons.org |
 
 
@@ -31,6 +32,7 @@ information about that script.
 [norm]:normalize_repos/
 [proj]:generate_projects_page/
 [search]:search_roadmap_export/
+[ctlistpage]: httpe://opensource.creativecommons.org/community/community-teams/members
 [osproj]:https://opensource.creativecommons.org/contributing-code/projects/
 
 
