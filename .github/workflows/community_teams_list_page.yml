@@ -1,0 +1,30 @@
+name: Generate Community Team Members Page
+on: 
+  schedule:
+  - cron: '0 0 * * *'
+  push:
+    branches:
+      - master
+      - add_workflows
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pipenv
+        cd community_teams_list_page
+        pipenv install
+    - name: Export token to env and run script
+      run: |
+        cd community_teams_list_page
+        pipenv run python community_teams_list_page.py
+      env:
+        ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        ADMIN_ASANA_TOKEN: ${{ secrets.ADMIN_ASANA_TOKEN }}
