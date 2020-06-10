@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 asana = "*"
 pygithub = "*"
+gitpython = "*"
 
 [requires]
 python_version = "3.7"
