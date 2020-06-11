@@ -1,7 +1,8 @@
 """
 This script pulls the members of the "Community Team Tracking" Asana
 project, formats it a bit, then pushes it to a databag
-"databags/community_team_list.json" in creativecommons/creativecommons.github.io-source
+"databags/community_team_list.json"
+in creativecommons/creativecommons.github.io-source
 """
 
 # Standard Lib
@@ -83,7 +84,9 @@ def generate_databag():
 
         for project in databag["projects"]:
             if project["name"] == project_name:
-                project["members"].append({"name": member["name"], "role": role})
+                project["members"].append(
+                    {"name": member["name"], "role": role}
+                )
                 break
 
     print("    Done.")
@@ -102,13 +105,6 @@ def prune_databag(databag):
             pruned["projects"].append(project)
 
     return pruned
-
-
-def format_project(role, project, repos):
-    """
-    Formats data about member roles into a nice pretty string
-    """
-    return "{} for the {} project{}".format(role, project, format_repo(repos))
 
 
 def get_custom_field(task, field_name):
