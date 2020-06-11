@@ -40,11 +40,18 @@ def generate_databag():
                 ]
             },
             ...
+        ],
+        "community_builders": [
+            {
+                "name": "",
+                "role": ""
+            },
+            ...
         ]
     }
     """
 
-    databag = {"projects": []}
+    databag = {"projects": [], "community_builders": []}
 
     members = ASANA_CLIENT.tasks.find_by_section(
         ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
@@ -56,6 +63,11 @@ def generate_databag():
         if member["name"] == "":
             continue  # Sometimes blank names come up
         role = get_custom_field(member, "Role")
+        if "Community" in role:
+            databag["community_builders"].append(
+                {"name": member["name"], "role": role}
+            )
+            continue
         project_name = get_custom_field(member, "Project Name")
         seen_projects = []
 
