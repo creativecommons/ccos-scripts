@@ -166,7 +166,16 @@ def commit_and_push_changes(json_filename):
         except Exception as e:
             print(f"Got exception {e} \n Trying manual push...")
             g = git.Git(GIT_WORKING_DIRECTORY)
-            print(g.execute(["git", "push", f"{GITHUB_REPO_URL_WITH_CREDENTIALS}", "master"]))
+            print(
+                g.execute(
+                    [
+                        "git",
+                        "push",
+                        f"{GITHUB_REPO_URL_WITH_CREDENTIALS}",
+                        "master",
+                    ]
+                )
+            )
     else:
         print("No changes to push...")
 
