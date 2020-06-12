@@ -17,7 +17,7 @@ This script is run via GitHub Actions automatically.
 2. Navigate to the `push_data_to_ccos` folder and run `pipenv install`
 3. Set the `ADMIN_GITHUB_TOKEN` environment variable with your GitHub token. You will need a GitHub token with admin permissions to the `creativecommons` GitHub organization.
 4. Set the ADMIN_ASANA_TOKEN environment variable with your Asana token. You will need an Asana token with access to the Creative Commons Asana organization.
-5. Run the script: `python3 sync_data.py`
+5. Run the script: `pipenv run sync_data.py` (or if you're in a virtual environment already, `python3 sync_data.py`)
 
 ## About the Code
 

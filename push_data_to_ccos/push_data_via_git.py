@@ -61,7 +61,7 @@ def generate_json_file(data, filename):
 def commit_and_push_changes(json_filename):
     repo = git.Repo(GIT_WORKING_DIRECTORY)
     git_diff = repo.index.diff(None)
-    if git_diff != []:
+    if git_diff:
         repo.index.add(items=f"{json_filename}")
         repo.index.commit(message="Syncing new data changes.")
         origin = repo.remotes.origin
