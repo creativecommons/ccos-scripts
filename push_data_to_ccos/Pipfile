@@ -7,9 +7,9 @@ verify_ssl = true
 
 [packages]
 asana = "*"
-pygithub = "*"
-gitpython = "*"
 emoji = "*"
+gitpython = "*"
+pygithub = "*"
 pyyaml = "*"
 
 [requires]
