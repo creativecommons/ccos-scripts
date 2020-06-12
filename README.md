@@ -12,29 +12,25 @@ information about that script.
 | Directory Name                    | Script Purpose                                                                  |
 | --------------------------------- | ------------------------------------------------------------------------------- |
 | [`normalize_repos`][norm]         | Ensures that all CC repos have standard labels and branch protections           |
-| [`generate_projects_page`][proj]  | Generates the ["Projects" page on CC Open Source][osproj]                       |
-| [`communityteams_list_page`][ctlist] | Generates the ["Community Teams Members" page on CC Open Source][ctlistpage] |
-| [`search_roadmap_export`][search] | Exports the `CC Search Roadmap` Asana project to opensource.creativecommons.org |
+| [`push_data_to_ccos`][push_to_ccos]  | Generates various pages with dynamic data on [CC Open Source][ccos] |
 
 
 ## Workflows
 | YML File Name                   | Workflow Purpose                                                        |
 | -------------------------------- | --------------------------------------------------------------------- |
-| [`normalize_repos.yml`][norm_pr_yml]        |  Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`normalize_repos`][norm]   |
-| [`generate_projects_page.yml`][gen_proj_yml]        | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`generate_projects_page`][proj] |
 | [`add_community_pr.yml`][community_pr_yml]        |  Runs hourly at 5 minutes past every hour UTC and add community PRs to [Active Sprint – CC Search](https://github.com/orgs/creativecommons/projects/7) |
+| [`normalize_repos.yml`][norm_pr_yml]        |  Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`normalize_repos`][norm]   |
+| [`push_data_to_ccos.yml`][push_ccos_yml]        | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`push_data_to_ccos`][push_to_ccos] |
 
 
 [community_pr_yml]:.github/workflows/add_community_pr.yml
-[gen_proj_yml]:.github/workflows/generate_projects_page.yml
 [norm_pr_yml]:.github/workflows/normalize_repos.yml
+[push_ccos_yml]:.github/workflows/push_data_to_ccos.yml
 
 [norm]:normalize_repos/
-[proj]:generate_projects_page/
-[search]:search_roadmap_export/
-[ctlistpage]: httpe://opensource.creativecommons.org/community/community-teams/members
-[osproj]:https://opensource.creativecommons.org/contributing-code/projects/
-[ctlistpage]: httpe://opensource.creativecommons.org/community/community-teams/members
+[push_to_ccos]:push_data_to_ccos/
+
+[ccos]: httpe://opensource.creativecommons.org/
 
 
 ## License

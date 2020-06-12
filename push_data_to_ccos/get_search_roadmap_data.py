@@ -6,17 +6,14 @@ creativecommons/creativecommons.github.io-source.
 
 # Standard Library
 import os
-import json
 import re
 
 # Third-party
 import asana
-from github import Github
+
 
 ASANA_ROADMAP_PROJECT_GID = "1140559033201049"
-
 ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
-GITHUB_CLIENT = Github(os.environ["ADMIN_GITHUB_TOKEN"])
 
 
 def fetch_quarters():
@@ -33,7 +30,7 @@ def fetch_quarters():
     """
     sections = ASANA_CLIENT.sections.find_by_project(ASANA_ROADMAP_PROJECT_GID)
     for section in sections:
-        if re.match("Q\d{1}\s\d{4}", section["name"], re.IGNORECASE):
+        if re.match(r"Q\d{1}\s\d{4}", section["name"], re.IGNORECASE):
             yield {"name": section["name"], "gid": section["gid"]}
 
 
@@ -62,6 +59,7 @@ def generate_databag():
     }
 
     """
+    print("Pulling from Asana...")
     databag = {"quarters": []}
 
     print("Generating Databag...")
@@ -91,10 +89,13 @@ def generate_databag():
 
     print("    Pruning quarters...")  # remove quarter if it has no tasks
     databag["quarters"] = [
-        quarter for quarter in databag["quarters"] if len(quarter["tasks"]) != 0
+        quarter
+        for quarter in databag["quarters"]
+        if len(quarter["tasks"]) != 0
     ]
     print("    Done.")
 
+    print("Pull successful.")
     return databag
 
 
@@ -117,24 +118,6 @@ def get_public_description(task):
             return field["text_value"]
 
 
-def push_to_repo(databag):
-    oss_repo = GITHUB_CLIENT.get_repo(
-        "creativecommons/creativecommons.github.io-source"
-    )
-    update = oss_repo.update_file(
-        path="databags/search_roadmap.json",
-        message="Update Search Roadmap Databag",
-        content=json.dumps(databag),
-        sha=oss_repo.get_contents("databags/search_roadmap.json").sha,
-        branch="master",
-    )
-    return update
-
-
-print("Pulling from Asana...")
-databag = generate_databag()
-print("Pull successful.")
-
-print("Pushing page content to open source repo...")
-push_data = push_to_repo(databag)
-print("Pushed successfully. Commit Info: {}".format(push_data))
+def get_search_roadmap_data():
+    data = generate_databag()
+    return data

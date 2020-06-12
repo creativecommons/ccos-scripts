@@ -1,7 +1,7 @@
 REQUIRED_LABELS = {
     "awaiting triage": {
         "color": "ff8858",
-        "description": "This issue needs to be triaged"
+        "description": "This issue needs to be triaged",
     },
     "blocked": {
         "color": "b60205",
@@ -56,6 +56,6 @@ REQUIRED_LABELS = {
     },
     "Great Contribution": {
         "color": "ffbf00",
-        "description": "This was a great contribution!"
-    }
+        "description": "This was a great contribution!",
+    },
 }

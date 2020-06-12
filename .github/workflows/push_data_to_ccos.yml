@@ -1,4 +1,4 @@
-name: Generate Projects Page
+name: Push data to CC Open Source
 on: 
   schedule:
   - cron: '0 0 * * *'
@@ -18,11 +18,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install pipenv
-        cd generate_projects_page
+        cd push_data_to_ccos
         pipenv install
-    - name: Export token to env and run the script
+    - name: Export token to env and run script
       run: |
-        cd generate_projects_page
-        pipenv run python generate_projects_page.py
+        cd push_data_to_ccos
+        pipenv run python sync_data.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        ADMIN_ASANA_TOKEN: ${{ secrets.ADMIN_ASANA_TOKEN }}
