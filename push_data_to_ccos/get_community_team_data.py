@@ -65,26 +65,26 @@ def generate_databag():
             databag["community_builders"].append(
                 {"name": member["name"], "role": role}
             )
-            continue
-        project_name = get_custom_field(member, "Project Name")
-        seen_projects = []
+        else:
+            project_name = get_custom_field(member, "Project Name")
+            seen_projects = []
 
-        if project_name not in seen_projects:
-            databag["projects"].append(
-                {
-                    "name": project_name,
-                    "members": [],
-                    "repos": get_custom_field(member, "Repo(s)"),
-                }
-            )
-            seen_projects.append(project_name)
-
-        for project in databag["projects"]:
-            if project["name"] == project_name:
-                project["members"].append(
-                    {"name": member["name"], "role": role}
+            if project_name not in seen_projects:
+                databag["projects"].append(
+                    {
+                        "name": project_name,
+                        "members": [],
+                        "repos": get_custom_field(member, "Repo(s)"),
+                    }
                 )
-                break
+                seen_projects.append(project_name)
+
+            for project in databag["projects"]:
+                if project["name"] == project_name:
+                    project["members"].append(
+                        {"name": member["name"], "role": role}
+                    )
+                    break
 
     print("    Done.")
     print("Pull successful.")
@@ -96,7 +96,7 @@ def prune_databag(databag):
     Sometimes empty projects find their way into the databag.
     This function prunes out the empty ones.
     """
-    pruned = {"projects": []}
+    pruned = {"projects": [], "community_builders": databag["community_builders"]}
 
     for project in databag["projects"]:
         if len(project["members"]) > 0:
