@@ -9,6 +9,6 @@ from push_data_via_git import push_data
 
 
 if __name__ == "__main__":
-    push_data(get_repo_data(), 'repos.json')
-    push_data(get_search_roadmap_data(), 'search_roadmap.json')
-    push_data(get_community_team_data(), 'community_team_members.json')
+    push_data(get_repo_data(), "repos.json")
+    push_data(get_search_roadmap_data(), "search_roadmap.json")
+    push_data(get_community_team_data(), "community_team_members.json")

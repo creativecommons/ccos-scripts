@@ -96,7 +96,10 @@ def prune_databag(databag):
     Sometimes empty projects find their way into the databag.
     This function prunes out the empty ones.
     """
-    pruned = {"projects": [], "community_builders": databag["community_builders"]}
+    pruned = {
+        "projects": [],
+        "community_builders": databag["community_builders"],
+    }
 
     for project in databag["projects"]:
         if len(project["members"]) > 0:
