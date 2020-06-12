@@ -64,7 +64,7 @@ def generate_databag():
         if member["name"] == "":
             continue  # Sometimes blank names come up
         role = get_custom_field(member, "Role")
-        if "Community" in role:
+        if role.startswith("Community"):
             databag["community_builders"].append(
                 {"name": member["name"], "role": role}
             )
