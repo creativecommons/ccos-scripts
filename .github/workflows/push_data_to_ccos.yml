@@ -24,7 +24,7 @@ jobs:
     - name: Export token to env and run script
       run: |
         cd push_data_to_ccos
-        pipenv run python sync.py
+        pipenv run python sync_data.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         ADMIN_ASANA_TOKEN: ${{ secrets.ADMIN_ASANA_TOKEN }}
