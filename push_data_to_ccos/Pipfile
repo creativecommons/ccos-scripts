@@ -9,6 +9,8 @@ verify_ssl = true
 asana = "*"
 pygithub = "*"
 gitpython = "*"
+emoji = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,10 +1,11 @@
-name: Generate Community Team Members Page
+name: Push data to CC Open Source
 on: 
   schedule:
   - cron: '0 0 * * *'
   push:
     branches:
       - master
+      - refactor_ccos_updates
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,12 +19,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install pipenv
-        cd search_roadmap_export
+        cd push_data_to_ccos
         pipenv install
     - name: Export token to env and run script
       run: |
-        cd search_roadmap_export
-        pipenv run python search_roadmap_export.py
+        cd push_data_to_ccos
+        pipenv run python sync.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         ADMIN_ASANA_TOKEN: ${{ secrets.ADMIN_ASANA_TOKEN }}
