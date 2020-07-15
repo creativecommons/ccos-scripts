@@ -18,7 +18,7 @@ information about that script.
 ## Workflows
 | YML File Name                   | Workflow Purpose                                                        |
 | -------------------------------- | --------------------------------------------------------------------- |
-| [`add_community_pr.yml`][community_pr_yml]        |  Runs hourly at 5 minutes past every hour UTC and add community PRs to [Active Sprint – CC Search](https://github.com/orgs/creativecommons/projects/7) |
+| [`add_community_pr.yml`][community_pr_yml]        |  Runs hourly at 5 minutes past every hour UTC and add community PRs to [Active Sprint – CC Search](https://github.com/orgs/creativecommons/projects/7) and [Vocabulary Planning]((https://github.com/orgs/creativecommons/projects/13) |
 | [`normalize_repos.yml`][norm_pr_yml]        |  Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`normalize_repos`][norm]   |
 | [`push_data_to_ccos.yml`][push_ccos_yml]        | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`push_data_to_ccos`][push_to_ccos] |
 
