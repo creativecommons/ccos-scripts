@@ -28,3 +28,24 @@ jobs:
         COLUMN_NAME: "In Progress (Community)"
         PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
         REPO_URL: https://github.com/creativecommons/cccatalog-frontend
+    - name: Handle vocabulary Repo
+      uses: subhamX/github-project-bot@v1.0.0
+      with:
+        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        COLUMN_NAME: "In Progress"
+        PROJECT_URL: https://github.com/orgs/creativecommons/projects/13
+        REPO_URL: https://github.com/creativecommons/vocabulary
+    - name: Handle vue-vocabulary Repo
+      uses: subhamX/github-project-bot@v1.0.0
+      with:
+        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        COLUMN_NAME: "In Progress"
+        PROJECT_URL: https://github.com/orgs/creativecommons/projects/13
+        REPO_URL: https://github.com/creativecommons/vue-vocabulary
+    - name: Handle fonts Repo
+      uses: subhamX/github-project-bot@v1.0.0
+      with:
+        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        COLUMN_NAME: "In Progress"
+        PROJECT_URL: https://github.com/orgs/creativecommons/projects/13
+        REPO_URL: https://github.com/creativecommons/fonts
