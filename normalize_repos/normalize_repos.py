@@ -82,7 +82,6 @@ def update_branch_protection(repo):
             master.edit_protection(
                 required_approving_review_count=1,
                 user_push_restrictions=[],
-                strict=True,
                 contexts=branch_protections.REQUIRED_STATUS_CHECK_MAP[
                     repo.name
                 ],
