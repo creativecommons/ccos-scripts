@@ -113,12 +113,11 @@ def get_custom_field(task, field_name):
     Gets the value of a custom field
     """
     for field in task["custom_fields"]:
-        if field["name"] == "Repo(s)" and field_name == "Repo(s)":
-            return field["text_value"]
-        elif field["name"] == field_name:
-            if field["enum_value"]:
+        if field["name"] == field_name:
+            if field["type"] == "enum":
                 return field["enum_value"]["name"]
-            return None
+            elif field["type"] == "text":
+                return field["text_value"]
 
 
 def get_community_team_data():
