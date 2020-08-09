@@ -32,7 +32,8 @@ def generate_databag():
                 "members": [
                     {
                         "name": "",
-                        "role": ""
+                        "role": "",
+                        "github: ""
                     },
                     ...
                 ]
@@ -42,7 +43,8 @@ def generate_databag():
         "community_builders": [
             {
                 "name": "",
-                "role": ""
+                "role": "",
+                "github: ""
             },
             ...
         ]
