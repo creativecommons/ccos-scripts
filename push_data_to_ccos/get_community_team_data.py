@@ -61,9 +61,10 @@ def generate_databag():
         if member["name"] == "":
             continue  # Sometimes blank names come up
         role = get_custom_field(member, "Role")
+        github = get_custom_field(member, "GitHub")
         if role.startswith("Community"):
             databag["community_builders"].append(
-                {"name": member["name"], "role": role}
+                {"name": member["name"], "role": role, "github": github}
             )
         else:
             project_name = get_custom_field(member, "Project Name")
@@ -82,7 +83,7 @@ def generate_databag():
             for project in databag["projects"]:
                 if project["name"] == project_name:
                     project["members"].append(
-                        {"name": member["name"], "role": role}
+                        {"name": member["name"], "role": role, "github": github}
                     )
                     break
 
