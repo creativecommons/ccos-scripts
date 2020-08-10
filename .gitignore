@@ -162,5 +162,6 @@ Temporary Items
 
 # Editor/IDE configs
 .idea/
+.vscode/
 
 search_roadmap_export/config.py
