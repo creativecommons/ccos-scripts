@@ -160,4 +160,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Editor/IDE configs
+.idea/
+.vscode/
+
 search_roadmap_export/config.py
