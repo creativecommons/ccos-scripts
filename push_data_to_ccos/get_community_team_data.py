@@ -32,7 +32,8 @@ def generate_databag():
                 "members": [
                     {
                         "name": "",
-                        "role": ""
+                        "role": "",
+                        "github: ""
                     },
                     ...
                 ]
@@ -42,7 +43,8 @@ def generate_databag():
         "community_builders": [
             {
                 "name": "",
-                "role": ""
+                "role": "",
+                "github: ""
             },
             ...
         ]
@@ -61,9 +63,10 @@ def generate_databag():
         if member["name"] == "":
             continue  # Sometimes blank names come up
         role = get_custom_field(member, "Role")
+        github = get_custom_field(member, "GitHub")
         if role.startswith("Community"):
             databag["community_builders"].append(
-                {"name": member["name"], "role": role}
+                {"name": member["name"], "role": role, "github": github}
             )
         else:
             project_name = get_custom_field(member, "Project Name")
@@ -82,7 +85,7 @@ def generate_databag():
             for project in databag["projects"]:
                 if project["name"] == project_name:
                     project["members"].append(
-                        {"name": member["name"], "role": role}
+                        {"name": member["name"], "role": role, "github": github}
                     )
                     break
 
@@ -113,12 +116,11 @@ def get_custom_field(task, field_name):
     Gets the value of a custom field
     """
     for field in task["custom_fields"]:
-        if field["name"] == "Repo(s)" and field_name == "Repo(s)":
-            return field["text_value"]
-        elif field["name"] == field_name:
-            if field["enum_value"]:
+        if field["name"] == field_name:
+            if field["type"] == "enum":
                 return field["enum_value"]["name"]
-            return None
+            elif field["type"] == "text":
+                return field["text_value"]
 
 
 def get_community_team_data():
