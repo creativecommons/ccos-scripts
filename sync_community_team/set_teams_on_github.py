@@ -8,6 +8,9 @@ GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
 
 
+ZERO_PERMISSION_ROLES = ['Project Contributor']
+
+
 def set_up_github_client():
     print("Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
@@ -34,6 +37,9 @@ def create_teams_for_data(databag, client=None, organization=None):
         repos = project['repos']
         roles = project['roles']
         for role, members in roles.items():
+            if role in ZERO_PERMISSION_ROLES:
+                continue
+
             members = [member['github'] for member in members]
             print("        Finding team...")
             team = map_role_to_team(organization, project_name, role)
