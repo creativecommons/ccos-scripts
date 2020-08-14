@@ -38,6 +38,7 @@ def create_teams_for_data(databag, client=None, organization=None):
         roles = project['roles']
         for role, members in roles.items():
             if role in ZERO_PERMISSION_ROLES:
+                print(f"    Skipping {role} as it has no privileges.")
                 continue
 
             members = [member['github'] for member in members]
