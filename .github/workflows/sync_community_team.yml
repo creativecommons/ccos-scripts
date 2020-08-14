@@ -1,0 +1,29 @@
+name: Sync Community Teams with GitHub
+on:
+  schedule:
+  - cron: '0 30 * * *'
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pipenv
+        cd sync_community_team
+        pipenv install
+    - name: Export token to env and run script
+      run: |
+        cd push_data_to_ccos
+        pipenv run python sync_teams.py
+      env:
+        ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        ADMIN_ASANA_TOKEN: ${{ secrets.ADMIN_ASANA_TOKEN }}
