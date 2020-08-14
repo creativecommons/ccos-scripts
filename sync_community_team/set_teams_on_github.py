@@ -20,6 +20,34 @@ def get_cc_organization(github_client):
     return cc
 
 
+def create_teams_for_data(databag, client=None, organization=None):
+    if client is None:
+        client = set_up_github_client()
+    if organization is None:
+        organization = get_cc_organization(client)
+
+    print("Creating and populating teams...")
+    projects = databag['projects']
+    for project in projects:
+        project_name = project['name']
+        print(f"    Creating and populating teams for project {project_name}...")
+        repos = project['repos']
+        roles = project['roles']
+        for role, members in roles.items():
+            members = [member['github'] for member in members]
+            print("        Finding team...")
+            team = map_role_to_team(organization, project_name, role)
+            print("        Done.")
+            print("        Populating repos...")
+            map_team_to_repos(organization, team, repos, True)
+            print("        Done.")
+            print("        Populating members...")
+            map_team_to_members(client, team, members, True)
+            print("        Done.")
+        print("    Done.")
+    print("Done.")
+
+
 def map_team_to_members(client, team, final_user_logins, non_destructive=False):
     """
     Map the team to the given set of members. Any members that are not already
@@ -96,15 +124,19 @@ def map_role_to_team(organization, project_name, role):
     """
     team_slug, team_name = get_team_slug_name(project_name, role)
     try:
-        return organization.get_team_by_slug(team_slug)
+        team = organization.get_team_by_slug(team_slug)
+        print("            Team exists, will update.")
     except UnknownObjectException:
+        print("            Did not exist, creating...")
         description = (f'Community Team for {project_name} '
                        f'containing folks with the role "{role}"')
-        return organization.create_team(
+        team = organization.create_team(
             name=team_name,
             description=description,
             privacy='closed'
         )
+        print("            Done.")
+    return team
 
 
 def get_team_slug_name(project_name, role):
