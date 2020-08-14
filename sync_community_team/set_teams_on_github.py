@@ -79,6 +79,11 @@ def map_team_to_members(client, team, final_user_logins, non_destructive=False):
     for user in users_to_add:
         team.add_membership(user)
 
+    current_login = client.get_user().login
+    if current_login not in final_user_logins:
+        current_user = client.get_user(current_login)
+        team.remove_membership(current_user)
+
 
 def map_team_to_repos(organization, team, final_repo_names, non_destructive=False):
     """
