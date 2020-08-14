@@ -165,7 +165,8 @@ def get_team_slug_name(project_name, role):
     @param role: the role held by folks in the team
     @return: the slug and name of the team
     """
-    team_name = f"CT: {project_name} {pluralized(role)}"
+    sanitized_role = pluralized(role).replace('Project ', '')
+    team_name = f"CT: {project_name} {sanitized_role}"
     team_slug = slugified(team_name)
     return team_slug, team_name
 
