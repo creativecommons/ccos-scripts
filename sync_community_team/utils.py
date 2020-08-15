@@ -6,6 +6,7 @@ from github import Github
 
 
 GITHUB_ORGANIZATION = "creativecommons"
+GITHUB_USERNAME = "cc-creativecommons-github-io-bot"
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
 
 
