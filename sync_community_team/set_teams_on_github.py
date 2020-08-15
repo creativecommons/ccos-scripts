@@ -21,21 +21,23 @@ def create_teams_for_data(databag):
     for project in projects:
         project_name = project["name"]
         print(f"    Creating and populating teams for project {project_name}...")
-        repos = project["repos"]
         roles = project["roles"]
         for role, members in roles.items():
             if role in ZERO_PERMISSION_ROLES:
                 print(f"    Skipping {role} as it has no privileges.")
                 continue
 
-            members = [member["github"] for member in members]
-            print("        Finding team...")
+            print(f"        Finding team for role {role}...")
             team = map_role_to_team(organization, project_name, role)
             print("        Done.")
-            print("        Populating repos...")
+
+            print(f"        Populating repos for team {team.name}...")
+            repos = project["repos"]
             map_team_to_repos(organization, team, repos, True)
             print("        Done.")
-            print("        Populating members...")
+
+            print(f"        Populating members for team {team.name}...")
+            members = [member["github"] for member in members]
             map_team_to_members(client, team, members, True)
             print("        Done.")
         print("    Done.")
@@ -111,7 +113,7 @@ def map_team_to_repos(organization, team, final_repo_names, non_destructive=Fals
         team.add_to_repos(repo)
 
 
-def map_role_to_team(organization, project_name, role):
+def map_role_to_team(organization, project_name, role, create_if_absent=True):
     """
     Map the given role in the given project to a team. Creates the team if one
     such does not already exist.
@@ -119,20 +121,25 @@ def map_role_to_team(organization, project_name, role):
     @param organization: the Organisation object of which the team is a part
     @param project_name: the name of the project to which the team belongs
     @param role: the role held by folks in the team
+    @param create_if_absent: whether to create the team if it does not exist
     @return: the team associated with the role
     """
     team_slug, team_name = get_team_slug_name(project_name, role)
     try:
         team = organization.get_team_by_slug(team_slug)
-        print("            Team exists, will update.")
+        print("            Team exists, will use.")
     except UnknownObjectException:
-        print("            Did not exist, creating...")
-        description = (f"Community Team for {project_name} "
-                       f'containing folks with the role "{role}"')
-        team = organization.create_team(
-            name=team_name,
-            description=description,
-            privacy="closed"
-        )
-        print("            Done.")
+        if not create_if_absent:
+            print("            Did not exist, not creating.")
+            team = None
+        else:
+            print("            Did not exist, creating...")
+            description = (f"Community Team for {project_name} "
+                           f'containing folks with the role "{role}"')
+            team = organization.create_team(
+                name=team_name,
+                description=description,
+                privacy="closed"
+            )
+            print("            Done.")
     return team
