@@ -12,11 +12,9 @@ from utils import (
 ZERO_PERMISSION_ROLES = ["Project Contributor"]
 
 
-def create_teams_for_data(databag, client=None, organization=None):
-    if client is None:
-        client = set_up_github_client()
-    if organization is None:
-        organization = get_cc_organization(client)
+def create_teams_for_data(databag):
+    client = set_up_github_client()
+    organization = get_cc_organization(client)
 
     print("Creating and populating teams...")
     projects = databag["projects"]
