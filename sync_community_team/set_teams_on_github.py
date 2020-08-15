@@ -8,6 +8,9 @@ GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
 
 
+ZERO_PERMISSION_ROLES = ['Project Contributor']
+
+
 def set_up_github_client():
     print("Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
@@ -34,6 +37,10 @@ def create_teams_for_data(databag, client=None, organization=None):
         repos = project['repos']
         roles = project['roles']
         for role, members in roles.items():
+            if role in ZERO_PERMISSION_ROLES:
+                print(f"    Skipping {role} as it has no privileges.")
+                continue
+
             members = [member['github'] for member in members]
             print("        Finding team...")
             team = map_role_to_team(organization, project_name, role)
@@ -159,7 +166,8 @@ def get_team_slug_name(project_name, role):
     @param role: the role held by folks in the team
     @return: the slug and name of the team
     """
-    team_name = f"CT: {project_name} {pluralized(role)}"
+    sanitized_role = pluralized(role).replace('Project ', '')
+    team_name = f"CT: {project_name} {sanitized_role}"
     team_slug = slugified(team_name)
     return team_slug, team_name
 
