@@ -36,7 +36,7 @@ def get_team_slug_name(project_name, role):
     @param role: the role held by folks in the team
     @return: the slug and name of the team
     """
-    sanitized_role = pluralized(role).replace('Project ', '')
+    sanitized_role = pluralized(role).replace("Project ", "")
     team_name = f"CT: {project_name} {sanitized_role}"
     team_slug = slugified(team_name)
     return team_slug, team_name
@@ -57,7 +57,7 @@ def pluralized(word):
     if word in defined_plurals:
         return defined_plurals[word]
 
-    es_endings = ['s', 'sh', 'ch', 'x', 'z']
+    es_endings = ["s", "sh", "ch", "x", "z"]
     if any([word.endswith(ending) for ending in es_endings]):
         return f"{word}es"
     else:
