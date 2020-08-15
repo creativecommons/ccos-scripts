@@ -68,7 +68,7 @@ def fetch_databag():
             role = member["role"]
             if role not in formatted_project["roles"]:
                 formatted_project["roles"][role] = []
-            del member['role']
+            del member["role"]
             formatted_project["roles"][role].append(member)
         databag["projects"].append(formatted_project)
 

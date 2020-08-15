@@ -9,7 +9,7 @@ from utils import (
 )
 
 
-ZERO_PERMISSION_ROLES = ['Project Contributor']
+ZERO_PERMISSION_ROLES = ["Project Contributor"]
 
 
 def create_teams_for_data(databag, client=None, organization=None):
@@ -19,18 +19,18 @@ def create_teams_for_data(databag, client=None, organization=None):
         organization = get_cc_organization(client)
 
     print("Creating and populating teams...")
-    projects = databag['projects']
+    projects = databag["projects"]
     for project in projects:
-        project_name = project['name']
+        project_name = project["name"]
         print(f"    Creating and populating teams for project {project_name}...")
-        repos = project['repos']
-        roles = project['roles']
+        repos = project["repos"]
+        roles = project["roles"]
         for role, members in roles.items():
             if role in ZERO_PERMISSION_ROLES:
                 print(f"    Skipping {role} as it has no privileges.")
                 continue
 
-            members = [member['github'] for member in members]
+            members = [member["github"] for member in members]
             print("        Finding team...")
             team = map_role_to_team(organization, project_name, role)
             print("        Done.")
@@ -129,12 +129,12 @@ def map_role_to_team(organization, project_name, role):
         print("            Team exists, will update.")
     except UnknownObjectException:
         print("            Did not exist, creating...")
-        description = (f'Community Team for {project_name} '
+        description = (f"Community Team for {project_name} "
                        f'containing folks with the role "{role}"')
         team = organization.create_team(
             name=team_name,
             description=description,
-            privacy='closed'
+            privacy="closed"
         )
         print("            Done.")
     return team
