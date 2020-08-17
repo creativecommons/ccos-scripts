@@ -8,7 +8,12 @@ GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
 
 
-ZERO_PERMISSION_ROLES = ['Project Contributor']
+PERMISSIONS = {
+    'Project Contributor': None,
+    'Project Collaborator': 'triage',
+    'Project Core Committer': 'push',
+    'Project Maintainer': 'maintain'
+}
 
 
 def set_up_github_client():
@@ -37,7 +42,7 @@ def create_teams_for_data(databag, client=None, organization=None):
         repos = project['repos']
         roles = project['roles']
         for role, members in roles.items():
-            if role in ZERO_PERMISSION_ROLES:
+            if PERMISSIONS[role] is None:
                 print(f"    Skipping {role} as it has no privileges.")
                 continue
 
@@ -47,6 +52,7 @@ def create_teams_for_data(databag, client=None, organization=None):
             print("        Done.")
             print("        Populating repos...")
             map_team_to_repos(organization, team, repos, True)
+            set_team_repo_permissions(team, PERMISSIONS[role])
             print("        Done.")
             print("        Populating members...")
             map_team_to_members(client, team, members, True)
@@ -122,6 +128,21 @@ def map_team_to_repos(organization, team, final_repo_names, non_destructive=Fals
     ]
     for repo in repos_to_add:
         team.add_to_repos(repo)
+
+
+def set_team_repo_permissions(team, permission):
+    """
+    Set the given permission for each repository belonging to the team. The
+    permissions are determined by the role corresponding to team.
+
+    @param team: the team to update the permissions for
+    @param permission: the permission to set on each repo assigned to the team
+    """
+    repos = team.get_repos()
+    for repo in repos:
+        print(f"            Populating {permission} permission on {repo} repo...")
+        team.set_repo_permission(repo, permission)
+        print("            Done.")
 
 
 def map_role_to_team(organization, project_name, role):
