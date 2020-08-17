@@ -9,7 +9,12 @@ from utils import (
 )
 
 
-ZERO_PERMISSION_ROLES = ["Project Contributor"]
+PERMISSIONS = {
+    'Project Contributor': None,
+    'Project Collaborator': 'triage',
+    'Project Core Committer': 'push',
+    'Project Maintainer': 'maintain'
+}
 
 
 def create_teams_for_data(databag):
@@ -23,7 +28,7 @@ def create_teams_for_data(databag):
         print(f"    Creating and populating teams for project {project_name}...")
         roles = project["roles"]
         for role, members in roles.items():
-            if role in ZERO_PERMISSION_ROLES:
+            if PERMISSIONS[role] is None:
                 print(f"    Skipping {role} as it has no privileges.")
                 continue
 
@@ -34,6 +39,7 @@ def create_teams_for_data(databag):
             print(f"        Populating repos for team {team.name}...")
             repos = project["repos"]
             map_team_to_repos(organization, team, repos, True)
+            set_team_repo_permissions(team, PERMISSIONS[role])
             print("        Done.")
 
             print(f"        Populating members for team {team.name}...")
@@ -113,6 +119,21 @@ def map_team_to_repos(organization, team, final_repo_names, non_destructive=Fals
         team.add_to_repos(repo)
 
 
+def set_team_repo_permissions(team, permission):
+    """
+    Set the given permission for each repository belonging to the team. The
+    permissions are determined by the role corresponding to team.
+
+    @param team: the team to update the permissions for
+    @param permission: the permission to set on each repo assigned to the team
+    """
+    repos = team.get_repos()
+    for repo in repos:
+        print(f"            Populating {permission} permission on {repo} repo...")
+        team.set_repo_permission(repo, permission)
+        print("            Done.")
+
+
 def map_role_to_team(organization, project_name, role, create_if_absent=True):
     """
     Map the given role in the given project to a team. Creates the team if one
@@ -125,21 +146,28 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
     @return: the team associated with the role
     """
     team_slug, team_name = get_team_slug_name(project_name, role)
+    properties = {
+        'name': team_name,
+        'description': (f'Community Team for {project_name} '
+                        f'containing folks with the role "{role}"'),
+        'privacy': 'closed'
+    }
     try:
         team = organization.get_team_by_slug(team_slug)
-        print("            Team exists, will use.")
+        print("            Team exists, reconciling...")
+        if team.description == properties['description']:
+            del properties['description']
+        if team.privacy == properties['privacy']:
+            del properties['privacy']
+        if properties:
+            team.edit(**properties)
+        print("            Done.")
     except UnknownObjectException:
         if not create_if_absent:
             print("            Did not exist, not creating.")
             team = None
         else:
             print("            Did not exist, creating...")
-            description = (f"Community Team for {project_name} "
-                           f'containing folks with the role "{role}"')
-            team = organization.create_team(
-                name=team_name,
-                description=description,
-                privacy="closed"
-            )
+            team = organization.create_team(**properties)
             print("            Done.")
     return team
