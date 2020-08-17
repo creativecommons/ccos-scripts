@@ -135,18 +135,27 @@ def map_role_to_team(organization, project_name, role):
     @return: the team associated with the role
     """
     team_slug, team_name = get_team_slug_name(project_name, role)
+    properties = {
+        'description': (f'Community Team for {project_name} '
+                        f'containing folks with the role "{role}"'),
+        'privacy': 'closed'
+    }
     try:
         team = organization.get_team_by_slug(team_slug)
-        print("            Team exists, will update.")
+        print("            Team exists, reconciling...")
+
+        if team.description == properties['description']:
+            del properties['description']
+        if team.privacy == properties['privacy']:
+            del properties['privacy']
+        if properties:
+            team.edit(**properties)
+        print("            Done.")
     except UnknownObjectException:
         print("            Did not exist, creating...")
-        description = (f'Community Team for {project_name} '
-                       f'containing folks with the role "{role}"')
-        team = organization.create_team(
-            name=team_name,
-            description=description,
-            privacy='closed'
-        )
+
+        properties['name'] = team_name
+        team = organization.create_team(**properties)
         print("            Done.")
     return team
 
