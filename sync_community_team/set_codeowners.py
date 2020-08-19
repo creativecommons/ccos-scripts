@@ -168,7 +168,10 @@ def create_pull_request(organization, repo, branch_name):
     repo = organization.get_repo(repo)
     return repo.create_pull(
         title="Sync Community Team to CODEOWNERS",
-        body="Hi! You might want to update your CODEOWNERS file.",
+        body=(
+            "This _automated PR_ updates your CODEOWNERS file to mention all "
+            "GitHub teams associated with Community Team roles."
+        ),
         head=branch_name,
         base=repo.default_branch  # could me 'main', 'master', 'prod' or something else
     )
