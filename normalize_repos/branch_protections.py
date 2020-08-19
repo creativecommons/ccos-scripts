@@ -28,7 +28,7 @@ EXEMPT_REPOSITORIES = [
 ]
 
 REQUIRED_STATUS_CHECK_MAP = {
-    "cccatalog-api": ["Automated tests"],
+    "cccatalog-api": ["Style", "Tests"],
     "cccatalog-frontend": ["Run CI tests"],
     "creativecommons.github.io-source": ["continuous-integration/travis-ci"],
     "fonts": [
