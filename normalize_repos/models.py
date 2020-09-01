@@ -71,7 +71,7 @@ class Label:
         """
 
         if self.group and self.group.is_prefixed:
-            return f'{self.group}__{self.name}'
+            return f'{self.group}: {self.name}'
         else:
             return self.name
 
@@ -90,4 +90,4 @@ class Label:
         return self.qualified_name
 
     def __repr__(self):
-        return f"<Label '{self}'>"
+        return f"<Label '{self.emoji} {self}'>"
