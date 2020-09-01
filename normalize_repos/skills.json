@@ -3,15 +3,15 @@
     "Python"
   ],
   "vocabulary": [
-    "SCSS",
-    "JavaScript: Storybook"
+    "Sass",
+    "JavaScript/Storybook"
   ],
   "vue-vocabulary": [
-    "JavaScript: Vue",
-    "JavaScript: Storybook"
+    "JavaScript/Vue",
+    "JavaScript/Storybook"
   ],
   "fonts": [
-    "SCSS",
-    "JavaScript: Storybook"
+    "Sass",
+    "JavaScript/Storybook"
   ]
 }
