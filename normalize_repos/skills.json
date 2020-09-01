@@ -1,17 +1,17 @@
 {
   "ccos-scripts": [
-    "python"
+    "Python"
   ],
   "vocabulary": [
-    "scss",
-    "javascript_storybook"
+    "SCSS",
+    "JavaScript: Storybook"
   ],
   "vue-vocabulary": [
-    "javascript_vue",
-    "javascript_storybook"
+    "JavaScript: Vue",
+    "JavaScript: Storybook"
   ],
   "fonts": [
-    "scss",
-    "javascript_storybook"
+    "SCSS",
+    "JavaScript: Storybook"
   ]
 }
