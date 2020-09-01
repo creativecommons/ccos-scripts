@@ -86,6 +86,20 @@ class Label:
 
         return f'{self.emoji} {self.description}'
 
+    @property
+    def api_arguments(self):
+        """
+        Get the dictionary of arguments to pass to the API for creating the
+        label. The API only accepts ``name``, ``color`` and ``description``.
+        @return: the API arguments as a dictionary
+        """
+
+        return {
+            'name': self.qualified_name,
+            'color': self.color,
+            'description': self.description
+        }
+
     def __str__(self):
         return self.qualified_name
 
