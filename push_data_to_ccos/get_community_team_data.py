@@ -85,12 +85,40 @@ def generate_databag():
             for project in databag["projects"]:
                 if project["name"] == project_name:
                     project["members"].append(
-                        {"name": member["name"], "role": role, "github": github}
+                        {"name": member["name"],
+                            "role": role, "github": github}
                     )
                     break
 
     print("    Done.")
     print("Pull successful.")
+    return databag
+
+
+def sort_databag(databag):
+    """     
+    This function orderes the member according to their roles
+    """
+    project_priority = {"Project Maintainer": 1, "Project Core Committer": 2,
+                        "Project Collaborator": 3, "Project Contributor": 4, }
+    community_builders_priority = {
+        "Community Collaborator": 1, "Community Contributor": 2}
+
+    for first_order_key in databag:
+        if first_order_key == 'projects':
+            for i in range(len(databag['projects'])):
+                member = databag['projects'][i]['members']
+                name_sorted_member = sorted(member, key=lambda x: x['name'])
+                databag['projects'][i]['members'] = sorted(
+                    name_sorted_member, key=lambda x: project_priority[x['role']])
+
+        elif first_order_key == 'community_builders':
+            community_builder = databag['community_builders']
+            name_sorted_community_builder = sorted(
+                community_builder, key=lambda x: x['name'])
+            databag['community_builders'] = sorted(
+                name_sorted_community_builder, key=lambda x: community_builders_priority[x['role']])
+
     return databag
 
 
@@ -124,4 +152,4 @@ def get_custom_field(task, field_name):
 
 
 def get_community_team_data():
-    return prune_databag(generate_databag())
+    return sort_databag(prune_databag(generate_databag()))
