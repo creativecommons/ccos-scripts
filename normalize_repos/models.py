@@ -33,11 +33,12 @@ class Label:
     relationship.
     """
 
-    def __init__(self, group=None, color=None, **kwargs):
+    def __init__(self, group=None, color=None, has_emoji_name=True, **kwargs):
         self.name = kwargs['name']
         self.description = kwargs['description']
         self.emoji = kwargs['emoji']
         self.own_color = color
+        self.has_emoji_name = has_emoji_name
 
         self.group = group
 
@@ -70,10 +71,12 @@ class Label:
         @return: the fully qualified name of the label
         """
 
+        name = self.name
         if self.group and self.group.is_prefixed:
-            return f'{self.group}: {self.name}'
-        else:
-            return self.name
+            name = f'{self.group}: {name}'
+        if self.has_emoji_name:
+            name = f'{self.emoji} {name}'
+        return name
 
     @property
     def emojified_description(self):
@@ -104,4 +107,4 @@ class Label:
         return self.qualified_name
 
     def __repr__(self):
-        return f"<Label '{self.emoji} {self}'>"
+        return f"<Label '{self}'>"
