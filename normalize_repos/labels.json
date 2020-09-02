@@ -1,0 +1,163 @@
+{
+  "groups": [
+    {
+      "name": "priority",
+      "labels": [
+        {
+          "name": "critical",
+          "color": "UNFAVOURABLE",
+          "description": "Issue breaks production and needs fixing asap",
+          "emoji": "\uD83D\uDFE5"
+        },
+        {
+          "name": "high",
+          "color": "NEGATIVE",
+          "description": "Issue stalls works on the project or its dependents",
+          "emoji": "\uD83D\uDFE7"
+        },
+        {
+          "name": "medium",
+          "color": "NEUTRAL",
+          "description": "Issue is not up actively harmful but that can escalate",
+          "emoji": "\uD83D\uDFE8"
+        },
+        {
+          "name": "low",
+          "color": "POSITIVE",
+          "description": "Issue doesn't hurt anyone",
+          "emoji": "\uD83D\uDFE9"
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "labels": [
+        {
+          "name": "ready for dev",
+          "color": "POSITIVE",
+          "description": "Issue is ready for work as blockers have been resolved",
+          "emoji": "\uD83C\uDFC1"
+        },
+        {
+          "name": "blocked",
+          "color": "MEDIUM",
+          "description": "Issue is not ready for work due to a PR or issue blocking it",
+          "emoji": "\uD83D\uDEA7"
+        },
+        {
+          "name": "ticket work required",
+          "color": "DARK",
+          "description": "Issue needs details and expansion before it can be worked on",
+          "emoji": "\uD83E\uDDF9"
+        },
+        {
+          "name": "discarded",
+          "color": "LIGHTER",
+          "description": "Issue will not be addressed or worked on",
+          "emoji": "⛔️"
+        },
+        {
+          "name": "awaiting triage",
+          "color": "DARKER",
+          "description": "Issue has not yet been ratified and is not ready for work",
+          "emoji": "\uD83D\uDEA6"
+        }
+      ]
+    },
+    {
+      "name": "goal",
+      "color": "ffffff",
+      "labels": [
+        {
+          "name": "addition",
+          "description": "A new feature or component for the application",
+          "emoji": "\uD83C\uDF1F"
+        },
+        {
+          "name": "improvement",
+          "description": "Changes to an existing feature or component in the application",
+          "emoji": "✨"
+        },
+        {
+          "name": "fix",
+          "description": "Correction in a misbehaving feature or component of the application",
+          "emoji": "\uD83D\uDEE0"
+        }
+      ]
+    },
+    {
+      "name": "aspect",
+      "color": "04338c",
+      "labels": [
+        {
+          "name": "text",
+          "description": "Concerns textual material like documentation, typo or translations",
+          "emoji": "\uD83D\uDCC4"
+        },
+        {
+          "name": "code",
+          "description": "Concerns the codebase including programming and markup languages",
+          "emoji": "\uD83D\uDCBB"
+        },
+        {
+          "name": "interface",
+          "description": "Concerns user experience in terms of the GUI or API design",
+          "emoji": "\uD83D\uDD79"
+        },
+        {
+          "name": "dx",
+          "description": "Concerns developer experience such as automation and code-style",
+          "emoji": "\uD83E\uDD16"
+        }
+      ]
+    },
+    {
+      "name": "talk",
+      "color": "f9bbe5",
+      "labels": [
+        {
+          "name": "question",
+          "description": "Issue warrants a reply but entails no work",
+          "emoji": "❓"
+        },
+        {
+          "name": "discussion",
+          "description": "Issue open for discussion, comments and feedback",
+          "emoji": "\uD83D\uDCAC"
+        }
+      ]
+    },
+    {
+      "name": "friendliness",
+      "color": "7f0799",
+      "is_prefixed": false,
+      "labels": [
+        {
+          "name": "good first issue",
+          "description": "Issue is beginner friendly and good for introduction",
+          "emoji": "\uD83E\uDD17",
+          "has_emoji_name": false
+        },
+        {
+          "name": "help wanted",
+          "description": "Issue open to participation from the community",
+          "emoji": "\uD83D\uDE4F",
+          "has_emoji_name":  false
+        },
+        {
+          "name": "staff only",
+          "description": "Issue restricted to CC staff members",
+          "emoji": "\uD83D\uDD12"
+        }
+      ]
+    }
+  ],
+  "standalone": [
+    {
+      "name": "ノಠ益ಠノ彡┻━┻",
+      "color": "000000",
+      "description": "Aaargh!",
+      "emoji": "\uD83E\uDD2F"
+    }
+  ]
+}
