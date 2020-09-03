@@ -1,8 +1,14 @@
 import os
+import logging
 
 # Third party
 from github import Github
 
+# Local
+import log
+
+logger = logging.getLogger("normalize_repos")
+log.reset_handler()
 
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_USERNAME = "cc-creativecommons-github-io-bot"
@@ -25,12 +31,14 @@ COLORS = {
 
 
 def set_up_github_client():
-    print("Setting up GitHub client...")
+    logger.log(logging.INFO, "Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
+    logger.log(log.SUCCESS, "done.")
     return github_client
 
 
 def get_cc_organization(github_client):
-    print("Getting CC's GitHub organization...")
+    logger.log(logging.INFO, "Getting CC's GitHub organization...")
     cc = github_client.get_organization(GITHUB_ORGANIZATION)
+    logger.log(log.SUCCESS, "done.")
     return cc
