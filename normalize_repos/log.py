@@ -34,7 +34,7 @@ class IndentFormatter(logging.Formatter):
         """
 
         fmt = "%(asctime)s │ %(levelname)-8s │ %(indent)s%(function)s: %(message)s"
-        logging.Formatter.__init__(self, fmt=fmt)
+        super().__init__(fmt=fmt)
 
         self.baseline = None
         self.cut = None
