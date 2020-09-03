@@ -111,11 +111,13 @@ class Label:
         @return: whether the instance is equal to its remote counterpart
         """
 
-        return all([
-            self.qualified_name == remote.name,
-            self.color == remote.color,
-            self.description == remote.description
-        ])
+        return all(
+            [
+                self.qualified_name == remote.name,
+                self.color == remote.color,
+                self.description == remote.description,
+            ]
+        )
 
     def __ne__(self, remote):
         """
@@ -125,11 +127,13 @@ class Label:
         @return: whether the instance is unequal to its remote counterpart
         """
 
-        return any([
-            self.qualified_name != remote.name,
-            self.color != remote.color,
-            self.description != remote.description
-        ])
+        return any(
+            [
+                self.qualified_name != remote.name,
+                self.color != remote.color,
+                self.description != remote.description,
+            ]
+        )
 
     def __str__(self):
         return self.qualified_name

@@ -29,7 +29,7 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
         logger.log(logging.INFO, f"Syncing initial labels...")
         log.change_indent(+1)
         for initial_label_name, initial_label in initial_labels.items():
-            logger.log(logging.INFO, f"Syncing label '{initial_label_name}'...")
+            logger.log(logging.INFO, f"Syncing '{initial_label_name}'...")
             log.change_indent(+1)
             if initial_label_name not in final_labels:
                 logger.log(logging.INFO, "Does not exist, deleting...")
@@ -43,7 +43,7 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
     logger.log(logging.INFO, f"Syncing final labels...")
     log.change_indent(+1)
     for final_label_name, final_label in final_labels.items():
-        logger.log(logging.INFO, f"Syncing label '{final_label_name}'...")
+        logger.log(logging.INFO, f"Syncing '{final_label_name}'...")
         log.change_indent(+1)
         if final_label_name not in initial_labels:
             logger.log(logging.INFO, "Did not exist, creating...")

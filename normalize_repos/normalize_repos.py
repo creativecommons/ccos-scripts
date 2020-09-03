@@ -18,7 +18,7 @@ from get_labels import get_labels
 from set_labels import set_labels
 import branch_protections
 
-logger = logging.getLogger('normalize_repos')
+logger = logging.getLogger("normalize_repos")
 log.reset_handler()
 
 
