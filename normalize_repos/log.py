@@ -160,9 +160,4 @@ def change_indent(delta=1):
             formatter.delta_indent(delta)
 
 
-__all__ = [
-    set_up_logging,
-    reset_handler,
-    change_indent,
-    SUCCESS
-]
+__all__ = [set_up_logging, reset_handler, change_indent, SUCCESS]

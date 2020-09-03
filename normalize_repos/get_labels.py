@@ -98,3 +98,6 @@ def get_labels():
     standard_labels = get_standard_labels()
     repo_specific_labels = get_repo_specific_labels()
     return standard_labels, repo_specific_labels
+
+
+__all__ = [get_labels]
