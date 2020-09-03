@@ -4,14 +4,7 @@
   ],
   "vocabulary": [
     "Sass",
-    "JavaScript/Storybook"
-  ],
-  "vue-vocabulary": [
     "JavaScript/Vue",
-    "JavaScript/Storybook"
-  ],
-  "fonts": [
-    "Sass",
     "JavaScript/Storybook"
   ]
 }
