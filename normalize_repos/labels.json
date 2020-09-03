@@ -6,25 +6,25 @@
         {
           "name": "critical",
           "color": "UNFAVOURABLE",
-          "description": "Issue must be fixed ASAP",
+          "description": "Must be fixed ASAP",
           "emoji": "\uD83D\uDFE5"
         },
         {
           "name": "high",
           "color": "NEGATIVE",
-          "description": "Issue stalls work on the project or its dependents",
+          "description": "Stalls work on the project or its dependents",
           "emoji": "\uD83D\uDFE7"
         },
         {
           "name": "medium",
           "color": "NEUTRAL",
-          "description": "Issue is not blocking but should be fixed soon",
+          "description": "Not blocking but should be fixed soon",
           "emoji": "\uD83D\uDFE8"
         },
         {
           "name": "low",
           "color": "POSITIVE",
-          "description": "Issue is low priority and doesn't need to be rushed",
+          "description": "Low priority and doesn't need to be rushed",
           "emoji": "\uD83D\uDFE9"
         }
       ]
@@ -33,33 +33,33 @@
       "name": "status",
       "labels": [
         {
-          "name": "ready for dev",
+          "name": "ready for work",
           "color": "LIGHT",
-          "description": "Issue is ready for work",
+          "description": "Ready for work",
           "emoji": "\uD83C\uDFC1"
         },
         {
           "name": "blocked",
           "color": "MEDIUM",
-          "description": "Issue is blocked and not ready for work",
+          "description": "Blocked & therefore, not ready for work",
           "emoji": "\uD83D\uDEA7"
         },
         {
           "name": "ticket work required",
           "color": "DARK",
-          "description": "Issue needs more details before it can be worked on",
+          "description": "Needs more details before it can be worked on",
           "emoji": "\uD83E\uDDF9"
         },
         {
           "name": "discarded",
           "color": "LIGHTER",
-          "description": "Issue will not be worked on",
+          "description": "Will not be worked on",
           "emoji": "⛔️"
         },
         {
           "name": "awaiting triage",
           "color": "DARKER",
-          "description": "Issue has not yet been ratified and is not ready for work",
+          "description": "Has not been triaged & therefore, not ready for work",
           "emoji": "\uD83D\uDEA6"
         }
       ]
@@ -91,22 +91,22 @@
       "labels": [
         {
           "name": "text",
-          "description": "Concerns textual material like documentation, typo or translations",
+          "description": "Concerns the textual material in the repository",
           "emoji": "\uD83D\uDCC4"
         },
         {
           "name": "code",
-          "description": "Concerns the codebase including programming and markup languages",
+          "description": "Concerns the software code in the repository",
           "emoji": "\uD83D\uDCBB"
         },
         {
           "name": "interface",
-          "description": "Concerns user experience in terms of the GUI or API design",
+          "description": "Concerns end-users' experience with the software",
           "emoji": "\uD83D\uDD79"
         },
         {
           "name": "dx",
-          "description": "Concerns developer experience such as automation and code-style",
+          "description": "Concerns developers' experience with the codebase",
           "emoji": "\uD83E\uDD16"
         }
       ]
@@ -117,12 +117,12 @@
       "labels": [
         {
           "name": "question",
-          "description": "Issue warrants a reply but entails no work",
+          "description": "Can be resolved with an answer",
           "emoji": "❓"
         },
         {
           "name": "discussion",
-          "description": "Issue open for discussion, comments and feedback",
+          "description": "Open for discussions and feedback",
           "emoji": "\uD83D\uDCAC"
         }
       ]
@@ -134,19 +134,19 @@
       "labels": [
         {
           "name": "good first issue",
-          "description": "Issue is beginner friendly and good for introduction",
+          "description": "New-contributor friendly",
           "emoji": "\uD83E\uDD17",
           "has_emoji_name": false
         },
         {
           "name": "help wanted",
-          "description": "Issue open to participation from the community",
+          "description": "Open to participation from the community",
           "emoji": "\uD83D\uDE4F",
           "has_emoji_name":  false
         },
         {
           "name": "staff only",
-          "description": "Issue restricted to CC staff members",
+          "description": "Restricted to CC staff members",
           "emoji": "\uD83D\uDD12"
         }
       ]
