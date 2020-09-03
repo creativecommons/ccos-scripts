@@ -139,9 +139,11 @@ def reset_handler():
     call to the logger can repopulate them based on the new stack in a new file.
     """
 
-    formatter = logging.root.handlers[-1].formatter
-    if isinstance(formatter, IndentFormatter):
-        formatter.reset()
+    handlers = logging.root.handlers
+    if len(handlers) > 0:
+        formatter = handlers[-1].formatter
+        if isinstance(formatter, IndentFormatter):
+            formatter.reset()
 
 
 def change_indent(delta=1):
@@ -151,9 +153,11 @@ def change_indent(delta=1):
     @param delta: the number of steps by which to indent/de-indent the logs
     """
 
-    formatter = logging.root.handlers[-1].formatter
-    if isinstance(formatter, IndentFormatter):
-        formatter.delta_indent(delta)
+    handlers = logging.root.handlers
+    if len(handlers) > 0:
+        formatter = handlers[-1].formatter
+        if isinstance(formatter, IndentFormatter):
+            formatter.delta_indent(delta)
 
 
 __all__ = [
