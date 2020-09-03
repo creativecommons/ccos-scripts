@@ -6,25 +6,25 @@
         {
           "name": "critical",
           "color": "UNFAVOURABLE",
-          "description": "Issue breaks production and needs fixing asap",
+          "description": "Issue must be fixed ASAP",
           "emoji": "\uD83D\uDFE5"
         },
         {
           "name": "high",
           "color": "NEGATIVE",
-          "description": "Issue stalls works on the project or its dependents",
+          "description": "Issue stalls work on the project or its dependents",
           "emoji": "\uD83D\uDFE7"
         },
         {
           "name": "medium",
           "color": "NEUTRAL",
-          "description": "Issue is not up actively harmful but that can escalate",
+          "description": "Issue is not blocking but should be fixed soon",
           "emoji": "\uD83D\uDFE8"
         },
         {
           "name": "low",
           "color": "POSITIVE",
-          "description": "Issue doesn't hurt anyone",
+          "description": "Issue is low priority and doesn't need to be rushed",
           "emoji": "\uD83D\uDFE9"
         }
       ]
@@ -35,25 +35,25 @@
         {
           "name": "ready for dev",
           "color": "LIGHT",
-          "description": "Issue is ready for work as blockers have been resolved",
+          "description": "Issue is ready for work",
           "emoji": "\uD83C\uDFC1"
         },
         {
           "name": "blocked",
           "color": "MEDIUM",
-          "description": "Issue is not ready for work due to a PR or issue blocking it",
+          "description": "Issue is blocked and not ready for work",
           "emoji": "\uD83D\uDEA7"
         },
         {
           "name": "ticket work required",
           "color": "DARK",
-          "description": "Issue needs details and expansion before it can be worked on",
+          "description": "Issue needs more details before it can be worked on",
           "emoji": "\uD83E\uDDF9"
         },
         {
           "name": "discarded",
           "color": "LIGHTER",
-          "description": "Issue will not be addressed or worked on",
+          "description": "Issue will not be worked on",
           "emoji": "⛔️"
         },
         {
@@ -70,17 +70,17 @@
       "labels": [
         {
           "name": "addition",
-          "description": "A new feature or component for the application",
+          "description": "Addition of new feature",
           "emoji": "\uD83C\uDF1F"
         },
         {
           "name": "improvement",
-          "description": "Changes to an existing feature or component in the application",
+          "description": "Improvement to an existing feature",
           "emoji": "✨"
         },
         {
           "name": "fix",
-          "description": "Correction in a misbehaving feature or component of the application",
+          "description": "Bug fix",
           "emoji": "\uD83D\uDEE0"
         }
       ]
