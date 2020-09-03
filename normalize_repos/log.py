@@ -71,7 +71,6 @@ class IndentFormatter(logging.Formatter):
         Change the manual push value by the given number of steps. Increasing
         the value indents the logs and decreasing it de-indents them.
         @param delta: the number of steps by which to indent/de-indent the logs
-        @return:
         """
 
         self.manual_push += delta
