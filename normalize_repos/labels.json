@@ -34,7 +34,7 @@
       "labels": [
         {
           "name": "ready for dev",
-          "color": "POSITIVE",
+          "color": "LIGHT",
           "description": "Issue is ready for work as blockers have been resolved",
           "emoji": "\uD83C\uDFC1"
         },
