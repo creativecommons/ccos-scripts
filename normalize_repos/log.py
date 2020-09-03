@@ -29,7 +29,7 @@ class IndentFormatter(logging.Formatter):
         @return: the index of the filename from which the logger was called
         """
 
-        lib_string = 'lib/python'
+        lib_string = "lib/python"
         lib_started = False
         for index, filename in enumerate(filenames):
             if not lib_started and lib_string in filename:
@@ -83,7 +83,7 @@ class IndentFormatter(logging.Formatter):
             self.cut = IndentFormatter.identify_cut(filenames)
 
         # Inject custom information into the record
-        record.indent = '. . ' * (depth - self.baseline + self.manual_push)
+        record.indent = ". . " * (depth - self.baseline + self.manual_push)
         record.function = stack[self.cut].function
 
         # Format the record using custom information
@@ -130,7 +130,7 @@ def set_up_logging():
     handler.setFormatter(formatter)
 
     logging.basicConfig(level=logging.INFO, handlers=(handler,))
-    logging.addLevelName(SUCCESS, 'SUCCESS')
+    logging.addLevelName(SUCCESS, "SUCCESS")
 
 
 def reset_handler():
