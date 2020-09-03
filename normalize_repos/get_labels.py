@@ -57,7 +57,7 @@ def get_skill_label_from_name(skill_group, skill_name):
         name=skill_name.lower(),
         description=f"Requires proficiency in '{skill_name}'",
         emoji="💪",
-        group=skill_group
+        group=skill_group,
     )
 
 

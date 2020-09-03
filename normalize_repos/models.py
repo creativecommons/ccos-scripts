@@ -10,7 +10,7 @@ class Group:
     """
 
     def __init__(self, color=None, is_prefixed=True, **kwargs):
-        self.name = kwargs['name']
+        self.name = kwargs["name"]
         self.color = color
         self.is_prefixed = is_prefixed
 
@@ -34,9 +34,9 @@ class Label:
     """
 
     def __init__(self, group=None, color=None, has_emoji_name=True, **kwargs):
-        self.name = kwargs['name']
-        self.description = kwargs['description']
-        self.emoji = kwargs['emoji']
+        self.name = kwargs["name"]
+        self.description = kwargs["description"]
+        self.emoji = kwargs["emoji"]
         self.own_color = color
         self.has_emoji_name = has_emoji_name
 
@@ -56,7 +56,7 @@ class Label:
         if color is None and self.group is not None:
             color = self.group.color
         if color is None:
-            color = COLORS['BLACK']
+            color = COLORS["BLACK"]
         elif color in COLORS:
             color = COLORS[color]
         return color
@@ -73,9 +73,9 @@ class Label:
 
         name = self.name
         if self.group and self.group.is_prefixed:
-            name = f'{self.group}: {name}'
+            name = f"{self.group}: {name}"
         if self.has_emoji_name:
-            name = f'{self.emoji} {name}'
+            name = f"{self.emoji} {name}"
         return name
 
     @property
@@ -87,7 +87,7 @@ class Label:
         @return: the emoji-prefixed description
         """
 
-        return f'{self.emoji} {self.description}'
+        return f"{self.emoji} {self.description}"
 
     @property
     def api_arguments(self):
@@ -98,9 +98,9 @@ class Label:
         """
 
         return {
-            'name': self.qualified_name,
-            'color': self.color,
-            'description': self.description
+            "name": self.qualified_name,
+            "color": self.color,
+            "description": self.description,
         }
 
     def __str__(self):
