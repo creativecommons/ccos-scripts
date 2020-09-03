@@ -17,42 +17,46 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
     @param non_destructive: whether to trim extra labels or preserve them
     """
 
-    logger.log(logging.INFO, "Fetching existing labels...")
-    existing_labels = list(repo.get_labels())
-    logger.log(log.SUCCESS, f"done. Found {len(existing_labels)} labels.")
+    logger.log(logging.INFO, "Fetching initial labels...")
+    initial_labels = {label.name: label for label in repo.get_labels()}
+    logger.log(log.SUCCESS, f"done. Found {len(initial_labels)} labels.")
 
-    existing_label_names = {
-        existing_label.name for existing_label in existing_labels
-    }
-    final_label_names = {label.qualified_name for label in final_labels}
+    logger.log(logging.INFO, "Parsing final labels...")
+    final_labels = {label.qualified_name: label for label in final_labels}
+    logger.log(log.SUCCESS, f"done. Found {len(final_labels)} labels.")
 
     if not non_destructive:
-        labels_to_delete = [
-            label
-            for label in existing_labels
-            if label.name not in final_label_names
-        ]
-        logger.log(
-            logging.WARNING, f"Deleting {len(labels_to_delete)} labels..."
-        )
+        logger.log(logging.INFO, f"Syncing initial labels...")
         log.change_indent(+1)
-        for label in labels_to_delete:
-            logger.log(logging.WARNING, f"Deleting label '{label.name}'...")
-            label.delete()
+        for initial_label_name, initial_label in initial_labels.items():
+            logger.log(logging.INFO, f"Syncing label '{initial_label_name}'...")
+            log.change_indent(+1)
+            if initial_label_name not in final_labels:
+                logger.log(logging.INFO, "Does not exist, deleting...")
+                initial_label.delete()
+                logger.log(log.SUCCESS, "done.")
+            log.change_indent(-1)
             logger.log(log.SUCCESS, "done.")
         log.change_indent(-1)
         logger.log(log.SUCCESS, "done.")
 
-    labels_to_create = [
-        label
-        for label in final_labels
-        if label.qualified_name not in existing_label_names
-    ]
-    logger.log(logging.INFO, f"Creating {len(labels_to_create)} labels...")
+    logger.log(logging.INFO, f"Syncing final labels...")
     log.change_indent(+1)
-    for label in labels_to_create:
-        logger.log(logging.INFO, f"Creating label '{label.name}'...")
-        repo.create_label(**label.api_arguments)
+    for final_label_name, final_label in final_labels.items():
+        logger.log(logging.INFO, f"Syncing label '{final_label_name}'...")
+        log.change_indent(+1)
+        if final_label_name not in initial_labels:
+            logger.log(logging.INFO, "Did not exist, creating...")
+            repo.create_label(**final_label.api_arguments)
+            logger.log(log.SUCCESS, "done.")
+        elif final_label != initial_labels[final_label_name]:
+            logger.log(logging.INFO, "Differences found, updating...")
+            initial_label = initial_labels[final_label_name]
+            initial_label.edit(**final_label.api_arguments)
+            logger.log(log.SUCCESS, "done.")
+        else:
+            logger.log(logging.INFO, "Match found, moving on.")
+        log.change_indent(-1)
         logger.log(log.SUCCESS, "done.")
     log.change_indent(-1)
     logger.log(log.SUCCESS, "done.")
