@@ -1,6 +1,8 @@
 import inspect
 import logging
 
+SUCCESS = logging.INFO + 1
+
 
 class IndentFormatter(logging.Formatter):
     """
@@ -8,6 +10,14 @@ class IndentFormatter(logging.Formatter):
     depth of the code invoking the logger. This removes the need for manual
     indentation using ``'\t'`` characters.
     """
+
+    color_map = {
+        logging.CRITICAL: 31,  # red
+        logging.ERROR: 31,  # red
+        logging.WARNING: 33,  # yellow
+        SUCCESS: 32,  # green
+        logging.INFO: 34,  # blue
+    }
 
     @staticmethod
     def identify_cut(filenames):
@@ -33,12 +43,29 @@ class IndentFormatter(logging.Formatter):
         intentionally minimal to get clean and readable logs.
         """
 
-        fmt = "%(asctime)s │ %(levelname)-8s │ %(indent)s%(function)s: %(message)s"
+        fmt = "%(message)s"
         super().__init__(fmt=fmt)
 
         self.baseline = None
         self.cut = None
         self.manual_push = 0
+
+    def update_format(self, record):
+        """
+        Update the format string based on the log level of the record.
+        @param record: the record based on whose level to update the formatting
+        """
+
+        prefix = "\u001b["
+        color = f"{self.color_map[record.levelno]}m"
+        bold = "1m"
+        reset = "0m"
+        self._style._fmt = (
+            "%(asctime)s │ "
+            f"{prefix}{color}%(levelname)-8s{prefix}{reset} │ "
+            f"%(indent)s{prefix}{bold}%(function)s{prefix}{reset}: "
+            "%(message)s"
+        )
 
     def format(self, record):
         """
@@ -56,10 +83,13 @@ class IndentFormatter(logging.Formatter):
             self.cut = IndentFormatter.identify_cut(filenames)
 
         # Inject custom information into the record
-        record.indent = '    ' * (depth - self.baseline + self.manual_push)
+        record.indent = '. . ' * (depth - self.baseline + self.manual_push)
         record.function = stack[self.cut].function
+
         # Format the record using custom information
-        out = logging.Formatter.format(self, record)
+        self.update_format(record)
+        out = super().format(record)
+
         # Remove custom information from the record
         del record.indent
         del record.function
@@ -100,6 +130,7 @@ def set_up_logging():
     handler.setFormatter(formatter)
 
     logging.basicConfig(level=logging.INFO, handlers=(handler,))
+    logging.addLevelName(SUCCESS, 'SUCCESS')
 
 
 def reset_handler():
@@ -123,3 +154,11 @@ def change_indent(delta=1):
     formatter = logging.root.handlers[-1].formatter
     if isinstance(formatter, IndentFormatter):
         formatter.delta_indent(delta)
+
+
+__all__ = [
+    set_up_logging,
+    reset_handler,
+    change_indent,
+    SUCCESS
+]
