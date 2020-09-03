@@ -38,6 +38,7 @@ class IndentFormatter(logging.Formatter):
 
         self.baseline = None
         self.cut = None
+        self.manual_push = 0
 
     def format(self, record):
         """
@@ -55,7 +56,7 @@ class IndentFormatter(logging.Formatter):
             self.cut = IndentFormatter.identify_cut(filenames)
 
         # Inject custom information into the record
-        record.indent = '  ' * (depth - self.baseline)
+        record.indent = '    ' * (depth - self.baseline + self.manual_push)
         record.function = stack[self.cut].function
         # Format the record using custom information
         out = logging.Formatter.format(self, record)
@@ -65,6 +66,18 @@ class IndentFormatter(logging.Formatter):
 
         return out
 
+    def delta_indent(self, delta=1):
+        """
+        Change the manual push value by the given number of steps. Increasing
+        the value indents the logs and decreasing it de-indents them.
+        @param delta: the number of steps by which to indent/de-indent the logs
+        @return:
+        """
+
+        self.manual_push += delta
+        if self.manual_push < 0:
+            self.manual_push = 0
+
     def reset(self):
         """
         Reset the baseline and cut attributes so that the next call to the
@@ -73,6 +86,7 @@ class IndentFormatter(logging.Formatter):
 
         self.baseline = None
         self.cut = None
+        self.manual_push = 0
 
 
 def set_up_logging():
@@ -95,4 +109,18 @@ def reset_handler():
     call to the logger can repopulate them based on the new stack in a new file.
     """
 
-    logging.root.handlers[-1].formatter.reset()
+    formatter = logging.root.handlers[-1].formatter
+    if isinstance(formatter, IndentFormatter):
+        formatter.reset()
+
+
+def change_indent(delta=1):
+    """
+    Indent the output of the logger by the given number of steps. If positive,
+    the indentation increases and if negative, it decreases.
+    @param delta: the number of steps by which to indent/de-indent the logs
+    """
+
+    formatter = logging.root.handlers[-1].formatter
+    if isinstance(formatter, IndentFormatter):
+        formatter.delta_indent(delta)
