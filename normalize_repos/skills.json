@@ -1,0 +1,10 @@
+{
+  "ccos-scripts": [
+    "Python"
+  ],
+  "vocabulary": [
+    "Sass",
+    "JavaScript/Vue",
+    "JavaScript/Storybook"
+  ]
+}
