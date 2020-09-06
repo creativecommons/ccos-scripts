@@ -16,6 +16,7 @@ import log
 from utils import get_cc_organization, set_up_github_client
 from get_labels import get_labels
 from set_labels import set_labels
+from validate_labels import validate_labels
 import branch_protections
 
 logger = logging.getLogger("normalize_repos")
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     logger.log(log.SUCCESS, "done.")
 
     logger.log(logging.INFO, "Validating labels...")
-    # TODO
+    validate_labels(standard_labels, repo_specific_labels)
     logger.log(log.SUCCESS, "done.")
 
     github = set_up_github_client()
