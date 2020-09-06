@@ -49,8 +49,17 @@ def update_branch_protection(repo):
 
 if __name__ == "__main__":
     logger.log(logging.INFO, "Starting normalization")
+
+    logger.log(logging.INFO, "Loading labels...")
+    standard_labels, repo_specific_labels = get_labels()
+    logger.log(log.SUCCESS, "done.")
+
     logger.log(logging.INFO, "Syncing labels...")
-    set_labels(*get_labels())
+    set_labels(standard_labels, repo_specific_labels)
+    logger.log(log.SUCCESS, "done.")
+
+    logger.log(logging.INFO, "Validating labels...")
+    # TODO
     logger.log(log.SUCCESS, "done.")
 
     github = set_up_github_client()
