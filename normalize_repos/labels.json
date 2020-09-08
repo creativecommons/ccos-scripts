@@ -162,7 +162,7 @@
     {
       "name": "hacktoberfest",
       "color": "883255",
-      "descriptions": "Ideal for Hacktoberfest participation",
+      "description": "Ideal for Hacktoberfest participation",
       "emoji": "\uD83C\uDF83"
     }
   ]
