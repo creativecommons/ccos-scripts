@@ -6,5 +6,10 @@
     "Sass",
     "JavaScript/Vue",
     "JavaScript/Storybook"
+  ],
+  "creativecommons.github.io-source": [
+    "Sass",
+    "Lektor",
+    "Jinja2"
   ]
 }
