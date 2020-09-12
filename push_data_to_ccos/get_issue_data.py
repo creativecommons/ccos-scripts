@@ -22,10 +22,7 @@ def get_issues(organization):
     return list(
         organization.get_issues(
             filter="all",
-            state="open",
             labels=[help_wanted],
-            sort="created",
-            direction="desc",
         )
     )
 
