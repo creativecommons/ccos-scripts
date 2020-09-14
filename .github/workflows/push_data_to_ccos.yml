@@ -1,7 +1,7 @@
 name: Push data to CC Open Source
 on: 
   schedule:
-  - cron: '0 0 * * *'
+  - cron: '15 0 * * *'
   push:
     branches:
       - master
