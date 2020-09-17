@@ -29,16 +29,20 @@ def get_cc_repos(github):
     cc = get_cc_organization(github)
     return cc.get_repos()
 
-def check_project_status(repo):
+
+def is_engineering_project(repo):
     contents = repo.get_contents(".cc-metadata.yml")
     contents = contents.decoded_content
-    metadata = yaml.load(contents, Loader=yaml.FullLoader)
-    return metadata["engineering_project"]
+    metadata = yaml.safe_load(contents)
+    return metadata.get("engineering_project", False)
+
 
 def update_branch_protection(repo):
     master = repo.get_branch("master")
-    status = check_project_status(repo)
-    if repo.name not in branch_protections.EXEMPT_REPOSITORIES or status == False:
+    if (
+        repo.name not in branch_protections.EXEMPT_REPOSITORIES
+        or not is_engineering_project(repo)
+    ):
         if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             master.edit_protection(
                 required_approving_review_count=1,
