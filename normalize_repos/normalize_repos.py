@@ -41,7 +41,7 @@ def update_branch_protection(repo):
     master = repo.get_branch("master")
     if (
         repo.name not in branch_protections.EXEMPT_REPOSITORIES
-        or not is_engineering_project(repo)
+        and is_engineering_project(repo)
     ):
         if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             master.edit_protection(
