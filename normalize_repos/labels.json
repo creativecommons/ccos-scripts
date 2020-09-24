@@ -160,10 +160,11 @@
       "emoji": "\uD83E\uDD2F"
     },
     {
-      "name": "hacktoberfest",
+      "name": "Hacktoberfest",
       "color": "883255",
       "description": "Ideal for Hacktoberfest participation",
-      "emoji": "\uD83C\uDF83"
+      "emoji": "\uD83C\uDF83",
+      "has_emoji_name":  false
     }
   ]
 }
