@@ -18,6 +18,9 @@ from get_labels import get_labels
 from set_labels import set_labels
 import branch_protections
 
+# For converting .cc-metadata.yml to Python dictionary
+import yaml
+
 logger = logging.getLogger("normalize_repos")
 log.reset_handler()
 
@@ -27,9 +30,19 @@ def get_cc_repos(github):
     return cc.get_repos()
 
 
+def is_engineering_project(repo):
+    contents = repo.get_contents(".cc-metadata.yml")
+    contents = contents.decoded_content
+    metadata = yaml.safe_load(contents)
+    return metadata.get("engineering_project", False)
+
+
 def update_branch_protection(repo):
     master = repo.get_branch("master")
-    if repo.name not in branch_protections.EXEMPT_REPOSITORIES:
+    if (
+        repo.name not in branch_protections.EXEMPT_REPOSITORIES
+        and is_engineering_project(repo)
+    ):
         if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             master.edit_protection(
                 required_approving_review_count=1,
