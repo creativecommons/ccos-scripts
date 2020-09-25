@@ -20,6 +20,7 @@ import branch_protections
 
 # For converting .cc-metadata.yml to Python dictionary
 import yaml
+from github import UnknownObjectException
 
 logger = logging.getLogger("normalize_repos")
 log.reset_handler()
@@ -31,7 +32,11 @@ def get_cc_repos(github):
 
 
 def is_engineering_project(repo):
-    contents = repo.get_contents(".cc-metadata.yml")
+    try:
+        contents = repo.get_contents(".cc-metadata.yml")
+    except UnknownObjectException:
+        # Implies that there is no .cc-metadata.yml file in the repository
+        return False
     contents = contents.decoded_content
     metadata = yaml.safe_load(contents)
     return metadata.get("engineering_project", False)
