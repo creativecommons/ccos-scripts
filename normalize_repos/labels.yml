@@ -22,3 +22,11 @@ groups:
         color: "POSITIVE"
         description: "Low priority and doesn't need to be rushed",
         emoji: "\uD83D\uDFE9"
+  group:
+    name: "priority"
+    labels:
+      label:
+        name: "ready for work"
+        color: "LIGHT"
+        description: "Ready for work",
+        emoji: "\uD83C\uDFC1"
