@@ -1,0 +1,24 @@
+groups:
+  group:
+    name: "priority"
+    labels:
+      label:
+        name: "critical"
+        color: "UNFAVOURABLE"
+        description: "Must be fixed ASAP"
+        emoji: ":red_circle:" # \uD83D\uDFE5
+      label:
+        name: "high"
+        color: "NEGATIVE"
+        description: "Stalls work on the project or its dependents",
+        emoji: ":red_circle:" # "\uD83D\uDFE7"
+      label:
+        name: "medium"
+        color: "NEUTRAL"
+        description: "Not blocking but should be fixed soon",
+        emoji: "\uD83D\uDFE8"
+      label:
+        name: "low"
+        color: "POSITIVE"
+        description: "Low priority and doesn't need to be rushed",
+        emoji: "\uD83D\uDFE9"
