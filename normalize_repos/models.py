@@ -113,7 +113,7 @@ class Label:
 
         return all(
             [
-                self.qualified_name.casefold() == remote.name.casefold(),
+                self.qualified_name == remote.name,
                 self.color == remote.color,
                 self.description == remote.description,
             ]
@@ -129,7 +129,7 @@ class Label:
 
         return any(
             [
-                self.qualified_name.casefold() != remote.name.casefold(),
+                self.qualified_name != remote.name,
                 self.color != remote.color,
                 self.description != remote.description,
             ]
