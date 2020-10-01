@@ -1,25 +1,20 @@
 import os
 import re
+import sys
 
 # Third party
 from github import Github
-
-
-GITHUB_ORGANIZATION = "creativecommons"
-GITHUB_USERNAME = "cc-creativecommons-github-io-bot"
-GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
+sys.path.append((os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
++ '/utils/'))
+from github_utils import get_cc_organization, set_up_github_client
 
 
 def set_up_github_client():
-    print("Setting up GitHub client...")
-    github_client = Github(GITHUB_TOKEN)
-    return github_client
-
+    return github_utils.set_up_github_client()
+    
 
 def get_cc_organization(github_client):
-    print("Getting CC's GitHub organization...")
-    cc = github_client.get_organization(GITHUB_ORGANIZATION)
-    return cc
+    return github_utils.get_cc_organization(github_client)
 
 
 def get_team_slug_name(project_name, role):

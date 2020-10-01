@@ -8,12 +8,8 @@ creativecommons/creativecommons.github.io-source.
 import os
 import re
 
-# Third-party
-import asana
-
-
-ASANA_ROADMAP_PROJECT_GID = "1140559033201049"
-ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
+# Local
+from utils import get_sections_asana,get_tasks_asana
 
 
 def fetch_quarters():
@@ -28,7 +24,7 @@ def fetch_quarters():
 
     are all matches.
     """
-    sections = ASANA_CLIENT.sections.find_by_project(ASANA_ROADMAP_PROJECT_GID)
+    sections = get_sections_asana()
     for section in sections:
         if re.match(r"Q\d{1}\s\d{4}", section["name"], re.IGNORECASE):
             yield {"name": section["name"], "gid": section["gid"]}
@@ -65,10 +61,7 @@ def generate_databag():
     print("Generating Databag...")
     for quarter in fetch_quarters():
         print("    Pulling tasks for quarter - {}...".format(quarter["name"]))
-        tasks = ASANA_CLIENT.tasks.find_by_section(  # Get tasks in section
-            quarter["gid"],
-            opt_fields=["name", "custom_fields", "tags.name", "completed"],
-        )
+        tasks = get_tasks_asana(quarter["gid"])
         print("    Done.")
         quarter = {"name": quarter["name"], "tasks": []}
 

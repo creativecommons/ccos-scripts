@@ -1,19 +1,9 @@
 from github import Github
-
+import sys,os
 # Locals
-from push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
-
-
-def set_up_github_client():
-    print("Setting up GitHub client...")
-    github_client = Github(GITHUB_TOKEN)
-    return github_client
-
-
-def get_cc_organization(github_client):
-    print("Getting CC's GitHub organization...")
-    cc = github_client.get_organization(GITHUB_ORGANIZATION)
-    return cc
+sys.path.append((os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
++ '/utils/'))
+from github_utils import get_cc_organization, set_up_github_client
 
 
 def get_issues(organization):

@@ -5,15 +5,8 @@ project, formats it a bit, then pushes it to a databag
 in creativecommons/creativecommons.github.io-source
 """
 
-# Standard Lib
-import os
-
-# Third party
-import asana
-
-
-ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
-ASANA_PROJECT_GID = "1172465506923661"
+# Locals
+from utils import get_members_asana
 
 
 def generate_databag():
@@ -53,9 +46,7 @@ def generate_databag():
     print("Pulling from Asana and generating databag...")
     databag = {"projects": [], "community_builders": []}
 
-    members = ASANA_CLIENT.tasks.find_by_section(
-        ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
-    )
+    members = get_members_asana()
     print("    Team members pulled.")
 
     print("    Processing team members...")

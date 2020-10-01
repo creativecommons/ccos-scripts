@@ -1,7 +1,11 @@
 import logging
 import log
+import sys,os
 
-from utils import set_up_github_client, get_cc_organization
+
+sys.path.append((os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
++ '/utils/'))
+from github_utils import get_cc_organization, set_up_github_client
 
 logger = logging.getLogger("normalize_repos")
 log.reset_handler()
