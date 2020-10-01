@@ -9,7 +9,7 @@ import os
 import re
 
 # Local
-from utils import get_sections_asana,get_tasks_asana
+from utils import get_sections_asana, get_tasks_asana
 
 
 def fetch_quarters():

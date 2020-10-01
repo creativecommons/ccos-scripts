@@ -7,15 +7,20 @@ organization are consistent. Please see README.md.
 
 # Standard library
 import logging
-import sys,os
+import sys, os
 
 # noinspection PyUnresolvedReferences
 import set_up_logging
 
 # Local/library specific
 import log
-sys.path.append((os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-+ '/utils/'))
+
+sys.path.append(
+    (
+        os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        + "/utils/"
+    )
+)
 from github_utils import get_cc_organization, set_up_github_client
 from get_labels import get_label
 from set_labels import set_labels

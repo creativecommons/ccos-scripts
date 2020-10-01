@@ -4,14 +4,19 @@ import sys
 
 # Third party
 from github import Github
-sys.path.append((os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-+ '/utils/'))
+
+sys.path.append(
+    (
+        os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        + "/utils/"
+    )
+)
 from github_utils import get_cc_organization, set_up_github_client
 
 
 def set_up_github_client():
     return github_utils.set_up_github_client()
-    
+
 
 def get_cc_organization(github_client):
     return github_utils.get_cc_organization(github_client)
@@ -47,9 +52,7 @@ def pluralized(word):
     @param word: the word to pluralize
     @return: the plural form of the noun
     """
-    defined_plurals = {
-        "person": "people"
-    }
+    defined_plurals = {"person": "people"}
     if word in defined_plurals:
         return defined_plurals[word]
 
