@@ -165,6 +165,13 @@
       "description": "Ideal for Hacktoberfest participation",
       "emoji": "\uD83C\uDF83",
       "has_emoji_name":  false
+    },
+    {
+      "name": "invalid",
+      "color": "LIGHTER",
+      "description": "Spam PRs for Hacktoberfest",
+      "emoji": "⛔️",
+      "has_emoji_name":  false
     }
   ]
 }
