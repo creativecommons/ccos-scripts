@@ -3,7 +3,8 @@
 
 
 # Standard library
-import sys, os
+import sys
+from pathlib import Path
 
 # Third-party
 from github import Github
@@ -12,12 +13,7 @@ import emoji
 import yaml
 
 # Local
-sys.path.append(
-    (
-        os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        + "/utils/"
-    )
-)
+sys.path.append((str(Path(__file__).cwd()) + "/utils/"))
 from github_utils import get_cc_organization, set_up_github_client
 
 
