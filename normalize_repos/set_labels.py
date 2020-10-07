@@ -18,11 +18,11 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
     """
 
     logger.log(logging.INFO, "Fetching initial labels...")
-    initial_labels = {label.name: label for label in repo.get_labels()}
+    initial_labels = {label.name.casefold(): label for label in repo.get_labels()}
     logger.log(log.SUCCESS, f"done. Found {len(initial_labels)} labels.")
 
     logger.log(logging.INFO, "Parsing final labels...")
-    final_labels = {label.qualified_name: label for label in final_labels}
+    final_labels = {label.qualified_name.casefold(): label for label in final_labels}
     logger.log(log.SUCCESS, f"done. Found {len(final_labels)} labels.")
 
     if not non_destructive:

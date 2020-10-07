@@ -1,0 +1,16 @@
+{
+  "ccos-scripts": [
+    "Python"
+  ],
+  "vocabulary": [
+    "Sass",
+    "JavaScript/Vue",
+    "JavaScript/Storybook"
+  ],
+  "creativecommons.github.io-source": [
+    "Sass",
+    "Lektor",
+    "Jinja2",
+    "JavaScript"
+  ]
+}
