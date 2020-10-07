@@ -1,10 +1,10 @@
 ccos-scripts:
-  - "Python"
+  - Python
 vocabulary:
-  - "Sass"
-  - "JavaScript/Vue"
-  - "JavaScript/Storybook"
+  - Sass
+  - JavaScript/Vue
+  - JavaScript/Storybook
 creativecommons.github.io-source:
-  - "Sass"
-  - "Lektor"
-  - "Jinja2"
+  - Sass
+  - Lektor
+  - Jinja2
