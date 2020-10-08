@@ -43,13 +43,13 @@ def is_engineering_project(repo):
 
 
 def update_branch_protection(repo):
-    master = repo.get_branch("master")
+    default_branch = repo.get_branch(repo.default_branch)
     if (
         repo.name not in branch_protections.EXEMPT_REPOSITORIES
         and is_engineering_project(repo)
     ):
         if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
-            master.edit_protection(
+            default_branch.edit_protection(
                 required_approving_review_count=1,
                 user_push_restrictions=[],
                 contexts=branch_protections.REQUIRED_STATUS_CHECK_MAP[
@@ -57,7 +57,7 @@ def update_branch_protection(repo):
                 ],
             )
         else:
-            master.edit_protection(
+            default_branch.edit_protection(
                 required_approving_review_count=1, user_push_restrictions=[]
             )
         print(f'Updating branch protection for: "{repo.name}"')
