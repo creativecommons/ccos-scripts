@@ -35,8 +35,7 @@ def groom_issues(issues):
             "repo": issue.repository.name,
             "url": issue.html_url,
             "number": issue.number,
-            "createdAt": int(issue.created_at.timestamp()),
-            "updatedAt": int(issue.updated_at.timestamp())
+            "createdAt": int(issue.created_at.timestamp())
         }
         for issue in issues
     ]
