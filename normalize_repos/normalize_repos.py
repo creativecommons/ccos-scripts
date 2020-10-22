@@ -52,6 +52,12 @@ def setup():
         metavar="REPO",
         dest="repos",
     )
+    ap.add_argument(
+        "--skip-branches", action="store_true", help="skip branches update",
+    )
+    ap.add_argument(
+        "--skip-labels", action="store_true", help="skip labels update",
+    )
     args = ap.parse_args()
     return args
 
@@ -79,7 +85,9 @@ def get_select_repos(args):
     return repos
 
 
-def set_repo_labels(repos):
+def set_repo_labels(args, repos):
+    if args.skip_labels:
+        return
     logger.log(logging.INFO, "Syncing labels...")
     set_labels(repos, *get_labels())
     logger.log(log.SUCCESS, "done.")
@@ -102,6 +110,8 @@ def update_branch_protection(repo):
         repo.name not in branch_protections.EXEMPT_REPOSITORIES
         and is_engineering_project(repo)
     ):
+
+        logger.log(logging.INFO, f"{repo.name}: updating branch protections")
         if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             master.edit_protection(
                 required_approving_review_count=1,
@@ -114,23 +124,28 @@ def update_branch_protection(repo):
             master.edit_protection(
                 required_approving_review_count=1, user_push_restrictions=[]
             )
-        print(f'Updating branch protection for: "{repo.name}"')
     else:
-        print(f'Skipping branch protection for exempt repo: "{repo.name}"')
+        logger.log(logging.INFO, f"{repo.name}: skipping: exempt")
 
 
-def update_branches(repos):
+def update_branches(args, repos):
+    if args.skip_branches:
+        return
+    logger.log(
+        logging.INFO, "Evaluting repositories for branch protections...",
+    )
     for repo in repos:
         # TODO: Set up automatic deletion of merged branches
         update_branch_protection(repo)
+    logger.log(log.SUCCESS, "done.")
 
 
 def main():
     args = setup()
     logger.log(logging.INFO, "Starting normalization")
     repos = get_select_repos(args)
-    set_repo_labels(repos)
-    update_branches(repos)
+    set_repo_labels(args, repos)
+    update_branches(args, repos)
 
 
 if __name__ == "__main__":
