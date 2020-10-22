@@ -72,7 +72,8 @@ def get_select_repos(args):
         if not repos:
             raise ScriptError(
                 "Specified repositories do not include any valid"
-                f" repositories: {args.repos}")
+                f" repositories: {args.repos}"
+            )
     repos.sort(key=lambda repo: repo.name)
     return repos
 
