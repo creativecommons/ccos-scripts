@@ -7,6 +7,7 @@ organization are consistent. Please see README.md.
 """
 
 # Standard library
+import argparse
 import logging
 import sys
 import traceback
@@ -35,9 +36,45 @@ class ScriptError(Exception):
         super(ScriptError, self).__init__(message)
 
 
+def setup():
+    """Instantiate and configure argparse and logging.
+
+    Return argsparse namespace.
+    """
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "-r",
+        "--repo",
+        "--repository",
+        action="append",
+        help="repository or repositories to update (instead of fetching"
+        " repositories from GitHub)",
+        dest="repos",
+    )
+    args = ap.parse_args()
+    return args
+
+
 def get_cc_repos(github):
     cc = get_cc_organization(github)
     return cc.get_repos()
+
+
+def get_select_repos(args):
+    github = set_up_github_client()
+    repos = list(get_cc_repos(github))
+    if args.repos:
+        repos_selected = []
+        for repo in repos:
+            if repo.name in args.repos:
+                repos_selected.append(repo)
+        repos = repos_selected
+        if not repos:
+            raise ScriptError(
+                "Specified repositories do not include any valid"
+                f" repositories: {args.repos}")
+    repos.sort(key=lambda repo: repo.name)
+    return repos
 
 
 def set_repo_labels(repos):
@@ -87,9 +124,9 @@ def update_branches(repos):
 
 
 def main():
+    args = setup()
     logger.log(logging.INFO, "Starting normalization")
-    github = set_up_github_client()
-    repos = get_cc_repos(github)
+    repos = get_select_repos(args)
     set_repo_labels(repos)
     update_branches(repos)
 
@@ -108,6 +145,6 @@ if __name__ == "__main__":
         sys.exit(error_value.code)
     except Exception:
         logger.log(
-            logging.ERROR, "Unhandled exception: {traceback.print_exc()}"
+            logging.ERROR, f"Unhandled exception: {traceback.format_exc()}"
         )
         sys.exit(1)
