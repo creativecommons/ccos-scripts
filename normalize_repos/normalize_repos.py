@@ -47,8 +47,8 @@ def setup():
         "--repo",
         "--repository",
         action="append",
-        help="repository or repositories to update (instead of fetching"
-        " repositories from GitHub)",
+        help="select repository or repositories to update from those fetched"
+        " from GitHub (may be specified multiple times)",
         metavar="REPO",
         dest="repos",
     )
