@@ -1,6 +1,8 @@
-import json
+# Standard library
 from pathlib import Path
+import json
 
+# Local/library specific
 from models import Group, Label
 
 

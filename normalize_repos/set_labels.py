@@ -1,7 +1,10 @@
+# Standard library
 import logging
+
+# Local/library specific
+from utils import set_up_github_client, get_cc_organization
 import log
 
-from utils import set_up_github_client, get_cc_organization
 
 logger = logging.getLogger("normalize_repos")
 log.reset_handler()

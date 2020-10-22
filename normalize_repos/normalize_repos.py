@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # vim: set fileencoding=utf-8:
+
 """
 This script ensures that all active repositories in the creativecommons GitHub
 organization are consistent. Please see README.md.
@@ -8,20 +9,19 @@ organization are consistent. Please see README.md.
 # Standard library
 import logging
 
-# noinspection PyUnresolvedReferences
-import set_up_logging
+# Third-party
+from github import UnknownObjectException
+import yaml  # For converting .cc-metadata.yml to Python dictionary
 
 # Local/library specific
-import log
-from utils import get_cc_organization, set_up_github_client
 from get_labels import get_labels
 from set_labels import set_labels
+from utils import get_cc_organization, set_up_github_client
 import branch_protections
+import log
 
-# For converting .cc-metadata.yml to Python dictionary
-import yaml
-from github import UnknownObjectException
 
+log.set_up_logging()
 logger = logging.getLogger("normalize_repos")
 log.reset_handler()
 
@@ -73,6 +73,7 @@ if __name__ == "__main__":
 
     github = set_up_github_client()
     repos = get_cc_repos(github)
+
     for repo in repos:
         # TODO: Set up automatic deletion of merged branches
         update_branch_protection(repo)
