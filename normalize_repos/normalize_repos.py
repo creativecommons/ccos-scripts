@@ -49,6 +49,7 @@ def setup():
         action="append",
         help="repository or repositories to update (instead of fetching"
         " repositories from GitHub)",
+        metavar="REPO",
         dest="repos",
     )
     args = ap.parse_args()
