@@ -8,6 +8,8 @@ organization are consistent. Please see README.md.
 
 # Standard library
 import logging
+import sys
+import traceback
 
 # Third-party
 from github import UnknownObjectException
@@ -26,9 +28,22 @@ logger = logging.getLogger("normalize_repos")
 log.reset_handler()
 
 
+class ScriptError(Exception):
+    def __init__(self, message, code=None):
+        self.code = code if code else 1
+        message = "({}) {}".format(self.code, message)
+        super(ScriptError, self).__init__(message)
+
+
 def get_cc_repos(github):
     cc = get_cc_organization(github)
     return cc.get_repos()
+
+
+def set_repo_labels(repos):
+    logger.log(logging.INFO, "Syncing labels...")
+    set_labels(repos, *get_labels())
+    logger.log(log.SUCCESS, "done.")
 
 
 def is_engineering_project(repo):
@@ -65,15 +80,34 @@ def update_branch_protection(repo):
         print(f'Skipping branch protection for exempt repo: "{repo.name}"')
 
 
-if __name__ == "__main__":
-    logger.log(logging.INFO, "Starting normalization")
-    logger.log(logging.INFO, "Syncing labels...")
-    set_labels(*get_labels())
-    logger.log(log.SUCCESS, "done.")
-
-    github = set_up_github_client()
-    repos = get_cc_repos(github)
-
+def update_branches(repos):
     for repo in repos:
         # TODO: Set up automatic deletion of merged branches
         update_branch_protection(repo)
+
+
+def main():
+    logger.log(logging.INFO, "Starting normalization")
+    github = set_up_github_client()
+    repos = get_cc_repos(github)
+    set_repo_labels(repos)
+    update_branches(repos)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except SystemExit as e:
+        sys.exit(e.code)
+    except KeyboardInterrupt:
+        logger.log(logging.INFO, "Halted via KeyboardInterrupt.")
+        sys.exit(130)
+    except ScriptError:
+        error_type, error_value, error_traceback = sys.exc_info()
+        logger.log(logging.CRITICAL, f"{error_value}")
+        sys.exit(error_value.code)
+    except Exception:
+        logger.log(
+            logging.ERROR, "Unhandled exception: {traceback.print_exc()}"
+        )
+        sys.exit(1)
