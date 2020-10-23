@@ -1,7 +1,9 @@
+# Standard library
 import logging
+
+# Local/library specific
 import log
 
-from utils import set_up_github_client, get_cc_organization
 
 logger = logging.getLogger("normalize_repos")
 log.reset_handler()
@@ -18,11 +20,15 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
     """
 
     logger.log(logging.INFO, "Fetching initial labels...")
-    initial_labels = {label.name.casefold(): label for label in repo.get_labels()}
+    initial_labels = {
+        label.name.casefold(): label for label in repo.get_labels()
+    }
     logger.log(log.SUCCESS, f"done. Found {len(initial_labels)} labels.")
 
     logger.log(logging.INFO, "Parsing final labels...")
-    final_labels = {label.qualified_name.casefold(): label for label in final_labels}
+    final_labels = {
+        label.qualified_name.casefold(): label for label in final_labels
+    }
     logger.log(log.SUCCESS, f"done. Found {len(final_labels)} labels.")
 
     if not non_destructive:
@@ -62,22 +68,13 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
     logger.log(log.SUCCESS, "done.")
 
 
-def set_labels(standard_labels, repo_specific_labels):
+def set_labels(repos, standard_labels, repo_specific_labels):
     """
     Set labels on all repos for the organisation. This is the main entrypoint of
     the module.
     """
 
-    logger.log(logging.INFO, "Setting up...")
-    client = set_up_github_client()
-    organization = get_cc_organization(client)
-    logger.log(log.SUCCESS, "done.")
-
-    logger.log(logging.INFO, "Fetching repos...")
-    repos = list(organization.get_repos())
-    logger.log(log.SUCCESS, f"done. Found {len(repos)} repos.")
-
-    for repo in repos:
+    for repo in list(repos):
         logger.log(logging.INFO, f"Getting labels for repo '{repo.name}'...")
         labels = standard_labels + repo_specific_labels.get(repo.name, [])
         logger.log(log.SUCCESS, f"done. Found {len(labels)} labels.")
