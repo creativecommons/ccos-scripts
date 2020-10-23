@@ -13,7 +13,7 @@ import sys
 import traceback
 
 # Third-party
-from github import UnknownObjectException
+from github import GithubException, UnknownObjectException
 import yaml  # For converting .cc-metadata.yml to Python dictionary
 
 # Local/library specific
@@ -105,7 +105,17 @@ def is_engineering_project(repo):
 
 
 def update_branch_protection(repo):
-    default_branch = repo.get_branch(repo.default_branch)
+    try:
+        default_branch = repo.get_branch(repo.default_branch)
+    except GithubException as e:
+        if e.data["message"] == "Branch not found":
+            logger.log(
+                logging.WARNING,
+                f"{repo.name}: skipping: default branch not found",
+            )
+            return
+        else:
+            raise
     if (
         repo.name not in branch_protections.EXEMPT_REPOSITORIES
         and is_engineering_project(repo)
