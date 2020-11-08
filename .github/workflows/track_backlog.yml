@@ -1,0 +1,16 @@
+name: Track new issues in backlog
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "5 * * * *" # Run at 5 minutes past every hour
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Track all issues
+      uses: dhruvkb/issue-projector@0.0.1
+      with:
+        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        ORG_NAME: 'creativecommons'
+        PROJECT_NAME: 'Backlog – CC Search'
+        COLUMN_NAME: 'Pending_Review'
