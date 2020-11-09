@@ -169,7 +169,7 @@
     {
       "name": "invalid",
       "color": "LIGHTER",
-      "description": "Spam PRs for Hacktoberfest",
+      "description": "Inappropriate or invalid (ex. Hacktoberfest spam)",
       "emoji": "⛔️",
       "has_emoji_name":  false
     }
