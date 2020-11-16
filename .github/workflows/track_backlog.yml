@@ -2,7 +2,7 @@ name: Track new issues in backlog
 on:
   workflow_dispatch:
   schedule:
-  - cron: "45 0 * *" # Run at 45 minutes past midnight
+  - cron: "45 0 * * *" # Run at 45 minutes past midnight
 jobs:
   build:
     runs-on: ubuntu-latest
