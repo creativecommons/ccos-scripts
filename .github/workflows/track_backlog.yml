@@ -4,7 +4,8 @@ on:
   schedule:
   - cron: "45 * * * *" # Run at 45 minutes past the hour, every hour
 jobs:
-  build:
+  add_issues_to_project:
+    name: Track all issues
     runs-on: ubuntu-latest
     steps:
     - name: Track all issues
@@ -18,6 +19,10 @@ jobs:
         ISSUE_TYPE: 'issue'
         INTERVAL: 1
         INTERVAL_UNIT: 'h'
+  add_prs_to_project:
+    name: Track all PRs
+    runs-on: ubuntu-latest
+    steps:
     - name: Track all PRs
       uses: dhruvkb/issue-projector@0.0.6
       with:
