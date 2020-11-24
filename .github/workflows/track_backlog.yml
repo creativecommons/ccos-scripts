@@ -2,13 +2,14 @@ name: Track new issues in backlog
 on:
   workflow_dispatch:
   schedule:
-  - cron: "45 0 * * *" # Run at 45 minutes past midnight
+  - cron: "45 * * * *" # Run at 45 minutes past the hour, every hour
 jobs:
-  build:
+  add_issues_to_project:
+    name: Track all issues
     runs-on: ubuntu-latest
     steps:
     - name: Track all issues
-      uses: dhruvkb/issue-projector@0.0.5
+      uses: dhruvkb/issue-projector@0.0.7
       with:
         ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         ORG_NAME: 'creativecommons'
@@ -16,11 +17,19 @@ jobs:
         COLUMN_NAME: 'Pending Review'
         EXCLUDED_PROJECT_NUMBER: 7 # Active sprint
         ISSUE_TYPE: 'issue'
+        INTERVAL: 1
+        INTERVAL_UNIT: 'h'
+  add_prs_to_project:
+    name: Track all PRs
+    runs-on: ubuntu-latest
+    steps:
     - name: Track all PRs
-      uses: dhruvkb/issue-projector@0.0.5
+      uses: dhruvkb/issue-projector@0.0.7
       with:
         ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         ORG_NAME: 'creativecommons'
         PROJECT_NUMBER: 7 # Active sprint
         COLUMN_NAME: 'Code Review'
         ISSUE_TYPE: 'pr'
+        INTERVAL: 1
+        INTERVAL_UNIT: 'h'
