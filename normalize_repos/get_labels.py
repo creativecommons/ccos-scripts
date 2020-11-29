@@ -93,8 +93,8 @@ def get_datafile_path(file_name):
 
 def get_labels():
     """
-    Get the standard list of packages and the repository-specific labels.
-    @return: the standard list of packages and the repository-specific labels
+    Get the list of standard and repository-specific labels.
+    @return: the list of standard and repository-specific labels
     """
 
     standard_labels = get_standard_labels()
