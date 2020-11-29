@@ -102,4 +102,4 @@ def get_labels():
     return standard_labels, repo_specific_labels
 
 
-__all__ = [get_labels]
+__all__ = ["get_labels"]
