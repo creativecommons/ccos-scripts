@@ -1,5 +1,6 @@
 groups:
   - name: priority
+    is_required: true
     labels:
       - name: critical
         color: 'UNFAVOURABLE'
@@ -19,6 +20,7 @@ groups:
         emoji: "\uD83D\uDFE9"
 
   - name: status
+    is_required: true
     labels:
       - name: ready for work
         color: 'LIGHT'
@@ -43,6 +45,7 @@ groups:
 
   - name: goal
     color: 'ffffff'
+    is_required: true
     labels:
       - name: addition
         description: Addition of new feature
@@ -56,6 +59,7 @@ groups:
 
   - name: aspect
     color: '04338c'
+    is_required: true
     labels:
       - name: text
         description: Concerns the textual material in the repository
