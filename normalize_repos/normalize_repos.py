@@ -17,8 +17,9 @@ from github import GithubException, UnknownObjectException
 import yaml  # For converting .cc-metadata.yml to Python dictionary
 
 # Local/library specific
-from get_labels import get_labels
+from get_labels import get_labels, get_groups
 from set_labels import set_labels
+from validate_issues import validate_issues
 from utils import get_cc_organization, set_up_github_client
 import branch_protections
 import log
@@ -58,6 +59,9 @@ def setup():
     ap.add_argument(
         "--skip-labels", action="store_true", help="skip labels update",
     )
+    ap.add_argument(
+        "--skip-issues", action="store_true", help="skip issue labels check"
+    )
     args = ap.parse_args()
     return args
 
@@ -90,6 +94,15 @@ def set_repo_labels(args, repos):
         return
     logger.log(logging.INFO, "Syncing labels...")
     set_labels(repos, *get_labels())
+    logger.log(log.SUCCESS, "done.")
+
+
+def validate_issue_labels(args, repos):
+    if args.skip_issues:
+        return
+    logger.log(logging.INFO, "Checking issues...")
+    groups = get_groups()
+    validate_issues(repos, groups)
     logger.log(log.SUCCESS, "done.")
 
 
@@ -155,6 +168,7 @@ def main():
     logger.log(logging.INFO, "Starting normalization")
     repos = get_select_repos(args)
     set_repo_labels(args, repos)
+    validate_issue_labels(args, repos)
     update_branches(args, repos)
 
 
