@@ -116,8 +116,6 @@ def validate_issues(repos, groups):
     logger.log(logging.INFO, f"Finding issues with invalid labels...")
     log.change_indent(+1)
     for repo in list(repos):
-        if repo.name != 'vocabulary':
-            continue
         logger.log(logging.INFO, f"Checking issues in repo '{repo.name}'...")
         invalid_issues[repo.name] = get_invalid_issues_in_repo(repo, required_groups)
         logger.log(log.SUCCESS, f"done.")
