@@ -6,6 +6,23 @@ import json
 from models import Group, Label
 
 
+def get_groups():
+    """
+    Get the list of label groups.
+    @return: the list of label groups.
+    """
+
+    labels_dict = load_json_from_file("labels")
+    groups = []
+    for group_info in labels_dict["groups"]:
+        group = Group(**group_info)
+        label_names = group_info.pop("labels", [])
+        groups.append(group)
+        for label_info in label_names:
+            Label(**label_info, group=group)
+    return groups
+
+
 def get_standard_labels():
     """
     Get the list of standard labels that apply to every repository.
@@ -102,4 +119,4 @@ def get_labels():
     return standard_labels, repo_specific_labels
 
 
-__all__ = [get_labels]
+__all__ = [get_labels, get_groups]
