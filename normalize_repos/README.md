@@ -2,7 +2,7 @@
 
 This script ensures that all active repositories in the creativecommons GitHub
 organization are consistent in the following ways:
-* They have all the labels defined in `labels.json` present.
+* They have all the labels defined in `labels.yml` present.
 * They have standard branch protections set up (with some exceptions).
 
 This script will only update color and description of existing labels or create

@@ -1,6 +1,6 @@
 # Standard library
 from pathlib import Path
-import json
+import yaml
 
 # Local/library specific
 from models import Group, Label
@@ -12,7 +12,7 @@ def get_standard_labels():
     @return: the list of standard labels
     """
 
-    labels_dict = load_json_from_file("labels")
+    labels_dict = load_yaml_from_file("labels")
     standard_labels = []
     for group_info in labels_dict["groups"]:
         label_names = group_info.pop("labels", [])
@@ -34,7 +34,7 @@ def get_repo_specific_labels():
     """
 
     skill_group = Group(color="5ff1f5", name="skill")
-    labels_dict = load_json_from_file("skills")
+    labels_dict = load_yaml_from_file("skills")
     repo_specific_labels = {}
     for repo_name, skill_names in labels_dict.items():
         skill_labels = [
@@ -63,31 +63,31 @@ def get_skill_label_from_name(skill_group, skill_name):
     )
 
 
-def load_json_from_file(file_name):
+def load_yaml_from_file(file_name):
     """
-    Load the JSON file into a Python list or dict. The extension '.json' is
+    Load the YAML file into a Python list or dict. The extension '.yml' is
     appended to the file name and only the current directory is scanned for the
     matching file.
     @param file_name: the name of the file to load
-    @return: the contents of the JSON file as a Python object
+    @return: the contents of the YAML file as a Python object
     """
 
     file_path = get_datafile_path(file_name)
     with open(file_path, "r") as file:
-        data = json.load(file)
+        data = yaml.safe_load(file)
     return data
 
 
 def get_datafile_path(file_name):
     """
     Get the path to the datafile by searching the current directory for a file
-    with the given name and the '.json' extension.
+    with the given name and the '.yml' extension.
     @param file_name: the name of the file whose path is required
     @return: the path to the file
     """
 
     current_file = Path(__file__).resolve()
-    data_file = current_file.parent.joinpath(f"{file_name}.json")
+    data_file = current_file.parent.joinpath(f"{file_name}.yml")
     return data_file
 
 
@@ -102,4 +102,4 @@ def get_labels():
     return standard_labels, repo_specific_labels
 
 
-__all__ = [get_labels]
+__all__ = ["get_labels"]
