@@ -5,19 +5,19 @@ groups:
       - name: critical
         color: 'UNFAVOURABLE'
         description: Must be fixed ASAP
-        emoji: "\uD83D\uDFE5"
+        emoji: "🟥"
       - name: high
         color: 'NEGATIVE'
         description: Stalls work on the project or its dependents
-        emoji: "\uD83D\uDFE7"
+        emoji: "🟧"
       - name: medium
         color: 'NEUTRAL'
         description: Not blocking but should be fixed soon
-        emoji: "\uD83D\uDFE8"
+        emoji: "🟨"
       - name: low
         color: 'POSITIVE'
         description: Low priority and doesn't need to be rushed
-        emoji: "\uD83D\uDFE9"
+        emoji: "🟩"
 
   - name: status
     is_required: true
@@ -25,23 +25,23 @@ groups:
       - name: ready for work
         color: 'LIGHT'
         description: Ready for work
-        emoji: "\uD83C\uDFC1"
+        emoji: "🏁"
       - name: blocked
         color: 'MEDIUM'
         description: Blocked & therefore, not ready for work
-        emoji: "\uD83D\uDEA7"
+        emoji: "🚧"
       - name: ticket work required
         color: 'DARK'
         description: Needs more details before it can be worked on
-        emoji: "\uD83E\uDDF9"
+        emoji: "🧹"
       - name: discarded
         color: 'LIGHTER'
         description: Will not be worked on
-        emoji: '⛔️'
+        emoji: "⛔️"
       - name: awaiting triage
         color: 'DARKER'
         description: Has not been triaged & therefore, not ready for work
-        emoji: "\uD83D\uDEA6"
+        emoji: "🚦"
 
   - name: goal
     color: 'ffffff'
@@ -49,13 +49,13 @@ groups:
     labels:
       - name: addition
         description: Addition of new feature
-        emoji: "\uD83C\uDF1F"
+        emoji: "🌟"
       - name: improvement
         description: Improvement to an existing feature
-        emoji: '✨'
+        emoji: "✨"
       - name: fix
         description: Bug fix
-        emoji: "\uD83D\uDEE0"
+        emoji: "🛠"
 
   - name: aspect
     color: '04338c'
@@ -63,26 +63,26 @@ groups:
     labels:
       - name: text
         description: Concerns the textual material in the repository
-        emoji: "\uD83D\uDCC4"
+        emoji: "📄"
       - name: code
         description: Concerns the software code in the repository
-        emoji: "\uD83D\uDCBB"
+        emoji: "💻"
       - name: interface
         description: Concerns end-users' experience with the software
-        emoji: "\uD83D\uDD79"
+        emoji: "🕹"
       - name: dx
         description: Concerns developers' experience with the codebase
-        emoji: "\uD83E\uDD16"
+        emoji: "🤖"
 
   - name: talk
     color: 'f9bbe5'
     labels:
       - name: question
         description: Can be resolved with an answer
-        emoji: '❓'
+        emoji: "❓"
       - name: discussion
         description: Open for discussions and feedback
-        emoji: "\uD83D\uDCAC"
+        emoji: "💬"
 
   - name: friendliness
     color: '7f0799'
@@ -90,31 +90,31 @@ groups:
     labels:
       - name: good first issue
         description: New-contributor friendly
-        emoji: "\uD83E\uDD17"
+        emoji: "🤗"
         has_emoji_name: false
       - name: help wanted
         description: Open to participation from the community
-        emoji: "\uD83D\uDE4F"
+        emoji: "🙏"
         has_emoji_name: false
       - name: staff only
         description: Restricted to CC staff members
-        emoji: "\uD83D\uDD12"
+        emoji: "🔒"
 
 standalone:
   - name: 'ノಠ益ಠノ彡┻━┻'
     color: '000000'
     description: Aaargh!
-    emoji: "\uD83E\uDD2F"
+    emoji: "🤯"
 
   - name: Hacktoberfest
     color: '883255'
     description: Ideal for Hacktoberfest participation
-    emoji: "\uD83C\uDF83"
+    emoji: "🎃"
     has_emoji_name: false
 
   - name: invalid
     color: 'LIGHTER'
     description: Inappropriate or invalid (ex. Hacktoberfest spam)
-    emoji: '⛔️'
+    emoji: "⛔️"
     has_emoji_name: false
 
