@@ -1,5 +1,6 @@
 name: Normalize Repos
-on: 
+on:
+  workflow_dispatch:
   schedule:
   - cron: '0 0 * * *'
   push:
@@ -26,3 +27,8 @@ jobs:
         pipenv run python normalize_repos.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+    - name: Export a report of invalid issues
+      uses: actions/upload-artifact@v2
+      with:
+        name: invalid-issue-report
+        path: /tmp/invalid_issues.yml
