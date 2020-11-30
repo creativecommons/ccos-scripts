@@ -48,7 +48,7 @@ class Label:
         self.has_emoji_name = has_emoji_name
 
         self.group = group
-        if self not in group.labels:
+        if group and self not in group.labels:
             group.labels.append(self)
 
     @property
