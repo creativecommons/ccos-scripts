@@ -54,10 +54,14 @@ def setup():
         dest="repos",
     )
     ap.add_argument(
-        "--skip-branches", action="store_true", help="skip branches update",
+        "--skip-branches",
+        action="store_true",
+        help="skip branches update",
     )
     ap.add_argument(
-        "--skip-labels", action="store_true", help="skip labels update",
+        "--skip-labels",
+        action="store_true",
+        help="skip labels update",
     )
     ap.add_argument(
         "--skip-issues", action="store_true", help="skip issue labels check"
@@ -155,7 +159,8 @@ def update_branches(args, repos):
     if args.skip_branches:
         return
     logger.log(
-        logging.INFO, "Evaluting repositories for branch protections...",
+        logging.INFO,
+        "Evaluting repositories for branch protections...",
     )
     for repo in repos:
         # TODO: Set up automatic deletion of merged branches
