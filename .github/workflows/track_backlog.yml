@@ -32,4 +32,4 @@ jobs:
         COLUMN_NAME: 'Code Review'
         ISSUE_TYPE: 'pr'
         INTERVAL: 1
-        INTERVAL_UNIT: 'h'
+        INTERVAL_UNIT: 'd'
