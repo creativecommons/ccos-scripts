@@ -1,17 +1,25 @@
+import logging
+
 from github import Github
 
 # Locals
 from push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
 
+from normalize_repos import log
+
+log.set_up_logging()
+logger = logging.getLogger("push_data_to_ccos")
+log.reset_handler()
+
 
 def set_up_github_client():
-    print("Setting up GitHub client...")
+    logger.log(logging.INFO, "Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
     return github_client
 
 
 def get_cc_organization(github_client):
-    print("Getting CC's GitHub organization...")
+    logger.log(logging.INFO, "Getting CC's GitHub organization...")
     cc = github_client.get_organization(GITHUB_ORGANIZATION)
     return cc
 

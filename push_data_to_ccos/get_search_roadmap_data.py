@@ -5,15 +5,20 @@ creativecommons/creativecommons.github.io-source.
 """
 
 # Standard Library
+import logging
 import os
 import re
 
 # Third-party
 import asana
 
+from normalize_repos import log
 
 ASANA_ROADMAP_PROJECT_GID = "1140559033201049"
 ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
+log.set_up_logging()
+logger = logging.getLogger("push_data_to_ccos")
+log.reset_handler()
 
 
 def fetch_quarters():
@@ -59,20 +64,19 @@ def generate_databag():
     }
 
     """
-    print("Pulling from Asana...")
+    logger.log(logging.INFO, "Pulling from Asana...")
     databag = {"quarters": []}
-
-    print("Generating Databag...")
+    logger.log(logging.INFO, "Generating Databag...")
     for quarter in fetch_quarters():
         print("    Pulling tasks for quarter - {}...".format(quarter["name"]))
         tasks = ASANA_CLIENT.tasks.find_by_section(  # Get tasks in section
             quarter["gid"],
             opt_fields=["name", "custom_fields", "tags.name", "completed"],
         )
-        print("    Done.")
+        logger.log(logging.INFO, "    Done.")
         quarter = {"name": quarter["name"], "tasks": []}
 
-        print("    Processing tasks...")
+        logger.log(logging.INFO, "    Processing tasks...")
         for task in tasks:
             # if task does not have opt out flag, and is not complete
             if has_filtering_tag(task) and not task["completed"]:
@@ -83,19 +87,17 @@ def generate_databag():
                         "description": get_public_description(task),
                     }
                 )
-        print("    Done.")
-
+        logger.log(logging.INFO, "    Done.")
         databag["quarters"].append(quarter)
-
-    print("    Pruning quarters...")  # remove quarter if it has no tasks
+    logger.log(logging.INFO, "    Pruning quarters...")  # remove quarter if it has no tasks
     databag["quarters"] = [
         quarter
         for quarter in databag["quarters"]
         if len(quarter["tasks"]) != 0
     ]
-    print("    Done.")
+    logger.log(logging.INFO, "    Done.")
+    logger.log(log.SUCCESS, "Pull successful.")
 
-    print("Pull successful.")
     return databag
 
 
