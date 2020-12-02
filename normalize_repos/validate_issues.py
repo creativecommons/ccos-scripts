@@ -9,6 +9,7 @@ logger = logging.getLogger("normalize_repos")
 log.reset_handler()
 
 TRIAGE_LABEL = "🚦 status: awaiting triage"
+LABEL_WORK_REQUIRED_LABEL = "🏷 status: label work required"
 
 
 def dump_invalid_issues(invalid_issues):
@@ -55,8 +56,12 @@ def are_issue_labels_valid(issue, required_groups):
         if not label_names.intersection(required_labels):
             missing_groups.append(group.name)
     if missing_groups:
+        issue.add_to_labels(LABEL_WORK_REQUIRED_LABEL)
         logger.log(logging.INFO, f"Issue '{issue.title}' has missing labels.")
         return False, f"Missing labels from groups: {', '.join(missing_groups)}"
+    else:
+        if LABEL_WORK_REQUIRED_LABEL in label_names:
+            issue.remove_from_labels(LABEL_WORK_REQUIRED_LABEL)
 
     logger.log(logging.INFO, f"Issue '{issue.title}' is OK.")
     return True, None
