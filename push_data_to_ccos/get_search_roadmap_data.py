@@ -68,7 +68,7 @@ def generate_databag():
     databag = {"quarters": []}
     logger.log(logging.INFO, "Generating Databag...")
     for quarter in fetch_quarters():
-        print("    Pulling tasks for quarter - {}...".format(quarter["name"]))
+        logger.log(logging.INFO, "    Pulling tasks for quarter - {}...".format(quarter["name"]))
         tasks = ASANA_CLIENT.tasks.find_by_section(  # Get tasks in section
             quarter["gid"],
             opt_fields=["name", "custom_fields", "tags.name", "completed"],
