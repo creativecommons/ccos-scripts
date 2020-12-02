@@ -34,6 +34,10 @@ groups:
         color: 'DARK'
         description: Needs more details before it can be worked on
         emoji: "🧹"
+      - name: label work required
+        color: 'DARK'
+        description: Needs proper labelling before it can be worked on
+        emoji: "🏷"
       - name: discarded
         color: 'LIGHTER'
         description: Will not be worked on
