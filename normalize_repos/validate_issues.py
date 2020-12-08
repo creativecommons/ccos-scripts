@@ -130,4 +130,4 @@ def validate_issues(repos, groups):
     dump_invalid_issues(invalid_issues)
 
 
-__all__ = [validate_issues]
+__all__ = ["validate_issues"]
