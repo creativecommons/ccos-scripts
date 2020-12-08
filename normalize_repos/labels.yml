@@ -45,7 +45,7 @@ groups:
       - name: discontinued
         color: 'LIGHTER'
         description: Not suitable for work as repo is in maintenance
-        emoji: "⛔️"
+        emoji: "🙅"
       - name: awaiting triage
         color: 'DARKER'
         description: Has not been triaged & therefore, not ready for work
