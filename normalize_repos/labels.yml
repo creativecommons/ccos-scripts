@@ -42,6 +42,10 @@ groups:
         color: 'LIGHTER'
         description: Will not be worked on
         emoji: "⛔️"
+      - name: discontinued
+        color: 'LIGHTER'
+        description: Not suitable for work as repo is in maintenance
+        emoji: "⛔️"
       - name: awaiting triage
         color: 'DARKER'
         description: Has not been triaged & therefore, not ready for work
