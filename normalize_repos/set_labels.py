@@ -83,4 +83,4 @@ def set_labels(repos, standard_labels, repo_specific_labels):
         logger.log(log.SUCCESS, "done.")
 
 
-__all__ = [set_labels]
+__all__ = ["set_labels"]
