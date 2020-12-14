@@ -25,11 +25,6 @@ This script is run via GitHub Actions automatically.
 
 Repository data is generated in `get_repo_data.py` and pulls data on CC repositories using the GitHub API.
 
-### CC Search Roadmap Data
-
-Repository data is generated in `get_search_roadmap_data.py`. This pulls tasks from the `CC Search Roadmap` Asana project in CC's Asana organization, 
-does some basic cleaning and filtering, and adds the tasks to a template.
-
 ### Community Team Data
 
 Community Team member data is generated from the `Community Teams Tracking` Asana project in CC's Asana organization.
