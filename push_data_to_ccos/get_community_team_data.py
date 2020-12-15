@@ -109,8 +109,8 @@ def sort_databag(databag):
         "Project Contributor": 4,
     }
     community_builders_priority = {
-        "Community Collaborator": 1,
-        "Community Contributor": 2,
+        "Community Maintainer": 1,
+        "Community Collaborator": 2,
     }
 
     for first_order_key in databag:
