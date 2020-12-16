@@ -45,7 +45,7 @@ def create_codeowners_for_data(databag):
         print(f"        Found {len(teams)} teams for project {project_name}.")
 
         print(f"        Checking all projects...")
-        repos = project["repos"][0].split(',')
+        repos = project["repos"]
         for repo in repos:
             check_and_fix_repo(organization, repo, teams)
     print("Done")

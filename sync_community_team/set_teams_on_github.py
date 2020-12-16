@@ -37,7 +37,7 @@ def create_teams_for_data(databag):
             print("        Done.")
 
             print(f"        Populating repos for team {team.name}...")
-            repos = project["repos"][0].split(',')
+            repos = project["repos"]
             map_team_to_repos(organization, team, repos, True)
             set_team_repo_permissions(team, PERMISSIONS[role])
             print("        Done.")
