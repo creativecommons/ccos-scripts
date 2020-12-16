@@ -7,6 +7,8 @@ This file intentionally has an external API identical to that of
 `push_data_to_ccos/get_community_team_data.py`.
 """
 
+import re
+
 # Third party
 import requests
 
@@ -60,7 +62,7 @@ def fetch_databag():
     for project in projects:
         formatted_project = {
             "name": project["name"],
-            "repos": project["repos"].split(", "),
+            "repos": re.split(r",\s?", project["repos"]),
             "roles": {}
         }
         members = project["members"]
