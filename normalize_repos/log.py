@@ -13,14 +13,6 @@ class IndentFormatter(logging.Formatter):
     indentation using ``'\t'`` characters.
     """
 
-    color_map = {
-        logging.CRITICAL: 31,  # red
-        logging.ERROR: 31,  # red
-        logging.WARNING: 33,  # yellow
-        SUCCESS: 32,  # green
-        logging.INFO: 34,  # blue
-    }
-
     @staticmethod
     def identify_cut(filenames):
         """
@@ -59,12 +51,10 @@ class IndentFormatter(logging.Formatter):
         """
 
         prefix = "\u001b["
-        color = f"{self.color_map[record.levelno]}m"
         bold = "1m"
         reset = "0m"
         self._style._fmt = (
-            "%(asctime)s │ "
-            f"{prefix}{color}%(levelname)-8s{prefix}{reset} │ "
+            "::%(levelname)-8s:: %(asctime)s │ "
             f"%(indent)s{prefix}{bold}%(function)s{prefix}{reset}: "
             "%(message)s"
         )
