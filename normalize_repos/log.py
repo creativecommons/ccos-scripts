@@ -54,7 +54,8 @@ class IndentFormatter(logging.Formatter):
         bold = "1m"
         reset = "0m"
         self._style._fmt = (
-            "::%(levelname)-8s:: %(asctime)s │ "
+            "::%(levelname)-8s file=%(filename)-20s,line=%(lineno)-4d::"
+            "%(asctime)s │ "
             f"%(indent)s{prefix}{bold}%(function)s{prefix}{reset}: "
             "%(message)s"
         )
