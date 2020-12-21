@@ -32,22 +32,22 @@ def create_codeowners_for_data(databag):
     client = set_up_github_client()
     organization = get_cc_organization(client)
 
-    print("Identifying and fixing CODEOWNER issues...")
+    logger.log(logging.INFO, "Identifying and fixing CODEOWNER issues...")
     projects = databag["projects"]
     for project in projects:
         project_name = project["name"]
-        print(f"    Identifying and fixing CODEOWNER issues for project {project_name}...")
+        logger.log(logging.INFO, f"Identifying and fixing CODEOWNER issues for project {project_name}...")
 
-        print(f"        Finding all teams...")
+        logger.log(logging.INFO, f"Finding all teams...")
         roles = project["roles"]
         teams = get_teams(organization, project_name, roles)
-        print(f"        Found {len(teams)} teams for project {project_name}.")
+        logger.log(logging.INFO, f"Found {len(teams)} teams for project {project_name}.")
 
-        print(f"        Checking all projects...")
+        logger.log(logging.INFO, f"Checking all projects...")
         repos = project["repos"]
         for repo in repos:
             check_and_fix_repo(organization, repo, teams)
-    print("Done")
+    logger.log(logging.INFO, "Done")
 
 
 def set_up_git_user():
@@ -55,7 +55,7 @@ def set_up_git_user():
     Set the OS environment variables that pertain to Git configuration. These,
     being set on the OS-level, do not need to be configured on a per-repo basis.
     """
-    print("Setting up git user...")
+    logger.log(logging.INFO, "Setting up git user...")
     os.environ["GIT_AUTHOR_NAME"] = GIT_USER_NAME
     os.environ["GIT_AUTHOR_EMAIL"] = GIT_USER_EMAIL
     os.environ["GIT_COMMITTER_NAME"] = GIT_USER_NAME
@@ -101,32 +101,32 @@ def check_and_fix_repo(organization, repo, teams):
     if not is_codeowners_present(repo):
         fix_required = True
         codeowners_path = get_codeowners_path(repo)
-        print("                CODEOWNERS does not exist, creating...")
+        logger.log(logging.INFO, "CODEOWNERS does not exist, creating...")
         os.makedirs(codeowners_path.parent, exist_ok=True)
         open(codeowners_path, 'a').close()
-        print("                Done.")
+        logger.log(logging.INFO, "Done.")
 
     team_mention_map = get_team_mention_map(repo, teams)
     if not all(team_mention_map.values()):
         fix_required = True
-        print("                CODEOWNERS is incomplete, populating...")
+        logger.log(logging.INFO, "CODEOWNERS is incomplete, populating...")
         add_missing_teams(repo, team_mention_map)
-        print("                Done.")
+        logger.log(logging.INFO, "Done.")
 
     if fix_required:
-        print("                Pushing to GitHub...")
+        logger.log(logging.INFO, "Pushing to GitHub...")
         branch_name = commit_and_push_changes(repo)
-        print(f"                Pushed to {branch_name}.")
+        logger.log(logging.INFO, f"Pushed to {branch_name}.")
 
-        print("                Opening a PR...")
+        logger.log(logging.INFO, "Opening a PR...")
         pr = create_pull_request(organization, repo, branch_name)
-        print(f"                PR at {pr.url}.")
+        logger.log(logging.INFO, f"PR at {pr.url}.")
 
-    print("                Deleting clone...")
+    logger.log(logging.INFO, "Deleting clone...")
     shutil.rmtree(get_repo_path(repo))
-    print("                Done.")
+    logger.log(logging.INFO, "Done.")
 
-    print("            All is well.")
+    logger.log(logging.INFO, "All is well.")
 
 
 def commit_and_push_changes(repo):
@@ -184,16 +184,16 @@ def set_up_repo(repo):
     """
     destination_path = get_repo_path(repo)
     if not os.path.isdir(destination_path):
-        print("                Cloning repo...")
+        logger.log(logging.INFO, "Cloning repo...")
         repo = git.Repo.clone_from(
             url=get_github_repo_url_with_credentials(repo),
             to_path=destination_path
         )
     else:
-        print("                Setting up repo...")
+        logger.log(logging.INFO, "Setting up repo...")
         repo = git.Repo(destination_path)
     origin = repo.remotes.origin
-    print("                Pulling latest code...")
+    logger.log(logging.INFO, "Pulling latest code...")
     origin.pull()
 
 

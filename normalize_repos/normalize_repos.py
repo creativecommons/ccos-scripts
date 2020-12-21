@@ -68,7 +68,7 @@ def get_cc_repos(github):
 
 
 def get_select_repos(args):
-    # github = set_up_github_client()
+    github = set_up_github_client()
     repos = list(get_cc_repos(github))
     if args.repos:
         repos_selected = []
