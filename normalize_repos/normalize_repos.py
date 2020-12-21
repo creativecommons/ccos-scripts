@@ -12,15 +12,15 @@ import logging
 import sys
 import traceback
 
-# Third-party
-# from github import GithubException, UnknownObjectException
-# import yaml  # For converting .cc-metadata.yml to Python dictionary
-#
-# # Local/library specific
-# from get_labels import get_labels
-# from set_labels import set_labels
-# from utils import get_cc_organization, set_up_github_client
-# import branch_protections
+Third-party
+from github import GithubException, UnknownObjectException
+import yaml  # For converting .cc-metadata.yml to Python dictionary
+
+# Local/library specific
+from get_labels import get_labels
+from set_labels import set_labels
+from utils import get_cc_organization, set_up_github_client
+import branch_protections
 import log
 
 
