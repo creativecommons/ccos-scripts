@@ -5,7 +5,7 @@ from pathlib import Path
 
 # Third-party
 import git
-
+import logging
 # Local
 from set_teams_on_github import map_role_to_team
 from utils import (
@@ -16,13 +16,12 @@ from utils import (
     get_cc_organization
 )
 
+logger = logging.getLogger("sync_community_team")
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
 
-
 WORKING_DIRECTORY = Path("/tmp").resolve()
-
 
 SYNC_BRANCH = "ct_codeowners"
 
@@ -95,7 +94,7 @@ def check_and_fix_repo(organization, repo, teams):
     @param repo: the repo to which the CODEOWNERS file being modified belongs
     """
 
-    print(f"            Checking and fixing {repo}...")
+    logger.log(f"Checking and fixing {repo}...")
     set_up_repo(repo)
     fix_required = False
 

@@ -10,6 +10,7 @@ This file intentionally has an external API identical to that of
 # Third party
 import requests
 
+import logging
 
 # Constants should match 'push_data_to_ccos/push_data_via_git.py'
 GITHUB_ORGANIZATION = "creativecommons"
@@ -19,6 +20,7 @@ GITHUB_REPO_NAME = "creativecommons.github.io-source"
 CT_MEMBERS = "community_team_members.json"
 
 DATABAG_URL = f"https://raw.githubusercontent.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}/master/databags/{CT_MEMBERS}"
+logger = logging.getLogger("sync_community_team")
 
 
 def fetch_databag():
@@ -48,15 +50,15 @@ def fetch_databag():
         ]
     }
     """
-    print("Pulling from OS@CC...")
+    logger.log(logging.INFO, "Pulling from OS@CC...")
     databag = {"projects": []}
 
     request = requests.get(DATABAG_URL)
     request.raise_for_status()
     projects = request.json()["projects"]
-    print("    Team members pulled.")
+    logger.log(logging.INFO, "Team members pulled.")
 
-    print("    Processing team members...")
+    logger.log(logging.INFO, "Processing team members...")
     for project in projects:
         formatted_project = {
             "name": project["name"],
@@ -72,8 +74,8 @@ def fetch_databag():
             formatted_project["roles"][role].append(member)
         databag["projects"].append(formatted_project)
 
-    print("    Done.")
-    print("Pull successful.")
+    logger.log(logging.INFO, "Done.")
+    logger.log(logging.INFO, "Pull successful.")
     return databag
 
 

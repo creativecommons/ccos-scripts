@@ -68,15 +68,15 @@ def generate_databag():
     databag = {"quarters": []}
     logger.log(logging.INFO, "Generating Databag...")
     for quarter in fetch_quarters():
-        logger.log(logging.INFO, "    Pulling tasks for quarter - {}...".format(quarter["name"]))
+        logger.log(logging.INFO, "Pulling tasks for quarter - {}...".format(quarter["name"]))
         tasks = ASANA_CLIENT.tasks.find_by_section(  # Get tasks in section
             quarter["gid"],
             opt_fields=["name", "custom_fields", "tags.name", "completed"],
         )
-        logger.log(logging.INFO, "    Done.")
+        logger.log(logging.INFO, "Done.")
         quarter = {"name": quarter["name"], "tasks": []}
 
-        logger.log(logging.INFO, "    Processing tasks...")
+        logger.log(logging.INFO, "Processing tasks...")
         for task in tasks:
             # if task does not have opt out flag, and is not complete
             if has_filtering_tag(task) and not task["completed"]:
@@ -87,15 +87,15 @@ def generate_databag():
                         "description": get_public_description(task),
                     }
                 )
-        logger.log(logging.INFO, "    Done.")
+        logger.log(logging.INFO, "Done.")
         databag["quarters"].append(quarter)
-    logger.log(logging.INFO, "    Pruning quarters...")  # remove quarter if it has no tasks
+    logger.log(logging.INFO, "Pruning quarters...")  # remove quarter if it has no tasks
     databag["quarters"] = [
         quarter
         for quarter in databag["quarters"]
         if len(quarter["tasks"]) != 0
     ]
-    logger.log(logging.INFO, "    Done.")
+    logger.log(logging.INFO, "Done.")
     logger.log(log.SUCCESS, "Pull successful.")
 
     return databag

@@ -8,46 +8,48 @@ from utils import (
     get_team_slug_name
 )
 
-
 PERMISSIONS = {
     'Project Contributor': None,
     'Project Collaborator': 'triage',
     'Project Core Committer': 'push',
     'Project Maintainer': 'maintain'
 }
+import logging
+
+logger = logging.getLogger("sync_community_team")
 
 
 def create_teams_for_data(databag):
     client = set_up_github_client()
     organization = get_cc_organization(client)
 
-    print("Creating and populating teams...")
+    logger.log(logging.INFO, "Creating and populating teams...")
     projects = databag["projects"]
     for project in projects:
         project_name = project["name"]
-        print(f"    Creating and populating teams for project {project_name}...")
+        logger.log(logging.INFO, f"Creating and populating teams for project {project_name}...")
         roles = project["roles"]
         for role, members in roles.items():
             if PERMISSIONS[role] is None:
-                print(f"    Skipping {role} as it has no privileges.")
+                logger.log(logging.INFO, f"Skipping {role} as it has no privileges.")
                 continue
 
-            print(f"        Finding team for role {role}...")
+            logger.log(logging.INFO, f"Finding team for role {role}...")
             team = map_role_to_team(organization, project_name, role)
-            print("        Done.")
+            logger.log(logging.INFO, "Done.")
 
-            print(f"        Populating repos for team {team.name}...")
+            logger.log(logging.INFO, f"Populating repos for team {team.name}...")
             repos = project["repos"]
             map_team_to_repos(organization, team, repos, True)
             set_team_repo_permissions(team, PERMISSIONS[role])
-            print("        Done.")
+            logger.log(logging.INFO, "Done.")
 
-            print(f"        Populating members for team {team.name}...")
+            logger.log(logging.INFO, f"Populating members for team {team.name}...")
             members = [member["github"] for member in members]
             map_team_to_members(client, team, members, True)
-            print("        Done.")
-        print("    Done.")
-    print("Done.")
+            logger.log(logging.INFO, "Done.")
+        logger.log(logging.INFO, "Done.")
+    logger.log(logging.INFO, "Done.")
 
 
 def map_team_to_members(client, team, final_user_logins, non_destructive=False):
@@ -129,9 +131,9 @@ def set_team_repo_permissions(team, permission):
     """
     repos = team.get_repos()
     for repo in repos:
-        print(f"            Populating {permission} permission on {repo} repo...")
+        logger.log(logging.INFO, f"Populating {permission} permission on {repo} repo...")
         team.set_repo_permission(repo, permission)
-        print("            Done.")
+        logger.log(logging.INFO, "Done.")
 
 
 def map_role_to_team(organization, project_name, role, create_if_absent=True):
@@ -154,20 +156,20 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
     }
     try:
         team = organization.get_team_by_slug(team_slug)
-        print("            Team exists, reconciling...")
+        logger.log(logging.INFO, "Team exists, reconciling...")
         if team.description == properties['description']:
             del properties['description']
         if team.privacy == properties['privacy']:
             del properties['privacy']
         if properties:
             team.edit(**properties)
-        print("            Done.")
+        logger.log(logging.INFO, "Done.")
     except UnknownObjectException:
         if not create_if_absent:
-            print("            Did not exist, not creating.")
+            logger.log(logging.INFO, "Did not exist, not creating.")
             team = None
         else:
-            print("            Did not exist, creating...")
+            logger.log(logging.INFO, "Did not exist, creating...")
             team = organization.create_team(**properties)
-            print("            Done.")
+            logger.log(logging.INFO, "Done.")
     return team

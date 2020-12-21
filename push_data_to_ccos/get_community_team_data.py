@@ -61,8 +61,8 @@ def generate_databag():
     members = ASANA_CLIENT.tasks.find_by_section(
         ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
     )
-    logger.log(logging.INFO, "    Team members pulled.")
-    logger.log(logging.INFO, "    Processing team members...")
+    logger.log(logging.INFO, "Team members pulled.")
+    logger.log(logging.INFO, "Processing team members...")
 
     for member in members:
         if member["name"] == "":
@@ -97,7 +97,7 @@ def generate_databag():
                         }
                     )
                     break
-    logger.log(logging.INFO, "    Done.")
+    logger.log(logging.INFO, "Done.")
     logger.log(log.SUCCESS, "Pull successful.")
     return databag
 
