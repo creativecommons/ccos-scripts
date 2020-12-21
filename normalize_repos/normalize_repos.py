@@ -12,7 +12,7 @@ import logging
 import sys
 import traceback
 
-Third-party
+#Third-party
 from github import GithubException, UnknownObjectException
 import yaml  # For converting .cc-metadata.yml to Python dictionary
 
