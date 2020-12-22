@@ -1,166 +1,86 @@
 """
-This script pulls the members of the "Community Team Tracking" Asana
-project, formats it a bit, then pushes it to a databag
-"databags/community_team_list.json"
-in creativecommons/creativecommons.github.io-source
+This script pulls the members of the Community Team from the databag in the
+OS@CC repository, formats it to match the required structure for setting up
+GitHub teams and then syncs the teams to GitHub.
+This file intentionally has an external API identical to that of
+`push_data_to_ccos/get_community_team_data.py`.
 """
 
-# Standard Lib
+import re
 import logging
-import os
-
-# Third party
-import asana
-
 from normalize_repos import log
 
-ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
-ASANA_PROJECT_GID = "1172465506923661"
+# Third party
+import requests
+
 log.set_up_logging()
 logger = logging.getLogger("push_data_to_ccos")
 log.reset_handler()
 
+# Constants should match 'push_data_to_ccos/push_data_via_git.py'
+GITHUB_ORGANIZATION = "creativecommons"
+GITHUB_REPO_NAME = "creativecommons.github.io-source"
 
-def generate_databag():
+# Constants should match 'push_data_to_ccos/sync_data.py'
+CT_MEMBERS = "community_team_members.json"
+
+DATABAG_URL = f"https://raw.githubusercontent.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}/master/databags/{CT_MEMBERS}"
+
+
+def fetch_databag():
     """
-    This method pulls the team members from Asana and
-    loads them into the databag after a little
-    formatting. The output of this method still needs
-    pruning. The databag schema is below.
-
+    This method pulls the team members from CCOS and
+    and loads them into the databag after a little
+    formatting. The databag schema is below.
     databag schema
     {
         "projects": [
             {
                 "name": "",
-                "repos": "",
+                "repos: [
+                    "",
+                    ...
+                ],
                 "members": [
                     {
                         "name": "",
-                        "role": "",
-                        "github: ""
+                        "github": ""
                     },
                     ...
                 ]
             },
             ...
-        ],
-        "community_builders": [
-            {
-                "name": "",
-                "role": "",
-                "github: ""
-            },
-            ...
         ]
     }
     """
-    logger.log(logging.INFO, "Pulling from Asana and generating databag...")
-    databag = {"projects": [], "community_builders": []}
+    logger.log(logging.INFO, "Pulling from OS@CC...")
+    databag = {"projects": []}
 
-    members = ASANA_CLIENT.tasks.find_by_section(
-        ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
-    )
+    request = requests.get(DATABAG_URL)
+    request.raise_for_status()
+    projects = request.json()["projects"]
     logger.log(logging.INFO, "Team members pulled.")
+
     logger.log(logging.INFO, "Processing team members...")
+    for project in projects:
+        formatted_project = {
+            "name": project["name"],
+            "repos": re.split(r",\s?", project["repos"]),
+            "roles": {}
+        }
+        members = project["members"]
+        for member in members:
+            role = member["role"]
+            if role not in formatted_project["roles"]:
+                formatted_project["roles"][role] = []
+            del member["role"]
+            formatted_project["roles"][role].append(member)
+        databag["projects"].append(formatted_project)
 
-    for member in members:
-        if member["name"] == "":
-            continue  # Sometimes blank names come up
-        role = get_custom_field(member, "Role")
-        github = get_custom_field(member, "GitHub")
-        if role.startswith("Community"):
-            databag["community_builders"].append(
-                {"name": member["name"], "role": role, "github": github}
-            )
-        else:
-            project_name = get_custom_field(member, "Project Name")
-            seen_projects = []
-
-            if project_name not in seen_projects:
-                databag["projects"].append(
-                    {
-                        "name": project_name,
-                        "members": [],
-                        "repos": get_custom_field(member, "Repo(s)"),
-                    }
-                )
-                seen_projects.append(project_name)
-
-            for project in databag["projects"]:
-                if project["name"] == project_name:
-                    project["members"].append(
-                        {
-                            "name": member["name"],
-                            "role": role,
-                            "github": github,
-                        }
-                    )
-                    break
     logger.log(logging.INFO, "Done.")
-    logger.log(log.SUCCESS, "Pull successful.")
+    logger.log(logging.INFO, "Pull successful.")
     return databag
-
-
-def sort_databag(databag):
-    """
-    This function orderes the member according to their roles
-    """
-    project_priority = {
-        "Project Maintainer": 1,
-        "Project Core Committer": 2,
-        "Project Collaborator": 3,
-        "Project Contributor": 4,
-    }
-    community_builders_priority = {
-        "Community Collaborator": 1,
-        "Community Contributor": 2,
-    }
-
-    for first_order_key in databag:
-        if first_order_key == "projects":
-            for project in databag["projects"]:
-                member = project["members"]
-                member.sort(key=lambda x: x["name"])
-                member.sort(key=lambda x: project_priority[x["role"]])
-
-        elif first_order_key == "community_builders":
-            community_builder = databag["community_builders"]
-            community_builder.sort(key=lambda x: x["name"])
-            community_builder.sort(
-                key=lambda x: community_builders_priority[x["role"]]
-            )
-    return databag
-
-
-def prune_databag(databag):
-    """
-    Sometimes empty projects find their way into the databag.
-    This function prunes out the empty ones.
-    """
-    pruned = {
-        "projects": [],
-        "community_builders": databag["community_builders"],
-    }
-
-    for project in databag["projects"]:
-        if len(project["members"]) > 0:
-            pruned["projects"].append(project)
-
-    return pruned
-
-
-def get_custom_field(task, field_name):
-    """
-    Gets the value of a custom field
-    """
-    for field in task["custom_fields"]:
-        if field["name"] == field_name:
-            if field["type"] == "enum":
-                return field["enum_value"]["name"]
-            elif field["type"] == "text":
-                return field["text_value"]
 
 
 def get_community_team_data():
-    return prune_databag(sort_databag(generate_databag()))
+    return fetch_databag()

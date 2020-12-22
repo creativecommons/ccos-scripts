@@ -11,6 +11,11 @@ This file intentionally has an external API identical to that of
 import requests
 
 import logging
+from normalize_repos import log
+log.set_up_logging()
+logger = logging.getLogger("sync_community_team")
+log.reset_handler()
+
 
 # Constants should match 'push_data_to_ccos/push_data_via_git.py'
 GITHUB_ORGANIZATION = "creativecommons"
@@ -20,7 +25,6 @@ GITHUB_REPO_NAME = "creativecommons.github.io-source"
 CT_MEMBERS = "community_team_members.json"
 
 DATABAG_URL = f"https://raw.githubusercontent.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}/master/databags/{CT_MEMBERS}"
-logger = logging.getLogger("sync_community_team")
 
 
 def fetch_databag():
@@ -74,7 +78,6 @@ def fetch_databag():
             formatted_project["roles"][role].append(member)
         databag["projects"].append(formatted_project)
 
-    logger.log(logging.INFO, "Done.")
     logger.log(logging.INFO, "Pull successful.")
     return databag
 

@@ -16,8 +16,11 @@ PERMISSIONS = {
 }
 import logging
 
-logger = logging.getLogger("sync_community_team")
+from normalize_repos import log
 
+log.set_up_logging()
+logger = logging.getLogger("sync_community_team")
+log.reset_handler()
 
 def create_teams_for_data(databag):
     client = set_up_github_client()

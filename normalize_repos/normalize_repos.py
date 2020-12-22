@@ -12,7 +12,7 @@ import logging
 import sys
 import traceback
 
-#Third-party
+# Third-party
 from github import GithubException, UnknownObjectException
 import yaml  # For converting .cc-metadata.yml to Python dictionary
 
@@ -22,7 +22,6 @@ from set_labels import set_labels
 from utils import get_cc_organization, set_up_github_client
 import branch_protections
 import log
-
 
 log.set_up_logging()
 logger = logging.getLogger("normalize_repos")
@@ -48,7 +47,7 @@ def setup():
         "--repository",
         action="append",
         help="select repository or repositories to update from those fetched"
-        " from GitHub (may be specified multiple times)",
+             " from GitHub (may be specified multiple times)",
         metavar="REPO",
         dest="repos",
     )
@@ -117,8 +116,8 @@ def update_branch_protection(repo):
         else:
             raise
     if (
-        repo.name not in branch_protections.EXEMPT_REPOSITORIES
-        and is_engineering_project(repo)
+            repo.name not in branch_protections.EXEMPT_REPOSITORIES
+            and is_engineering_project(repo)
     ):
 
         logger.log(logging.INFO, f"{repo.name}: updating branch protections")

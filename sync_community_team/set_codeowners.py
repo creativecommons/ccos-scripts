@@ -16,8 +16,11 @@ from utils import (
     get_cc_organization
 )
 
-logger = logging.getLogger("sync_community_team")
+from normalize_repos import log
 
+log.set_up_logging()
+logger = logging.getLogger("sync_community_team")
+log.reset_handler()
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
 

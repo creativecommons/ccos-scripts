@@ -95,7 +95,6 @@ def generate_databag():
         for quarter in databag["quarters"]
         if len(quarter["tasks"]) != 0
     ]
-    logger.log(logging.INFO, "Done.")
     logger.log(log.SUCCESS, "Pull successful.")
 
     return databag

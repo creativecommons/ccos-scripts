@@ -5,8 +5,11 @@ import re
 from github import Github
 import logging
 
-logger = logging.getLogger("sync_community_team")
+from normalize_repos import log
 
+log.set_up_logging()
+logger = logging.getLogger("sync_community_team")
+log.reset_handler()
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_USERNAME = "cc-creativecommons-github-io-bot"
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
