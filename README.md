@@ -36,6 +36,26 @@ information about that script.
 
 [ccos]: httpe://opensource.creativecommons.org/
 
+## :robot: Automation Authorship
+
+Scripts that commit code or automatically reply to pull requests and issues need to be associated with a GitHub user account. Creative Commons maintains a [cc-open-source-bot](https://github.com/cc-open-source-bot) user for this purpose. This is useful for a few reasons:
+
+- It's ethically important that our community members know when they are talking to a bot instead of a human.
+- It makes it easy to audit our automations in the future, because all commits and messages will be associated with the single @cc-open-source-bot user account via the GitHub search, api, etc.
+- We won't need to  update automations when there are changes to staff or volunteers.
+
+Using this bot clearly communicates when a commit, comment, or action was performed by an automation. For example, here is some configuration for a workflow using the [Add & Commit](https://github.com/EndBug/add-and-commit) GitHub Action:
+
+```yml
+# ...other settings here
+- name: Commit changes
+  uses: EndBug/add-and-commit@v4
+  with:
+    author_name: cc-open-source-bot
+    author_email: opensource@creativecommons.org
+    message: "Deploy site"
+    add: "./example-directory"
+```
 
 ## License
 
