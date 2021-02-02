@@ -47,15 +47,19 @@ def setup():
         "--repository",
         action="append",
         help="select repository or repositories to update from those fetched"
-             " from GitHub (may be specified multiple times)",
+        " from GitHub (may be specified multiple times)",
         metavar="REPO",
         dest="repos",
     )
     ap.add_argument(
-        "--skip-branches", action="store_true", help="skip branches update",
+        "--skip-branches",
+        action="store_true",
+        help="skip branches update",
     )
     ap.add_argument(
-        "--skip-labels", action="store_true", help="skip labels update",
+        "--skip-labels",
+        action="store_true",
+        help="skip labels update",
     )
     args = ap.parse_args()
     return args
@@ -116,8 +120,8 @@ def update_branch_protection(repo):
         else:
             raise
     if (
-            repo.name not in branch_protections.EXEMPT_REPOSITORIES
-            and is_engineering_project(repo)
+        repo.name not in branch_protections.EXEMPT_REPOSITORIES
+        and is_engineering_project(repo)
     ):
 
         logger.log(logging.INFO, f"{repo.name}: updating branch protections")
@@ -141,7 +145,8 @@ def update_branches(args, repos):
     if args.skip_branches:
         return
     logger.log(
-        logging.INFO, "Evaluting repositories for branch protections...",
+        logging.INFO,
+        "Evaluting repositories for branch protections...",
     )
     for repo in repos:
         # TODO: Set up automatic deletion of merged branches
