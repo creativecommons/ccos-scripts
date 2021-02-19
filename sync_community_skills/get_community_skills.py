@@ -8,7 +8,7 @@ and generate the required skills.json
 import json
 
 
-#Third Part
+# Third Part
 import requests
 
 
