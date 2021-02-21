@@ -1,6 +1,6 @@
 """
 This script gets the data from the Github API to get the names and 
-languages of all the repositories of the 'Creative Commons' orgaization
+languages of all the repositories of the 'Creative Commons' organization
 and generate the required skills.json
 """
 
