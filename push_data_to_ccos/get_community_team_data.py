@@ -10,8 +10,12 @@ import os
 
 # Third party
 import asana
+import logging
+from normalize_repos import log
 
-
+log.set_up_logging()
+logger = logging.getLogger("push_data_to_ccos")
+log.reset_handler()
 ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
 ASANA_PROJECT_GID = "1172465506923661"
 
@@ -50,15 +54,15 @@ def generate_databag():
         ]
     }
     """
-    print("Pulling from Asana and generating databag...")
+    logger.log(logging.INFO, "Pulling from Asana and generating databag...")
     databag = {"projects": [], "community_builders": []}
 
     members = ASANA_CLIENT.tasks.find_by_section(
         ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
     )
-    print("    Team members pulled.")
+    logger.log(logging.INFO, "Team members pulled.")
 
-    print("    Processing team members...")
+    logger.log(logging.INFO, "Processing team members...")
     for member in members:
         if member["name"] == "":
             continue  # Sometimes blank names come up
@@ -93,8 +97,7 @@ def generate_databag():
                     )
                     break
 
-    print("    Done.")
-    print("Pull successful.")
+    logger.log(logging.INFO, "Done.")
     return databag
 
 
