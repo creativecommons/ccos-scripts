@@ -26,6 +26,7 @@ log.set_up_logging()
 logger = logging.getLogger("sync_community_skills")
 log.reset_handler()
 
+
 class ScriptError(Exception):
     def __init__(self, message, code=None):
         self.code = code if code else 1
@@ -61,11 +62,12 @@ def generate_databag():
     return data
 
 
-def generate_skills(): 
+def generate_skills():
     """
     Writing the result array into skills.json file
     """
     print(json.dumps(generate_databag(), indent=2, sort_keys=True))
+
 
 if __name__ == "__main__":
     try:
