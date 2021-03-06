@@ -22,9 +22,7 @@ GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
 # Local/library specific
 import log
 
-log.set_up_logging()
 logger = logging.getLogger("sync_community_skills")
-log.reset_handler()
 
 
 class ScriptError(Exception):
