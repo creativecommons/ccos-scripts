@@ -1,34 +1,41 @@
+#!/usr/bin/env python3
+# vim: set fileencoding=utf-8:
 """
 This script gets the data from the Github API to get the names and 
 languages of all the repositories of the 'Creative Commons' organization
 and generate the required skills.json
 """
 
-# Standard Lib
+# Standard Library
 import json
 import os
+import sys
+import logging
+import traceback
 
+# Third Party
+from github import Github
 
-# Third Part
-import requests
-
-GIT_USER_NAME = "CC creativecommons.github.io Bot"
-GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
-
-GITHUB_USERNAME = "cc-creativecommons-github-io-bot"
 GITHUB_ORGANIZATION = "creativecommons"
-GITHUB_REPO_NAME = "ccos-scripts"
-
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
-GITHUB_REPO_URL_WITH_CREDENTIALS = (
-    f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}"
-    f"@github.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}.git"
-)
+
+# Local/library specific
+import log
+
+log.set_up_logging()
+logger = logging.getLogger("sync_community_skills")
+log.reset_handler()
+
+class ScriptError(Exception):
+    def __init__(self, message, code=None):
+        self.code = code if code else 1
+        message = "({}) {}".format(self.code, message)
+        super(ScriptError, self).__init__(message)
 
 
 def generate_databag():
     """
-    This method pulls the names and languages from the 'Github Api'
+    This method pulls the names and languages from the 'PyGithub'
     and loads them into the databag after a little formatting and
     then this databag will be used to generate the required skills.json
     The databag schema is down below:
@@ -38,24 +45,42 @@ def generate_databag():
         "languages": []
     }
     """
-    print("Pulling from the Github API")
-    result = []
-    api_request = requests.get(
-        "https://api.github.com/orgs/creativecommons/repos?per_page=100"
-    )
-    data = api_request.json()
-    for x in data:
-        databag = {"name": "", "languages": []}
-        databag["name"] = x["name"]
-        result.append(databag)
-        languages_dat_from_api = requests.get(x["languages_url"])
-        databag["languages"].append(languages_dat_from_api.json())
-    return result
+    print("Pulling from OS@CC...")
+    github_client = Github(GITHUB_TOKEN)
+    cc = github_client.get_organization(GITHUB_ORGANIZATION)
+    repos = list(cc.get_repos())
+    if not repos:
+        raise ScriptError(
+            "Unable to setup the Github Client to get the requested"
+            f"Github organization and the repos of that organization"
+        )
+    repos.sort(key=lambda repo: repo.name)
+    data = []
+    for repo in repos:
+        data.append({"name": repo.name, "languages": repo.get_languages()})
+    return data
 
 
-"""
-Writing the result array into skills.json file
-"""
+def generate_skills(): 
+    """
+    Writing the result array into skills.json file
+    """
+    print(json.dumps(generate_databag(), indent=2, sort_keys=True))
 
-with open("skills.json", "w") as outfile:
-    json.dump(generate_databag(), outfile)
+if __name__ == "__main__":
+    try:
+        generate_skills()
+    except SystemExit as e:
+        sys.exit(e.code)
+    except KeyboardInterrupt:
+        logger.log(logging.INFO, "Halted via KeyboardInterrupt.")
+        sys.exit(130)
+    except ScriptError:
+        error_type, error_value, error_traceback = sys.exc_info()
+        logger.log(logging.CRITICAL, f"{error_value}")
+        sys.exit(error_value.code)
+    except Exception:
+        logger.log(
+            logging.ERROR, f"Unhandled exception: {traceback.format_exc()}"
+        )
+        sys.exit(1)
