@@ -5,12 +5,13 @@ project, formats it a bit, then pushes it to a databag
 in creativecommons/creativecommons.github.io-source
 """
 
+# Standard library
 # Standard Lib
 import os
 
+# Third-party
 # Third party
 import asana
-
 
 ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
 ASANA_PROJECT_GID = "1172465506923661"

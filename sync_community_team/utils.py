@@ -1,9 +1,10 @@
+# Standard library
 import os
 import re
 
+# Third-party
 # Third party
 from github import Github
-
 
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_USERNAME = "cc-creativecommons-github-io-bot"
@@ -52,9 +53,7 @@ def pluralized(word):
     @param word: the word to pluralize
     @return: the plural form of the noun
     """
-    defined_plurals = {
-        "person": "people"
-    }
+    defined_plurals = {"person": "people"}
     if word in defined_plurals:
         return defined_plurals[word]
 

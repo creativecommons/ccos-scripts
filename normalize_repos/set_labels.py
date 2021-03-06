@@ -1,9 +1,9 @@
 # Standard library
 import logging
 
+# First-party/Local
 # Local/library specific
 import log
-
 
 logger = logging.getLogger("normalize_repos")
 log.reset_handler()

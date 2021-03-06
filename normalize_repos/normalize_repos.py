@@ -13,17 +13,18 @@ import sys
 import traceback
 
 # Third-party
-from github import GithubException, UnknownObjectException
 import yaml  # For converting .cc-metadata.yml to Python dictionary
+from github import GithubException, UnknownObjectException
 
-# Local/library specific
-from get_labels import get_labels, get_groups
-from set_labels import set_labels
-from validate_issues import validate_issues
-from utils import get_cc_organization, set_up_github_client
+# First-party/Local
 import branch_protections
 import log
 
+# Local/library specific
+from get_labels import get_groups, get_labels
+from set_labels import set_labels
+from utils import get_cc_organization, set_up_github_client
+from validate_issues import validate_issues
 
 log.set_up_logging()
 logger = logging.getLogger("normalize_repos")

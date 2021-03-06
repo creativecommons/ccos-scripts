@@ -1,7 +1,10 @@
 # Standard library
 from pathlib import Path
+
+# Third-party
 import yaml
 
+# First-party/Local
 # Local/library specific
 from models import Group, Label
 

@@ -7,7 +7,6 @@ import os
 # Third-party
 import git
 
-
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
 

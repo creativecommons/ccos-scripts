@@ -5,11 +5,14 @@ verify_ssl = true
 
 [dev-packages]
 ipython = "*"
+black = "==20.8b1"
+isort = "*"
+flake8 = "*"
 
 [packages]
-pygithub = "*"
+PyGithub = "*"
 requests = "*"
-gitpython = "*"
+GitPython = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3"
