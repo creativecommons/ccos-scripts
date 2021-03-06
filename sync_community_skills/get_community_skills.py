@@ -6,19 +6,22 @@ languages of all the repositories of the 'Creative Commons' organization
 and generate the required skills.json
 """
 
+# Standard library
 # Standard Library
 import json
+import logging
 import os
 import sys
-import logging
 import traceback
 
+# Third-party
 # Third Party
 from github import Github
 
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
 
+# Third-party
 # Local/library specific
 import log
 
