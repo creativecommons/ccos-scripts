@@ -4,8 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-requests = "*"
-pygithub = "*"
+PyGithub = "*"
 
 [dev-packages]
 black = "==20.8b1"
