@@ -8,7 +8,6 @@ from pathlib import Path
 import git
 
 # First-party/Local
-# Local
 from set_teams_on_github import map_role_to_team
 from utils import (
     GITHUB_ORGANIZATION,

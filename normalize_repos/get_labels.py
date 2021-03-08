@@ -5,7 +5,6 @@ from pathlib import Path
 import yaml
 
 # First-party/Local
-# Local/library specific
 from models import Group, Label
 
 

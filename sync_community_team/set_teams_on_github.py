@@ -1,9 +1,7 @@
-# Third party
 # Third-party
 from github import UnknownObjectException
 
 # First-party/Local
-# Local
 from utils import get_cc_organization, get_team_slug_name, set_up_github_client
 
 PERMISSIONS = {

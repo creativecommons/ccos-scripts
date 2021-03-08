@@ -2,7 +2,6 @@
 import logging
 
 # First-party/Local
-# Local/library specific
 import log
 
 logger = logging.getLogger("normalize_repos")

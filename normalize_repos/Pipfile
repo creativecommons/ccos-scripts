@@ -7,10 +7,10 @@ verify_ssl = true
 allow_prereleases = true
 
 [dev-packages]
-ipython = "*"
-isort = "*"
 black = "==20.8b1"
 flake8 = "*"
+ipython = "*"
+isort = "*"
 
 [packages]
 PyGithub = "*"

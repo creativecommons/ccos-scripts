@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # vim: set fileencoding=utf-8:
+
 # Standard library
 import argparse
 
 # First-party/Local
-# Local
 from get_community_team_data import get_community_team_data
 from get_repo_data import get_repo_data
 from push_data_via_git import push_data

@@ -8,7 +8,6 @@ from github import Github
 from github.GithubException import GithubException, UnknownObjectException
 
 # First-party/Local
-# Local
 from push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
 
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
