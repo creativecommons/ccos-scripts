@@ -3,7 +3,6 @@ import os
 import re
 
 # Third-party
-# Third party
 from github import Github
 
 GITHUB_ORGANIZATION = "creativecommons"

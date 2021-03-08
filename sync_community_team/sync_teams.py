@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# Local
 # First-party/Local
 from get_community_team_data import get_community_team_data
 from set_codeowners import create_codeowners_for_data
