@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # vim: set fileencoding=utf-8:
 """
-This script gets the data from the Github API to get the names and 
+This script gets the data from the Github API to get the names and
 languages of all the repositories of the 'Creative Commons' organization
 and generate the required skills.json
 """
 
-# Standard Library
+# Standard library
 import json
 import logging
 import os
@@ -16,13 +16,11 @@ import traceback
 # Third-party
 from github import Github
 
-# Local/library specific
-import log
-
 logger = logging.getLogger("sync_community_skills")
 
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
+
 
 class ScriptError(Exception):
     def __init__(self, message, code=None):
@@ -50,7 +48,7 @@ def generate_databag():
     if not repos:
         raise ScriptError(
             "Unable to setup the Github Client to get the requested"
-            f"Github organization and the repos of that organization"
+            " Github organization and the repos of that organization"
         )
     repos.sort(key=lambda repo: repo.name)
     data = []
