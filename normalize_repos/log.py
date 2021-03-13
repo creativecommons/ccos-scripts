@@ -148,7 +148,8 @@ def set_up_logging():
 def reset_handler():
     """
     Reset the formatter on the handler on the root logger. This causes the next
-    call to the logger can repopulate them based on the new stack in a new file.
+    call to the logger can repopulate them based on the new stack in a new
+    file.
     """
 
     handlers = logging.root.handlers

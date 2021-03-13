@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # vim: set fileencoding=utf-8:
 
+# Standard library
+import logging
+
 # Third-party
 import emoji
 import yaml
@@ -8,31 +11,36 @@ from github import Github
 from github.GithubException import GithubException, UnknownObjectException
 
 # First-party/Local
+import log
 from push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
 
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
+log.set_up_logging()
+logger = logging.getLogger("push_data_to_ccos")
+log.reset_handler()
+
 
 def set_up_github_client():
-    print("Setting up GitHub client...")
+    logger.log(logging.INFO, "Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
     return github_client
 
 
 def get_cc_organization(github_client):
-    print("Getting CC's GitHub organization...")
+    logger.log(logging.INFO, "Getting CC's GitHub organization...")
     cc = github_client.get_organization(GITHUB_ORGANIZATION)
     return cc
 
 
 def get_repositories(organization):
-    print("Getting CC's repos...")
+    logger.log(logging.INFO, "Getting CC's repos...")
     repos = organization.get_repos()
     return repos
 
 
 def get_repo_github_data(repo):
-    print("\tGetting data for this repo...")
+    logger.log(logging.INFO, "Getting data for this repo...")
     repo_github_data = {
         "id": repo.id,
         "name": repo.name,
@@ -59,10 +67,10 @@ def get_repo_github_data(repo):
 
 
 def get_repo_cc_metadata(repo):
-    print("\tGetting CC metadata for this repo...")
+    logger.log(logging.INFO, "Getting CC metadata for this repo...")
     try:
         cc_metadata_file = repo.get_contents(CC_METADATA_FILE_NAME)
-    except (UnknownObjectException, GithubException) as e:
+    except (UnknownObjectException, GithubException):
         return {}
     cc_metadata = yaml.safe_load(cc_metadata_file.decoded_content)
     if "technologies" in cc_metadata:
@@ -79,7 +87,9 @@ def get_repo_data_list(repos):
     total = repos.totalCount
 
     for repo in repos:
-        print(f"Processing {count} of {total} – {repo.name}")
+        logger.log(
+            logging.INFO, f"Processing {count} of {total} – {repo.name}"
+        )
         if not repo.private:
             repo_cc_metadata = get_repo_cc_metadata(repo)
             is_engineering_project = repo_cc_metadata.get(
@@ -92,7 +102,9 @@ def get_repo_data_list(repos):
                 repo_data = {**repo_github_data, **repo_cc_metadata}
                 repo_data_list.append(repo_data)
             else:
-                print("\tNot an active engineering project, skipping")
+                logger.log(
+                    logging.INFO, "Not an active engineering project, skipping"
+                )
         count += 1
     return sorted(repo_data_list, key=lambda k: k["name"].lower())
 
