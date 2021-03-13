@@ -38,15 +38,16 @@ def create_codeowners_for_data(databag):
     for project in projects:
         project_name = project["name"]
         print(
-            f"    Identifying and fixing CODEOWNER issues for project {project_name}..."
+            "    Identifying and fixing CODEOWNER issues for project"
+            f" {project_name}..."
         )
 
-        print(f"        Finding all teams...")
+        print("        Finding all teams...")
         roles = project["roles"]
         teams = get_teams(organization, project_name, roles)
         print(f"        Found {len(teams)} teams for project {project_name}.")
 
-        print(f"        Checking all projects...")
+        print("        Checking all projects...")
         repos = project["repos"]
         for repo in repos:
             check_and_fix_repo(organization, repo, teams)
@@ -56,7 +57,8 @@ def create_codeowners_for_data(databag):
 def set_up_git_user():
     """
     Set the OS environment variables that pertain to Git configuration. These,
-    being set on the OS-level, do not need to be configured on a per-repo basis.
+    being set on the OS-level, do not need to be configured on a per-repo
+    basis.
     """
     print("Setting up git user...")
     os.environ["GIT_AUTHOR_NAME"] = GIT_USER_NAME
@@ -68,8 +70,8 @@ def set_up_git_user():
 def get_teams(organization, project_name, roles):
     """
     Get all teams corresponding to the Community Team roles for the project.
-    Roles with no permissions do not form teams on GitHub and therefore will not
-    be represented in the resulting list.
+    Roles with no permissions do not form teams on GitHub and therefore will
+    not be represented in the resulting list.
 
     @param organization: the organization whole teams are being fetched
     @param project_name: the project whose teams are being fetching
@@ -161,7 +163,8 @@ def create_pull_request(organization, repo, branch_name):
 
     @param organization: the organization to which the repository belongs
     @param repo: the repo to which the CODEOWNERS file being modified belongs
-    @param branch_name: the name of the branch containing the CODEOWNERS changes
+    @param branch_name: the name of the branch containing the CODEOWNERS
+                        changes
     """
     repo = organization.get_repo(repo)
     return repo.create_pull(
@@ -171,7 +174,8 @@ def create_pull_request(organization, repo, branch_name):
             "GitHub teams associated with Community Team roles."
         ),
         head=branch_name,
-        base=repo.default_branch,  # could me 'main', 'master', 'prod' or something else
+        # default branch could be 'main', 'master', 'prod', or something else
+        base=repo.default_branch,
     )
 
 

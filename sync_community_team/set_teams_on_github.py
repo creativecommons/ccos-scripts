@@ -91,8 +91,9 @@ def map_team_to_repos(
 ):
     """
     Map the team to the given set of repositories. Any repositories that are
-    not already a part of the team will be added and any additional repositories
-    that are a part of the team will be removed, unless chosen not to.
+    not already a part of the team will be added and any additional
+    repositories that are a part of the team will be removed, unless chosen not
+    to.
 
     @param organization: the Organisation object of which the team is a part
     @param team: the Team object representing the team

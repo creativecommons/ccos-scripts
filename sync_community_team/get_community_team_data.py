@@ -20,7 +20,10 @@ GITHUB_REPO_NAME = "creativecommons.github.io-source"
 # Constants should match 'push_data_to_ccos/sync_data.py'
 CT_MEMBERS = "community_team_members.json"
 
-DATABAG_URL = f"https://raw.githubusercontent.com/{GITHUB_ORGANIZATION}/{GITHUB_REPO_NAME}/master/databags/{CT_MEMBERS}"
+DATABAG_URL = (
+    f"https://raw.githubusercontent.com/{GITHUB_ORGANIZATION}/"
+    f"{GITHUB_REPO_NAME}/master/databags/{CT_MEMBERS}"
+)
 
 
 def fetch_databag():
