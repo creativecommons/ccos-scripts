@@ -5,19 +5,22 @@ project, formats it a bit, then pushes it to a databag
 in creativecommons/creativecommons.github.io-source
 """
 
-# Standard Lib
+# Standard library
+import logging
 import os
 
-# Third party
+# Third-party
 import asana
-import logging
-from normalize_repos import log
+
+# First-party/Local
+import log
+
+ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
+ASANA_PROJECT_GID = "1172465506923661"
 
 log.set_up_logging()
 logger = logging.getLogger("push_data_to_ccos")
 log.reset_handler()
-ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
-ASANA_PROJECT_GID = "1172465506923661"
 
 
 def generate_databag():

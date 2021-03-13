@@ -7,14 +7,16 @@ verify_ssl = true
 allow_prereleases = true
 
 [dev-packages]
-black = "*"
+black = "==20.8b1"
+flake8 = "*"
+isort = "*"
 
 [packages]
 asana = "*"
 emoji = "*"
-gitpython = "*"
-pygithub = "*"
-pyyaml = "*"
+GitPython = "*"
+PyGithub = "*"
+PyYAML = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3"

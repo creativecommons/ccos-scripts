@@ -1,13 +1,12 @@
 # Standard library
-import os
 import logging
+import os
 
-# Third party
+# Third-party
 from github import Github
 
-# Local/library specific
+# First-party/Local
 import log
-
 
 logger = logging.getLogger("normalize_repos")
 log.reset_handler()

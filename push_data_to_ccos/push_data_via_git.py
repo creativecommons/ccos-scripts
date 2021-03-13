@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 # vim: set fileencoding=utf-8:
+
 # Standard library
 import json
+import logging
 import os
 
 # Third-party
 import git
 
-import logging
-from normalize_repos import log
+# First-party/Local
+import log
 
-log.set_up_logging()
-logger = logging.getLogger("push_data_to_ccos")
-log.reset_handler()
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
 
@@ -29,6 +28,10 @@ GITHUB_REPO_URL_WITH_CREDENTIALS = (
 WORKING_DIRECTORY = "/tmp"
 GIT_WORKING_DIRECTORY = f"{WORKING_DIRECTORY}/{GITHUB_REPO_NAME}"
 JSON_FILE_DIRECTORY = f"{GIT_WORKING_DIRECTORY}/databags"
+
+log.set_up_logging()
+logger = logging.getLogger("push_data_to_ccos")
+log.reset_handler()
 
 
 def set_up_repo():

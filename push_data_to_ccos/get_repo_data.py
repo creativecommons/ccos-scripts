@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 # vim: set fileencoding=utf-8:
 
+# Standard library
+import logging
+
 # Third-party
-from github import Github
-from github.GithubException import GithubException, UnknownObjectException
 import emoji
 import yaml
-from normalize_repos import log
-# Local
+from github import Github
+from github.GithubException import GithubException, UnknownObjectException
+
+# First-party/Local
+import log
 from push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
-import logging
+
+CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
 log.set_up_logging()
 logger = logging.getLogger("push_data_to_ccos")
 log.reset_handler()
-
-CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
 
 def set_up_github_client():
@@ -84,7 +87,9 @@ def get_repo_data_list(repos):
     total = repos.totalCount
 
     for repo in repos:
-        logger.log(logging.INFO, f"Processing {count} of {total} – {repo.name}")
+        logger.log(
+            logging.INFO, f"Processing {count} of {total} – {repo.name}"
+        )
         if not repo.private:
             repo_cc_metadata = get_repo_cc_metadata(repo)
             is_engineering_project = repo_cc_metadata.get(
@@ -97,7 +102,9 @@ def get_repo_data_list(repos):
                 repo_data = {**repo_github_data, **repo_cc_metadata}
                 repo_data_list.append(repo_data)
             else:
-                logger.log(logging.INFO, "Not an active engineering project, skipping")
+                logger.log(
+                    logging.INFO, "Not an active engineering project, skipping"
+                )
         count += 1
     return sorted(repo_data_list, key=lambda k: k["name"].lower())
 

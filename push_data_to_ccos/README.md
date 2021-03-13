@@ -1,13 +1,11 @@
 # Push Data to CCOS
 
 This folder contains a script that pushes the latest version of dynamically generated data to CC Open Source. This data updates the following pages:
-* [CC Search page on CC Open Source][ccsearch] (roadmap portion)
 * [Community Team Members page on CC Open Source][ctlistpage]
 * [Projects page on CC Open Source][osproj].
 
-[ccsearch]: https://opensource.creativecommons.org/cc-search/
 [ctlistpage]: httpe://opensource.creativecommons.org/community/community-teams/members/
-[osproj]:https://opensource.creativecommons.org/contributing-code/projects/
+[osproj]: https://opensource.creativecommons.org/contributing-code/projects/
 
 This script is run via GitHub Actions automatically. 
 
@@ -31,7 +29,7 @@ Community Team member data is generated from the `Community Teams Tracking` Asan
 
 ### Pushing to GitHub
 
-Data is pushed to the `[creativecommons.github.io-source](https://github.com/creativecommons/creativecommons.github.io-source)` repository in the `push_data_via_git.py` file.
+Data is pushed to the [`creativecommons.github.io-source`](https://github.com/creativecommons/creativecommons.github.io-source) repository via the `push_data_via_git.py` script.
 
 
 ## Repository README
