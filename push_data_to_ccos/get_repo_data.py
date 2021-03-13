@@ -70,7 +70,7 @@ def get_repo_cc_metadata(repo):
     logger.log(logging.INFO, "Getting CC metadata for this repo...")
     try:
         cc_metadata_file = repo.get_contents(CC_METADATA_FILE_NAME)
-    except (UnknownObjectException, GithubException) as e:
+    except (UnknownObjectException, GithubException):
         return {}
     cc_metadata = yaml.safe_load(cc_metadata_file.decoded_content)
     if "technologies" in cc_metadata:
