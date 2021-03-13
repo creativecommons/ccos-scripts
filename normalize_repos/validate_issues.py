@@ -1,8 +1,10 @@
 # Standard library
 import logging
+
+# Third-party
 import yaml
 
-# Local/library specific
+# First-party/Local
 import log
 
 logger = logging.getLogger("normalize_repos")
@@ -20,12 +22,12 @@ def dump_invalid_issues(invalid_issues):
 
     for invalid_issue_list in invalid_issues.values():
         for invalid_issue in invalid_issue_list:
-            issue = invalid_issue['issue']
-            invalid_issue['issue'] = issue.title
-            invalid_issue['url'] = issue.html_url
+            issue = invalid_issue["issue"]
+            invalid_issue["issue"] = issue.title
+            invalid_issue["url"] = issue.html_url
 
     logger.log(logging.INFO, f"Dumping issues in a file...")
-    with open('/tmp/invalid_issues.yml', 'w') as file:
+    with open("/tmp/invalid_issues.yml", "w") as file:
         yaml.dump(invalid_issues, file)
     logger.log(log.SUCCESS, "done.")
 
@@ -41,24 +43,29 @@ def are_issue_labels_valid(issue, required_groups):
     labels = issue.get_labels()
     label_names = {label.name for label in labels}
     if issue.pull_request:
-        logger.log(logging.INFO, f"Skipping '{issue.title}' because it is a PR.")
+        logger.log(
+            logging.INFO, f"Skipping '{issue.title}' because it is a PR."
+        )
         return True, None  # PRs are exempt
     if TRIAGE_LABEL in label_names:
-        logger.log(logging.INFO, f"Skipping '{issue.title}' because it is awaiting triage.")
+        logger.log(
+            logging.INFO,
+            f"Skipping '{issue.title}' because it is awaiting triage.",
+        )
         return True, None  # Issues that haven't been triaged are exempt
 
     missing_groups = []
     for group in required_groups:
-        required_labels = {
-            label.qualified_name
-            for label in group.labels
-        }
+        required_labels = {label.qualified_name for label in group.labels}
         if not label_names.intersection(required_labels):
             missing_groups.append(group.name)
     if missing_groups:
         issue.add_to_labels(LABEL_WORK_REQUIRED_LABEL)
         logger.log(logging.INFO, f"Issue '{issue.title}' has missing labels.")
-        return False, f"Missing labels from groups: {', '.join(missing_groups)}"
+        return (
+            False,
+            f"Missing labels from groups: {', '.join(missing_groups)}",
+        )
     else:
         if LABEL_WORK_REQUIRED_LABEL in label_names:
             issue.remove_from_labels(LABEL_WORK_REQUIRED_LABEL)
@@ -86,10 +93,7 @@ def get_invalid_issues_in_repo(repo, required_groups):
         logger.log(logging.INFO, f"Checking labels on '{issue.title}'...")
         are_valid, reason = are_issue_labels_valid(issue, required_groups)
         if not are_valid:
-            invalid_issues.append({
-                "issue": issue,
-                "reason": reason
-            })
+            invalid_issues.append({"issue": issue, "reason": reason})
         logger.log(log.SUCCESS, "done.")
     log.change_indent(-1)
     return invalid_issues
@@ -122,7 +126,9 @@ def validate_issues(repos, groups):
     log.change_indent(+1)
     for repo in list(repos):
         logger.log(logging.INFO, f"Checking issues in repo '{repo.name}'...")
-        invalid_issues[repo.name] = get_invalid_issues_in_repo(repo, required_groups)
+        invalid_issues[repo.name] = get_invalid_issues_in_repo(
+            repo, required_groups
+        )
         logger.log(log.SUCCESS, f"done.")
     log.change_indent(-1)
     logger.log(log.SUCCESS, f"done.")

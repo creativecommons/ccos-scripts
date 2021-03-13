@@ -2,7 +2,6 @@
 import inspect
 import logging
 
-
 SUCCESS = logging.INFO + 1
 
 
@@ -68,10 +67,7 @@ class IndentFormatter(logging.Formatter):
                 "%(asctime)s │ "
             )
         elif record.levelname == "DEBUG":
-            self._style._fmt = (
-                "::%(levelname)s::"
-                "%(asctime)s │ "
-            )
+            self._style._fmt = "::%(levelname)s::" "%(asctime)s │ "
         else:
             self._style._fmt = (
                 "%(asctime)s │ "

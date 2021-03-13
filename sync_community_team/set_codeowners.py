@@ -1,3 +1,4 @@
+# Standard library
 import datetime
 import os
 import shutil
@@ -6,16 +7,15 @@ from pathlib import Path
 # Third-party
 import git
 
-# Local
+# First-party/Local
 from set_teams_on_github import map_role_to_team
 from utils import (
     GITHUB_ORGANIZATION,
-    GITHUB_USERNAME,
     GITHUB_TOKEN,
+    GITHUB_USERNAME,
+    get_cc_organization,
     set_up_github_client,
-    get_cc_organization
 )
-
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
@@ -37,7 +37,9 @@ def create_codeowners_for_data(databag):
     projects = databag["projects"]
     for project in projects:
         project_name = project["name"]
-        print(f"    Identifying and fixing CODEOWNER issues for project {project_name}...")
+        print(
+            f"    Identifying and fixing CODEOWNER issues for project {project_name}..."
+        )
 
         print(f"        Finding all teams...")
         roles = project["roles"]
@@ -78,11 +80,7 @@ def get_teams(organization, project_name, roles):
         role: map_role_to_team(organization, project_name, role, False)
         for role in roles.keys()
     }
-    return [
-        team
-        for team in role_team_map.values()
-        if team is not None
-    ]
+    return [team for team in role_team_map.values() if team is not None]
 
 
 def check_and_fix_repo(organization, repo, teams):
@@ -104,7 +102,7 @@ def check_and_fix_repo(organization, repo, teams):
         codeowners_path = get_codeowners_path(repo)
         print("                CODEOWNERS does not exist, creating...")
         os.makedirs(codeowners_path.parent, exist_ok=True)
-        open(codeowners_path, 'a').close()
+        open(codeowners_path, "a").close()
         print("                Done.")
 
     team_mention_map = get_team_mention_map(repo, teams)
@@ -173,7 +171,7 @@ def create_pull_request(organization, repo, branch_name):
             "GitHub teams associated with Community Team roles."
         ),
         head=branch_name,
-        base=repo.default_branch  # could me 'main', 'master', 'prod' or something else
+        base=repo.default_branch,  # could me 'main', 'master', 'prod' or something else
     )
 
 
@@ -188,7 +186,7 @@ def set_up_repo(repo):
         print("                Cloning repo...")
         repo = git.Repo.clone_from(
             url=get_github_repo_url_with_credentials(repo),
-            to_path=destination_path
+            to_path=destination_path,
         )
     else:
         print("                Setting up repo...")
@@ -221,10 +219,7 @@ def get_team_mention_map(repo, teams):
     codeowners_path = get_codeowners_path(repo)
     with open(codeowners_path) as codeowners_file:
         contents = codeowners_file.read()
-    return {
-        team.slug: mentionified(team.slug) in contents
-        for team in teams
-    }
+    return {team.slug: mentionified(team.slug) in contents for team in teams}
 
 
 def add_missing_teams(repo, team_mention_map):
@@ -266,8 +261,10 @@ def get_github_repo_url_with_credentials(repo):
     @param repo: the name of the repository
     @return: the authenticated URL to the repo
     """
-    return (f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}"
-            f"@github.com/{GITHUB_ORGANIZATION}/{repo}.git")
+    return (
+        f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}"
+        f"@github.com/{GITHUB_ORGANIZATION}/{repo}.git"
+    )
 
 
 def get_repo_path(repo):

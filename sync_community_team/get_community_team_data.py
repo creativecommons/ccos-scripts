@@ -7,11 +7,11 @@ This file intentionally has an external API identical to that of
 `push_data_to_ccos/get_community_team_data.py`.
 """
 
+# Standard library
 import re
 
-# Third party
+# Third-party
 import requests
-
 
 # Constants should match 'push_data_to_ccos/push_data_via_git.py'
 GITHUB_ORGANIZATION = "creativecommons"
@@ -63,7 +63,7 @@ def fetch_databag():
         formatted_project = {
             "name": project["name"],
             "repos": re.split(r",\s?", project["repos"]),
-            "roles": {}
+            "roles": {},
         }
         members = project["members"]
         for member in members:
