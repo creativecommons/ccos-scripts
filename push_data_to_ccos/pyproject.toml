@@ -1,6 +1,12 @@
 [tool.black]
 line-length = 79
 
+
+# [tool.flake8]
+#   config: .flake8
+# also see: https://gitlab.com/pycqa/flake8/-/issues/428
+
+
 [tool.isort]
 import_heading_firstparty = 'First-party/Local'
 import_heading_future = 'Future'
