@@ -15,15 +15,22 @@ information about that script.
 | [`push_data_to_ccos`][push_to_ccos] | Generates various pages with dynamic data on [CC Open Source][ccos] |
 | [`sync_community_team`][sync_team]  | Syncs all Community Team memberships with corresponding memberships in GitHub teams |
 
+[norm]: normalize_repos/
+[push_to_ccos]: push_data_to_ccos/
+[ccos]: httpe://opensource.creativecommons.org/
+[sync_team]: sync_community_team/
+
 
 ## Workflows
 
 | Workflow Name/Status | YML File Name | Workflow Purpose |
 | -------------------- | ------------- | ---------------- |
-| [![Add Community PRs to Project][b1]][l1] | [`add_community_pr.yml`][community_pr_yml] | Runs hourly at 5 minutes past every hour UTC and add community PRs to [Active Sprint][active_sprint] and [Vocabulary Planning][vocab_planning] |
+| [![Add Community PRs to Project][b1]][l1] | [`add_community_pr.yml`][community_pr_yml] | Runs hourly at 5 minutes past every hour UTC and add new Vocabulary issues to [Vocabulary In Progress][vocab_in_progress] |
 | [![Normalize Repos][b2]][l2] | [`normalize_repos.yml`][norm_pr_yml] | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`normalize_repos`][norm] |
 | [![Push data to CC Open Source][b3]][l3] | [`push_data_to_ccos.yml`][push_ccos_yml] | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`push_data_to_ccos`][push_to_ccos] |
 | [![Sync Community Teams with GitHub][b4]][l4] | [`sync_community_team.yml`][sync_team_yml] | Runs daily at 00:30 UTC and whenever someone pushes to master branch and uses [`sync_community_team`][sync_team] |
+| [![Track new issues in backlog][b5]][l5] | [`track_backlog.yml`][track_backlog] | Runs hourly at 45 minutes past every hour UTC and add community PRs to [Active Sprint][active_sprint] and new issues to [Backlog Pending Review][backlog_pending] |
+
 
 [b1]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
 [l1]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml
@@ -33,18 +40,17 @@ information about that script.
 [l3]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml
 [b4]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml/badge.svg
 [l4]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml
-
-[norm]: normalize_repos/
-[push_to_ccos]: push_data_to_ccos/
-[ccos]: httpe://opensource.creativecommons.org/
-[sync_team]: sync_community_team/
+[b5]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
+[l5]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml
 
 [community_pr_yml]: .github/workflows/add_community_pr.yml
-[active_sprint]: https://github.com/orgs/creativecommons/projects/7
-[vocab_planning]: https://github.com/orgs/creativecommons/projects/13
+[vocab_in_progress]: https://github.com/orgs/creativecommons/projects/13
 [norm_pr_yml]: .github/workflows/normalize_repos.yml
 [push_ccos_yml]: .github/workflows/push_data_to_ccos.yml
 [sync_team_yml]: .github/workflows/sync_community_team.yml
+[community_pr_yml]: .github/workflows/track_backlog.yml
+[active_sprint]: https://github.com/orgs/creativecommons/projects/7
+[backlog_pending]: https://github.com/orgs/creativecommons/projects/10
 
 
 ## :robot: Automation Authorship
