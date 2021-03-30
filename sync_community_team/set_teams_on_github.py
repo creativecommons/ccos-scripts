@@ -72,13 +72,14 @@ def map_team_to_members(
         for user in users_to_drop:
             team.remove_membership(user)
 
-    users_to_add = [
-        client.get_user(login)
-        for login in final_user_logins
-        if login not in initial_user_logins
-    ]
-    for user in users_to_add:
-        team.add_membership(user)
+    for login in final_user_logins:
+        if login not in initial_user_logins:
+            try:
+                user = client.get_user(login)
+            except UnknownObjectException:
+                print(f"            ERROR: User not found: {login}")
+                raise
+            team.add_membership(user)
 
     current_login = client.get_user().login
     if current_login not in final_user_logins:
