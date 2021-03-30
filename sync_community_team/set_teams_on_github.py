@@ -158,15 +158,18 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
     }
     try:
         team = organization.get_team_by_slug(team_slug)
-        print("            Team exists, reconciling...")
+    except UnknownObjectException:
+        team = None
+    if team:
+        print(f"            Team exists ({team_name}), reconciling...")
         if team.description == properties["description"]:
             del properties["description"]
         if team.privacy == properties["privacy"]:
             del properties["privacy"]
-        if properties:
-            team.edit(**properties)
+        if properties and properties != {"name": team.name}:
+                team.edit(**properties)
         print("            Done.")
-    except UnknownObjectException:
+    else:
         if not create_if_absent:
             print("            Did not exist, not creating.")
             team = None
