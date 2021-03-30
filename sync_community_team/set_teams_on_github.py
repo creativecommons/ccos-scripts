@@ -167,7 +167,7 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
         if team.privacy == properties["privacy"]:
             del properties["privacy"]
         if properties and properties != {"name": team.name}:
-                team.edit(**properties)
+            team.edit(**properties)
         print("            Done.")
     else:
         if not create_if_absent:
