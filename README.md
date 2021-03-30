@@ -20,7 +20,7 @@ information about that script.
 
 | Workflow Name/Status | YML File Name | Workflow Purpose |
 | -------------------- | ------------- | ---------------- |
-| [![Add Community PRs to Project][b1]][l1] | [`add_community_pr.yml`][community_pr_yml] | Runs hourly at 5 minutes past every hour UTC and add community PRs to [Active Sprint – CC Search][active_sprint] and [Vocabulary Planning][vocab_planning] |
+| [![Add Community PRs to Project][b1]][l1] | [`add_community_pr.yml`][community_pr_yml] | Runs hourly at 5 minutes past every hour UTC and add community PRs to [Active Sprint][active_sprint] and [Vocabulary Planning][vocab_planning] |
 | [![Normalize Repos][b2]][l2] | [`normalize_repos.yml`][norm_pr_yml] | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`normalize_repos`][norm] |
 | [![Push data to CC Open Source][b3]][l3] | [`push_data_to_ccos.yml`][push_ccos_yml] | Runs daily at 00:00 UTC and whenever someone pushes to master branch and uses [`push_data_to_ccos`][push_to_ccos] |
 | [![Sync Community Teams with GitHub][b4]][l4] | [`sync_community_team.yml`][sync_team_yml] | Runs daily at 00:30 UTC and whenever someone pushes to master branch and uses [`sync_community_team`][sync_team] |
