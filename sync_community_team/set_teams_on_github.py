@@ -130,7 +130,8 @@ def set_team_repo_permissions(team, permission):
     repos = team.get_repos()
     for repo in repos:
         print(
-            f"            Populating {permission} permission on {repo} repo..."
+            f"            Populating {permission} permission on"
+            f" {repo.full_name} repo..."
         )
         team.set_repo_permission(repo, permission)
         print("            Done.")
