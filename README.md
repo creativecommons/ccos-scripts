@@ -48,7 +48,7 @@ information about that script.
 [norm_pr_yml]: .github/workflows/normalize_repos.yml
 [push_ccos_yml]: .github/workflows/push_data_to_ccos.yml
 [sync_team_yml]: .github/workflows/sync_community_team.yml
-[community_pr_yml]: .github/workflows/track_backlog.yml
+[track_backlog]: .github/workflows/track_backlog.yml
 [active_sprint]: https://github.com/orgs/creativecommons/projects/7
 [backlog_pending]: https://github.com/orgs/creativecommons/projects/10
 
