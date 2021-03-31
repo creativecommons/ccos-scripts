@@ -72,13 +72,14 @@ def map_team_to_members(
         for user in users_to_drop:
             team.remove_membership(user)
 
-    users_to_add = [
-        client.get_user(login)
-        for login in final_user_logins
-        if login not in initial_user_logins
-    ]
-    for user in users_to_add:
-        team.add_membership(user)
+    for login in final_user_logins:
+        if login not in initial_user_logins:
+            try:
+                user = client.get_user(login)
+            except UnknownObjectException:
+                print(f"            ERROR: User not found: {login}")
+                raise
+            team.add_membership(user)
 
     current_login = client.get_user().login
     if current_login not in final_user_logins:
@@ -130,7 +131,8 @@ def set_team_repo_permissions(team, permission):
     repos = team.get_repos()
     for repo in repos:
         print(
-            f"            Populating {permission} permission on {repo} repo..."
+            f"            Populating {permission} permission on"
+            f" {repo.full_name} repo..."
         )
         team.set_repo_permission(repo, permission)
         print("            Done.")
@@ -158,15 +160,18 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
     }
     try:
         team = organization.get_team_by_slug(team_slug)
-        print("            Team exists, reconciling...")
+    except UnknownObjectException:
+        team = None
+    if team:
+        print(f"            Team exists ({team_name}), reconciling...")
         if team.description == properties["description"]:
             del properties["description"]
         if team.privacy == properties["privacy"]:
             del properties["privacy"]
-        if properties:
+        if properties and properties != {"name": team.name}:
             team.edit(**properties)
         print("            Done.")
-    except UnknownObjectException:
+    else:
         if not create_if_absent:
             print("            Did not exist, not creating.")
             team = None
