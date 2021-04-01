@@ -20,7 +20,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install pipenv
         cd normalize_repos
-        pipenv install
+        pipenv sync
     - name: Export token to env and run normalize script
       run: |
         cd normalize_repos
