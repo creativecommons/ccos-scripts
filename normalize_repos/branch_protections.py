@@ -13,9 +13,9 @@ EXEMPT_REPOSITORIES = [
     "cc.i18n",
     # exempted to allow community maintainer to self-merge PRs
     "ccsearch-browser-extension",
-    # exempted for bot pushes to master
+    # exempted for bot pushes to default branch
     "creativecommons.github.io-source",
-    # exempted for bot pushes to master
+    # exempted for bot pushes to default branch
     "creativecommons.github.io",
     # non-engineering repo
     "global-network-strategy",
