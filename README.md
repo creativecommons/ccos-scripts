@@ -26,10 +26,10 @@ information about that script.
 | Workflow Name/Status | YML File Name | Workflow Purpose |
 | -------------------- | ------------- | ---------------- |
 | [![Add Community PRs to Project][b1]][l1] | [`add_community_pr.yml`][community_pr_yml] | Runs hourly at 5 minutes past every hour UTC and adds new Vocabulary issues to [Vocabulary: In Progress][vocab_in_progress] |
-| [![Normalize Repos][b2]][l2] | [`normalize_repos.yml`][norm_pr_yml] | Runs daily at 00:00 UTC and whenever someone pushes to main branch and uses [`normalize_repos`][norm] |
-| [![Push data to CC Open Source][b3]][l3] | [`push_data_to_ccos.yml`][push_ccos_yml] | Runs daily at 00:00 UTC and whenever someone pushes to main branch and uses [`push_data_to_ccos`][push_to_ccos] |
-| [![Sync Community Teams with GitHub][b4]][l4] | [`sync_community_team.yml`][sync_team_yml] | Runs daily at 00:30 UTC and whenever someone pushes to main branch and uses [`sync_community_team`][sync_team] |
-| [![Track new issues in backlog][b5]][l5] | [`track_backlog.yml`][track_backlog] | Runs hourly at 45 minutes past every hour UTC and adds community PRs to [Active Sprint: Code Review][active_sprint] and new issues to [Backlog: Pending Review][backlog_pending] |
+| [![Normalize Repos][b2]][l2] | [`normalize_repos.yml`][norm_pr_yml] | Runs daily at 00:00 UTC and whenever someone pushes to the main branch and uses [`normalize_repos`][norm] |
+| [![Push data to CC Open Source][b3]][l3] | [`push_data_to_ccos.yml`][push_ccos_yml] | Runs daily at 00:00 UTC and whenever someone pushes to the main branch and uses [`push_data_to_ccos`][push_to_ccos] |
+| [![Sync Community Teams with GitHub][b4]][l4] | [`sync_community_team.yml`][sync_team_yml] | Runs daily at 00:30 UTC and whenever someone pushes to the main branch and uses [`sync_community_team`][sync_team] |
+| [![Track new issues in backlog][b5]][l5] | [`track_backlog.yml`][track_backlog] | Runs hourly at 45 minutes past every hour UTC and adds PRs to [Active Sprint: Code Review][active_sprint] and new issues to [Backlog: Pending Review][backlog_pending]. Uses [dhruvkb/issue-projector][issue-projector]. |
 
 
 [b1]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
@@ -51,6 +51,7 @@ information about that script.
 [track_backlog]: .github/workflows/track_backlog.yml
 [active_sprint]: https://github.com/orgs/creativecommons/projects/7
 [backlog_pending]: https://github.com/orgs/creativecommons/projects/10
+[issue-projector]: https://github.com/dhruvkb/issue-projector
 
 
 ## :robot: Automation Authorship
