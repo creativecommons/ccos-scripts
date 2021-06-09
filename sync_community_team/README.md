@@ -1,4 +1,4 @@
-# Push Data to CCOS
+# Sync Community Team
 
 This folder contains a script (`sync_teams.py`) that automatically:
 1. creates GitHub teams
