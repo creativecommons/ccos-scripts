@@ -18,8 +18,10 @@ class ScriptError(Exception):
 
 
 def main():
-    create_teams_for_data(get_community_team_data())
+    exit_status = 0
+    exit_status = create_teams_for_data(get_community_team_data(), exit_status)
     create_codeowners_for_data(get_community_team_data())
+    sys.exit(exit_status)
 
 
 if __name__ == "__main__":
