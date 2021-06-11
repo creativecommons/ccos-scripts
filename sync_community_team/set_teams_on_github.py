@@ -12,7 +12,7 @@ PERMISSIONS = {
 }
 
 
-def create_teams_for_data(databag):
+def create_teams_for_data(databag, exit_status):
     client = set_up_github_client()
     organization = get_cc_organization(client)
 
@@ -41,14 +41,15 @@ def create_teams_for_data(databag):
 
             print(f"        Populating members for team {team.name}...")
             members = [member["github"] for member in members]
-            map_team_to_members(client, team, members, True)
+            exit_status = map_team_to_members(client, team, members, exit_status, True)
             print("        Done.")
         print("    Done.")
     print("Done.")
+    return exit_status
 
 
 def map_team_to_members(
-    client, team, final_user_logins, non_destructive=False
+    client, team, final_user_logins, exit_status, non_destructive=False
 ):
     """
     Map the team to the given set of members. Any members that are not already
@@ -78,13 +79,15 @@ def map_team_to_members(
                 user = client.get_user(login)
             except UnknownObjectException:
                 print(f"            ERROR: User not found: {login}")
-                raise
+                exit_status = 1
+                continue
             team.add_membership(user)
 
     current_login = client.get_user().login
     if current_login not in final_user_logins:
         current_user = client.get_user(current_login)
         team.remove_membership(current_user)
+    return exit_status
 
 
 def map_team_to_repos(
