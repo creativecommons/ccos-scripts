@@ -22,7 +22,7 @@ CT_MEMBERS = "community_team_members.json"
 
 DATABAG_URL = (
     f"https://raw.githubusercontent.com/{GITHUB_ORGANIZATION}/"
-    f"{GITHUB_REPO_NAME}/master/databags/{CT_MEMBERS}"
+    f"{GITHUB_REPO_NAME}/main/databags/{CT_MEMBERS}"
 )
 
 
