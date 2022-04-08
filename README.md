@@ -60,6 +60,27 @@ This worflow creates GitHub teams for the Community teams and updates their memb
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 
 
+### Track new issues in backlog
+
+| **Workflow** | | |
+| -- | --: | --- |
+| | Status: | [![Track new issues in backlog][backlog_badge]][backlog_link] |
+| | Schedule: | Hourly at 45 minutes past the hour (`**:45`) |
+| | YAML: | [`track_backlog.yml`][track_backlog] |
+| **Action** | | |
+| | | [dhruvkb/issue-projector][issue_bot] |
+| **Env** | | |
+| | Required: | `ADMIN_GITHUB_TOKEN` |
+
+This workflow adds PRs to [Active Sprint: Code Review][active_sprint] and new issues to [Backlog: Pending Review][backlog_pending].
+
+[backlog_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
+[backlog_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml
+[track_backlog]: .github/workflows/track_backlog.yml
+[issue_bot]: https://github.com/dhruvkb/issue-projector
+[active_sprint]: https://github.com/orgs/creativecommons/projects/7
+[backlog_pending]: https://github.com/orgs/creativecommons/projects/10
+
 
 ###  Normalize Repos
 
@@ -134,25 +155,6 @@ The destination data is used by the following pages:
   organization
 - `ADMIN_GITHUB_TOKEN`: GitHub token with admin permissions to the
   `creativecommons` GitHub organization
-
-
-## Old Workflows Documentation
-
-| Workflow Name/Status | YML File Name | Workflow Purpose |
-| -------------------- | ------------- | ---------------- |
-|  | [`add_community_pr.yml`][community_pr_yml] | Runs hourly at 5 minutes past every hour UTC and adds new Vocabulary issues to [Vocabulary: In Progress][vocab_in_progress] |
-|  | [`sync_community_team.yml`][sync_team_yml] | Runs daily at 00:30 UTC and whenever someone pushes to the main branch and uses [`sync_community_team`][sync_team] |
-| [![Track new issues in backlog][b5]][l5] | [`track_backlog.yml`][track_backlog] | Runs hourly at 45 minutes past every hour UTC and adds PRs to [Active Sprint: Code Review][active_sprint] and new issues to [Backlog: Pending Review][backlog_pending]. Uses [dhruvkb/issue-projector][issue-projector]. |
-
-[b5]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
-[l5]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml
-
-[vocab_in_progress]: https://github.com/orgs/creativecommons/projects/13
-[sync_team_yml]: .github/workflows/sync_community_team.yml
-[track_backlog]: .github/workflows/track_backlog.yml
-[active_sprint]: https://github.com/orgs/creativecommons/projects/7
-[backlog_pending]: https://github.com/orgs/creativecommons/projects/10
-[issue-projector]: https://github.com/dhruvkb/issue-projector
 
 
 ## :robot: Automation Authorship
