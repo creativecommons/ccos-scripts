@@ -28,7 +28,7 @@ Planning][vocab_plan] project.
 [prs_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
 [prs_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml
 [community_pr_yml]: .github/workflows/add_community_pr.yml
-[proj_bot] https://github.com/subhamX/github-project-bot
+[proj_bot]: https://github.com/subhamX/github-project-bot
 [vocab_repo]: https://github.com/creativecommons/vocabulary
 [vocab_plan]: https://github.com/orgs/creativecommons/projects/13
 
