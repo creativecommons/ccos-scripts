@@ -56,7 +56,7 @@ def main():
                 ):
                     raise
             card.delete()
-            print(f"     -> removed.")
+            print("     -> removed.")
 
 
 if __name__ == "__main__":
