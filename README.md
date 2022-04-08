@@ -6,6 +6,60 @@ infrastructure.
 
 ## Workflows
 
+The following workflows are ordered by schedule frequency and start time.
+
+
+### Add Community PRs to Project
+
+| **Workflow** | | |
+| -- | --: | --- |
+| | Status: | [![Add Community PRs to Project][prs_badge]][prs_link] |
+| | Schedule: | Hourly at 5 minutes past the hour (`**:05`) |
+| | YAML: | [`add_community_pr.yml`][community_pr_yml] |
+| **Action** | | |
+| | | [subhamX/github-project-bot][proj_bot] |
+| **Env** | | |
+| | Required: | `ADMIN_GITHUB_TOKEN` |
+
+This workflow adds community PRs in the
+[creativecommons/vocabulary][vocab_repo] repository to [Vocabulary
+Planning][vocab_plan] project.
+
+[prs_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
+[prs_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml
+[community_pr_yml]: .github/workflows/add_community_pr.yml
+[proj_bot] https://github.com/subhamX/github-project-bot
+[vocab_repo]: https://github.com/creativecommons/vocabulary
+[vocab_plan]: https://github.com/orgs/creativecommons/projects/13
+
+
+### Sync Community Teams with GitHub
+
+| **Workflow** | | |
+| -- | --: | --- |
+| | Status: | [![Sync Community Teams with GitHub][team_badge]][team_link] |
+| | Schedule: | Hourly at 30 minutes past the hour (`**:30`) |
+| | YAML: | [`sync_community_team.yml`][sync_team_yml]  |
+| **Script** | | |
+| | File: | [`sync_community_teams.py`][team_file] |
+| | Common Modules: | [`ccos/`](ccos/) |
+| | Specific Modules: | [`ccos/norm/`](ccos/norm/) |
+| **Env** | | |
+| | Required: | `ADMIN_GITHUB_TOKEN` |
+
+This worflow creates GitHub teams for the Community teams and updates their membership based on the [`community_team_members.json`][databag] Lektor databag.
+ - The databag is used to create the [Community Team Members — Creative
+   Commons Open Source][ctlistpage] page
+ - The databag is kept up-to-date by [Push data to CC Open
+   Source](#push-data-to-cc-open-source), above
+
+[team_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml/badge.svg
+[team_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml
+[team_file]: sync_community_teams.py
+[databag]: https://github.com/creativecommons/creativecommons.github.io-source/blob/master/databags/community_team_members.json
+[ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
+
+
 
 ###  Normalize Repos
 
@@ -74,33 +128,6 @@ The destination data is used by the following pages:
 [db_repos]: https://github.com/creativecommons/creativecommons.github.io-source/blob/main/databags/repos.json
 
 
-### Sync Community Teams with GitHub
-
-| **Workflow** | | |
-| -- | --: | --- |
-| | Status: | [![Sync Community Teams with GitHub][team_badge]][team_link] |
-| | Schedule: | Hourly at 30 minutes past the hour (`**:30`) |
-| | YAML: | [`sync_community_team.yml`][sync_team_yml]  |
-| **Script** | | |
-| | File: | [`sync_community_teams.py`][team_file] |
-| | Common Modules: | [`ccos/`](ccos/) |
-| | Specific Modules: | [`ccos/norm/`](ccos/norm/) |
-| **Env** | | |
-| | Required: | `ADMIN_GITHUB_TOKEN` |
-
-This worflow creates GitHub teams for the Community teams and updates their membership based on the [`community_team_members.json`][databag] Lektor databag.
- - The databag is used to create the [Community Team Members — Creative
-   Commons Open Source][ctlistpage] page
- - The databag is kept up-to-date by [Push data to CC Open
-   Source](#push-data-to-cc-open-source), above
-
-[team_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml/badge.svg
-[team_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml
-[team_file]: sync_community_teams.py
-[databag]: https://github.com/creativecommons/creativecommons.github.io-source/blob/master/databags/community_team_members.json
-[ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
-
-
 ## Environment Variables
 
 - `ADMIN_ASANA_TOKEN`: Asana token with access to the Creative Commons Asana
@@ -113,16 +140,13 @@ This worflow creates GitHub teams for the Community teams and updates their memb
 
 | Workflow Name/Status | YML File Name | Workflow Purpose |
 | -------------------- | ------------- | ---------------- |
-| [![Add Community PRs to Project][b1]][l1] | [`add_community_pr.yml`][community_pr_yml] | Runs hourly at 5 minutes past every hour UTC and adds new Vocabulary issues to [Vocabulary: In Progress][vocab_in_progress] |
+|  | [`add_community_pr.yml`][community_pr_yml] | Runs hourly at 5 minutes past every hour UTC and adds new Vocabulary issues to [Vocabulary: In Progress][vocab_in_progress] |
 |  | [`sync_community_team.yml`][sync_team_yml] | Runs daily at 00:30 UTC and whenever someone pushes to the main branch and uses [`sync_community_team`][sync_team] |
 | [![Track new issues in backlog][b5]][l5] | [`track_backlog.yml`][track_backlog] | Runs hourly at 45 minutes past every hour UTC and adds PRs to [Active Sprint: Code Review][active_sprint] and new issues to [Backlog: Pending Review][backlog_pending]. Uses [dhruvkb/issue-projector][issue-projector]. |
 
-[b1]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
-[l1]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml
 [b5]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
 [l5]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml
 
-[community_pr_yml]: .github/workflows/add_community_pr.yml
 [vocab_in_progress]: https://github.com/orgs/creativecommons/projects/13
 [sync_team_yml]: .github/workflows/sync_community_team.yml
 [track_backlog]: .github/workflows/track_backlog.yml
