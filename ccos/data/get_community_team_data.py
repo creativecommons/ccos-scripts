@@ -6,24 +6,46 @@ in creativecommons/creativecommons.github.io-source
 """
 
 # Standard library
+import inspect
 import logging
 import os
+import sys
 
 # Third-party
 import asana
 
 # First-party/Local
-import log
+from ccos import log
 
-ASANA_CLIENT = asana.Client.access_token(os.environ["ADMIN_ASANA_TOKEN"])
+ASANA_WORKSPACE_GID = "133733285600979"
 ASANA_PROJECT_GID = "1172465506923661"
 
-log.set_up_logging()
-logger = logging.getLogger("push_data_to_ccos")
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
 log.reset_handler()
 
 
-def generate_databag():
+def setup_asana_client():
+    logger.log(logging.INFO, "Setting up Asana client...")
+    try:
+        asana_token = os.environ["ADMIN_ASANA_TOKEN"]
+    except KeyError:
+        logger.critical("missin ADMIN_ASANA_TOKEN environment variable")
+        sys.exit(1)
+    asana_client = asana.Client.access_token(asana_token)
+    try:
+        # Perform simple API operation to test authentication
+        asana_client.workspaces.get_workspace(ASANA_WORKSPACE_GID)
+    except asana.error.NoAuthorizationError as e:
+        logger.critical(
+            f"{e.status} {e.message} (is ADMIN_ASANA_TOKEN valid?)"
+        )
+        sys.exit(1)
+    logger.log(logging.INFO, "done.")
+    return asana_client
+
+
+def generate_databag(asana_client):
     """
     This method pulls the team members from Asana and
     loads them into the databag after a little
@@ -57,10 +79,11 @@ def generate_databag():
         ]
     }
     """
+
     logger.log(logging.INFO, "Pulling from Asana and generating databag...")
     databag = {"projects": [], "community_builders": []}
 
-    members = ASANA_CLIENT.tasks.find_by_section(
+    members = asana_client.tasks.find_by_section(
         ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
     )
     logger.log(logging.INFO, "Team members pulled.")
@@ -164,5 +187,5 @@ def get_custom_field(task, field_name):
                 return field["text_value"]
 
 
-def get_community_team_data():
-    return prune_databag(sort_databag(generate_databag()))
+def get_community_team_data(asana_client):
+    return prune_databag(sort_databag(generate_databag(asana_client)))

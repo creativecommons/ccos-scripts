@@ -10,6 +10,9 @@ ipython = "*"
 isort = "*"
 
 [packages]
+asana = "*"
+emoji = "*"
+GitPython = "*"
 PyGithub = "*"
 PyYAML = "*"
 

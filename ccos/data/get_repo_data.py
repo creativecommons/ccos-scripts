@@ -2,7 +2,9 @@
 # vim: set fileencoding=utf-8:
 
 # Standard library
+import inspect
 import logging
+import os.path
 
 # Third-party
 import emoji
@@ -11,13 +13,13 @@ from github import Github
 from github.GithubException import GithubException, UnknownObjectException
 
 # First-party/Local
-import log
-from push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
+from ccos import log
+from ccos.data.push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
 
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
-log.set_up_logging()
-logger = logging.getLogger("push_data_to_ccos")
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
 log.reset_handler()
 
 
