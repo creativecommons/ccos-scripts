@@ -1,7 +1,7 @@
 name: Sync Community Teams with GitHub
 on:
   schedule:
-  - cron: '30 0 * * *'
+    - cron: '30 0 * * *' # Daily at midnight:30 (00:30)
   push:
     branches:
       - main

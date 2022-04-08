@@ -2,7 +2,7 @@ name: Track new issues in backlog
 on:
   workflow_dispatch:
   schedule:
-  - cron: "45 * * * *" # Run hourly at 45 minutes past the hour
+    - cron: "45 * * * *" # Hourly at 45 minutes past the hour (**:45)
 jobs:
   add_issues_to_project:
     name: Track all issues

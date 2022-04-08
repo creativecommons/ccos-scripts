@@ -1,7 +1,7 @@
 name: Add Community PRs to Project
 on:
   schedule:
-    - cron: "5 * * * *" # Run hourly at 5 minutes past the hour
+    - cron: "5 * * * *" # Hourly at 5 minutes past the hour (**:05)
 jobs:
   build:
     runs-on: ubuntu-latest
