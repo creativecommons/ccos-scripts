@@ -55,6 +55,7 @@ This worflow creates GitHub teams for the Community teams and updates their memb
 
 [team_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml/badge.svg
 [team_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml
+[sync_team_yml]: .github/workflows/sync_community_team.yml
 [team_file]: sync_community_teams.py
 [databag]: https://github.com/creativecommons/creativecommons.github.io-source/blob/master/databags/community_team_members.json
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
