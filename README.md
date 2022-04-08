@@ -9,15 +9,17 @@ infrastructure.
 
 ###  Normalize Repos
 
-- Workflow
-  - Status: [![Normalize Repos][norm_badge]][norm_link]
-  - Schedule: Hourly at 45 minutes past the hour (`**:45`)
-  - YAML: [`normalize_repos.yml`][norm_pr_yml]
-- Script:  `normalize_repos.py`
-  - Common Modules: [`ccos/`](ccos/)
-  - Specific Modules: [`ccos/norm/`](ccos/norm/)
-- Required Environment Variables:
-  - `ADMIN_GITHUB_TOKEN`
+| **Workflow** | | |
+| -- | --: | --- |
+| | Status: | [![Normalize Repos][norm_badge]][norm_link] |
+| | Schedule: | Hourly at 45 minutes past the hour (`**:45`) |
+| | YAML: | [`normalize_repos.yml`][norm_pr_yml] |
+| **Script** | | |
+| | File: | [`normalize_repos.py`][norm_file] |
+| | Common Modules: | [`ccos/`](ccos/) |
+| | Specific Modules: | [`ccos/norm/`](ccos/norm/) |
+| **Env** | | |
+| | Required: | `ADMIN_GITHUB_TOKEN` |
 
 This workflow ensures that all active repositories in the creativecommons
 GitHub organization are consistent in the following ways:
@@ -27,29 +29,32 @@ GitHub organization are consistent in the following ways:
 This script will only update color and description of existing labels or create
 new labels. It will never delete labels.
 
-[norm_pr_yml]: .github/workflows/normalize_repos.yml
 [norm_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml/badge.svg
 [norm_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml
+[norm_pr_yml]: .github/workflows/normalize_repos.yml
+[norm_file]: normalize_repos.py
 
 
 ### Push data to CC Open Source
 
-- Workflow
-  - Status: [![Push data to CC Open Source][data_badge]][data_link]
-  - Schedule: Daily at midnight:15 (`00:15`)
-  - YAML: [`push_data_to_ccos.yml`][push_ccos_yml]
-- Script:  `push_data_to_ccos.py`
-  - Common Modules: [`ccos/`](ccos/)
-  - Specific Modules: [`ccos/data/`](ccos/data/)
-- Required Environment Variables:
-  - `ADMIN_ASANA_TOKEN`
-  - `ADMIN_GITHUB_TOKEN`
+| **Workflow** | | |
+| -- | --: | --- |
+| | Status: | [![Push data to CC Open Source][data_badge]][data_link] |
+| | Schedule: | Daily at midnight:15 (`00:15`) |
+| | YAML: | [`push_data_to_ccos.yml`][push_ccos_yml] |
+| **Script** | | |
+| | File: | [`push_data_to_ccos.py`][data_file] |
+| | Common Modules: | [`ccos/`](ccos/) |
+| | Specific Modules: | [`ccos/data/`](ccos/data/) |
+| **Env** | | |
+| | Required: | `ADMIN_ASANA_TOKEN` |
+| | Required: | `ADMIN_GITHUB_TOKEN` |
 
 This workflow retreives data from Asana, formats it as a lektor databag, and
 pushes it to CC Open Source website source repository:
 - Data Source: [Community Team Tracking - Asana][asana] (limited access)
 - Data Destination:
-  - [`creativecommons.github.io-source`][ccos_source]
+  - [`creativecommons/creativecommons.github.io-source`][ccos_source]
     - [`databags/community_team_members.json`][db_community]
     - [`databags/repos.json`][db_repos]
 
@@ -59,6 +64,8 @@ The destination data is used by the following pages:
 
 [data_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml/badge.svg
 [data_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml
+[push_ccos_yml]: .github/workflows/push_data_to_ccos.yml
+[data_file]: push_data_to_ccos.py
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 [osproj]: https://opensource.creativecommons.org/contributing-code/projects/
 [asana]: https://app.asana.com/0/1172465506923657/list
@@ -92,7 +99,6 @@ The destination data is used by the following pages:
 
 [community_pr_yml]: .github/workflows/add_community_pr.yml
 [vocab_in_progress]: https://github.com/orgs/creativecommons/projects/13
-[push_ccos_yml]: .github/workflows/push_data_to_ccos.yml
 [sync_team_yml]: .github/workflows/sync_community_team.yml
 [track_backlog]: .github/workflows/track_backlog.yml
 [active_sprint]: https://github.com/orgs/creativecommons/projects/7
