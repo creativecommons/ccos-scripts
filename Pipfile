@@ -15,6 +15,7 @@ emoji = "*"
 GitPython = "*"
 PyGithub = "*"
 PyYAML = "*"
+requests = "*"
 
 [requires]
 python_version = "3.9"
