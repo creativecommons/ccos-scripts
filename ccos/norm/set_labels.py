@@ -1,18 +1,21 @@
 # Standard library
+import inspect
 import logging
+import os.path
 
 # First-party/Local
-import log
+from ccos import log
 
-logger = logging.getLogger("normalize_repos")
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
 log.reset_handler()
 
 
 def map_repo_to_labels(repo, final_labels, non_destructive=True):
     """
-    Map the given list of labels to GitHub. Any labels that do not already exist
-    on the repository will be created and if chosen to, any additional lables on
-    the repository will be removed.
+    Map the given list of labels to GitHub. Any labels that do not already
+    exist on the repository will be created and if chosen to, any additional
+    lables on the repository will be removed.
     @param repo: the repo on which the labels are being synced
     @param final_labels: the list of labels that should be present on the repo
     @param non_destructive: whether to trim extra labels or preserve them
@@ -31,7 +34,7 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
     logger.log(log.SUCCESS, f"done. Found {len(final_labels)} labels.")
 
     if not non_destructive:
-        logger.log(logging.INFO, f"Syncing initial labels...")
+        logger.log(logging.INFO, "Syncing initial labels...")
         log.change_indent(+1)
         for initial_label_name, initial_label in initial_labels.items():
             logger.log(logging.INFO, f"Syncing '{initial_label_name}'...")
@@ -45,7 +48,7 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
         log.change_indent(-1)
         logger.log(log.SUCCESS, "done.")
 
-    logger.log(logging.INFO, f"Syncing final labels...")
+    logger.log(logging.INFO, "Syncing final labels...")
     log.change_indent(+1)
     for final_label_name, final_label in final_labels.items():
         logger.log(logging.INFO, f"Syncing '{final_label_name}'...")
@@ -69,8 +72,8 @@ def map_repo_to_labels(repo, final_labels, non_destructive=True):
 
 def set_labels(repos, standard_labels, repo_specific_labels):
     """
-    Set labels on all repos for the organisation. This is the main entrypoint of
-    the module.
+    Set labels on all repos for the organisation. This is the main entrypoint
+    of the module.
     """
 
     for repo in list(repos):

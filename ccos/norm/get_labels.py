@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 
 # First-party/Local
-from models import Group, Label
+from ccos.norm.models import Group, Label
 
 
 def get_groups():
@@ -67,8 +67,8 @@ def get_repo_specific_labels():
 def get_skill_label_from_name(skill_group, skill_name):
     """
     Generate the skill label purely from the name of the skill. The name of the
-    skill is plugged into the description and the lower-cased version is used as
-    the label name.
+    skill is plugged into the description and the lower-cased version is used
+    as the label name.
     @param skill_group: the logical parent group of all skill labels
     @param skill_name: the name of the skill to convert into a label
     @return: an instance of Label derived from the skill name
