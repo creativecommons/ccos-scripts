@@ -1,8 +1,18 @@
+# Standard library
+import inspect
+import logging
+import os.path
+
 # Third-party
 from github import UnknownObjectException
 
 # First-party/Local
-from utils import get_cc_organization, get_team_slug_name, set_up_github_client
+from ccos import log
+from ccos.gh_utils import (
+    get_cc_organization,
+    get_team_slug_name,
+    set_up_github_client,
+)
 
 PERMISSIONS = {
     "Project Contributor": None,
@@ -11,40 +21,53 @@ PERMISSIONS = {
     "Project Maintainer": "maintain",
 }
 
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
+log.reset_handler()
+
 
 def create_teams_for_data(databag, exit_status):
     client = set_up_github_client()
     organization = get_cc_organization(client)
 
-    print("Creating and populating teams...")
+    logging.log(logging.INFO, "Creating and populating teams...")
     projects = databag["projects"]
     for project in projects:
         project_name = project["name"]
-        print(
-            f"    Creating and populating teams for project {project_name}..."
+        logging.log(
+            logging.INFO,
+            f"Creating and populating teams for project {project_name}...",
         )
         roles = project["roles"]
         for role, members in roles.items():
             if PERMISSIONS[role] is None:
-                print(f"    Skipping {role} as it has no privileges.")
+                logging.log(
+                    logging.INFO, f"Skipping {role} as it has no privileges."
+                )
                 continue
 
-            print(f"        Finding team for role {role}...")
+            logging.log(logging.INFO, f"Finding team for role {role}...")
             team = map_role_to_team(organization, project_name, role)
-            print("        Done.")
+            logging.log(log.SUCCESS, "Done.")
 
-            print(f"        Populating repos for team {team.name}...")
+            logging.log(
+                logging.INFO, f"Populating repos for team {team.name}..."
+            )
             repos = project["repos"]
             map_team_to_repos(organization, team, repos, True)
             set_team_repo_permissions(team, PERMISSIONS[role])
-            print("        Done.")
+            logging.log(log.SUCCESS, "Done.")
 
-            print(f"        Populating members for team {team.name}...")
+            logging.log(
+                logging.INFO, f"Populating members for team {team.name}..."
+            )
             members = [member["github"] for member in members]
-            exit_status = map_team_to_members(client, team, members, exit_status, True)
-            print("        Done.")
-        print("    Done.")
-    print("Done.")
+            exit_status = map_team_to_members(
+                client, team, members, exit_status, True
+            )
+            logging.log(log.SUCCESS, "Done.")
+        logging.log(log.SUCCESS, "Done.")
+    logging.log(log.SUCCESS, "Done.")
     return exit_status
 
 
@@ -78,7 +101,7 @@ def map_team_to_members(
             try:
                 user = client.get_user(login)
             except UnknownObjectException:
-                print(f"            ERROR: User not found: {login}")
+                logging.log(logging.INFO, f"ERROR: User not found: {login}")
                 exit_status = 1
                 continue
             team.add_membership(user)
@@ -133,12 +156,12 @@ def set_team_repo_permissions(team, permission):
     """
     repos = team.get_repos()
     for repo in repos:
-        print(
-            f"            Populating {permission} permission on"
-            f" {repo.full_name} repo..."
+        logging.log(
+            logging.INFO,
+            f"Populating {permission} permission on {repo.full_name} repo...",
         )
         team.set_repo_permission(repo, permission)
-        print("            Done.")
+        logging.log(log.SUCCESS, "Done.")
 
 
 def map_role_to_team(organization, project_name, role, create_if_absent=True):
@@ -166,20 +189,20 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
     except UnknownObjectException:
         team = None
     if team:
-        print(f"            Team exists ({team_name}), reconciling...")
+        logging.log(logging.INFO, f"Team exists ({team_name}), reconciling...")
         if team.description == properties["description"]:
             del properties["description"]
         if team.privacy == properties["privacy"]:
             del properties["privacy"]
         if properties and properties != {"name": team.name}:
             team.edit(**properties)
-        print("            Done.")
+        logging.log(log.SUCCESS, "Done.")
     else:
         if not create_if_absent:
-            print("            Did not exist, not creating.")
+            logging.log(logging.INFO, "Did not exist, not creating.")
             team = None
         else:
-            print("            Did not exist, creating...")
+            logging.log(logging.INFO, "Did not exist, creating...")
             team = organization.create_team(**properties)
-            print("            Done.")
+            logging.log(log.SUCCESS, "Done.")
     return team

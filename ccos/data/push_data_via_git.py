@@ -2,6 +2,7 @@
 # vim: set fileencoding=utf-8:
 
 # Standard library
+import inspect
 import json
 import logging
 import os
@@ -10,7 +11,7 @@ import os
 import git
 
 # First-party/Local
-import log
+from ccos import log
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
@@ -29,8 +30,8 @@ WORKING_DIRECTORY = "/tmp"
 GIT_WORKING_DIRECTORY = f"{WORKING_DIRECTORY}/{GITHUB_REPO_NAME}"
 JSON_FILE_DIRECTORY = f"{GIT_WORKING_DIRECTORY}/databags"
 
-log.set_up_logging()
-logger = logging.getLogger("push_data_to_ccos")
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
 log.reset_handler()
 
 

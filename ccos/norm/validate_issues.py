@@ -1,13 +1,16 @@
 # Standard library
+import inspect
 import logging
+import os.path
 
 # Third-party
 import yaml
 
 # First-party/Local
-import log
+from ccos import log
 
-logger = logging.getLogger("normalize_repos")
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
 log.reset_handler()
 
 TRIAGE_LABEL = "🚦 status: awaiting triage"
@@ -26,7 +29,7 @@ def dump_invalid_issues(invalid_issues):
             invalid_issue["issue"] = issue.title
             invalid_issue["url"] = issue.html_url
 
-    logger.log(logging.INFO, f"Dumping issues in a file...")
+    logger.log(logging.INFO, "Dumping issues in a file...")
     with open("/tmp/invalid_issues.yml", "w") as file:
         yaml.dump(invalid_issues, file)
     logger.log(log.SUCCESS, "done.")
@@ -36,7 +39,8 @@ def are_issue_labels_valid(issue, required_groups):
     """
     Check if the given issue is valid based on the labels applied to it.
     @param issue: the issue whose labels are being validated
-    @param required_groups: the label groups which must be applied on all issues
+    @param required_groups: the label groups which must be applied on all
+    issues
     @return: whether the issues is or isn't valid, and why
     """
 
@@ -79,13 +83,14 @@ def get_invalid_issues_in_repo(repo, required_groups):
     Get a list of invalid issues in the given repo with the reason for marking
     them as such.
     @param repo: the repo in which to check for the validity of issues
-    @param required_groups: the label groups which must be applied on all issues
+    @param required_groups: the label groups which must be applied on all
+        issues
     @return: a list of invalid issues and their causes
     """
 
     logger.log(logging.INFO, f"Getting issues for repo '{repo.name}'...")
     issues = repo.get_issues(state="open")
-    logger.log(log.SUCCESS, f"done.")
+    logger.log(log.SUCCESS, "done.")
 
     invalid_issues = []
     log.change_indent(+1)
@@ -115,23 +120,23 @@ def get_required_groups(groups):
 
 def validate_issues(repos, groups):
     """
-    Validate the labels on all issues in all repos for the organisation. This is
-    the main entrypoint of the module.
+    Validate the labels on all issues in all repos for the organisation. This
+    is the main entrypoint of the module.
     """
 
     required_groups = get_required_groups(groups)
     invalid_issues = {}
 
-    logger.log(logging.INFO, f"Finding issues with invalid labels...")
+    logger.log(logging.INFO, "Finding issues with invalid labels...")
     log.change_indent(+1)
     for repo in list(repos):
         logger.log(logging.INFO, f"Checking issues in repo '{repo.name}'...")
         invalid_issues[repo.name] = get_invalid_issues_in_repo(
             repo, required_groups
         )
-        logger.log(log.SUCCESS, f"done.")
+        logger.log(log.SUCCESS, "done.")
     log.change_indent(-1)
-    logger.log(log.SUCCESS, f"done.")
+    logger.log(log.SUCCESS, "done.")
 
     dump_invalid_issues(invalid_issues)
 

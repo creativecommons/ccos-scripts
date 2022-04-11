@@ -1,24 +1,50 @@
 # Standard library
+import inspect
+import logging
 import os
 import re
+import sys
 
 # Third-party
 from github import Github
+from github.GithubException import BadCredentialsException
+
+# First-party/Local
+from ccos import log
 
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_USERNAME = "cc-creativecommons-github-io-bot"
-GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
+GITHUB_TOKEN = None
+
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
+log.reset_handler()
 
 
 def set_up_github_client():
-    print("Setting up GitHub client...")
+    global GITHUB_TOKEN
+    try:
+        GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
+    except KeyError:
+        logger.critical("missin ADMIN_GITHUB_TOKEN environment variable")
+        sys.exit(1)
+    logger.log(logging.INFO, "Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
+    logger.log(log.SUCCESS, "done.")
     return github_client
 
 
 def get_cc_organization(github_client):
-    print("Getting CC's GitHub organization...")
-    cc = github_client.get_organization(GITHUB_ORGANIZATION)
+    logger.log(logging.INFO, "Getting CC's GitHub organization...")
+    try:
+        cc = github_client.get_organization(GITHUB_ORGANIZATION)
+    except BadCredentialsException as e:
+        logger.critical(
+            f"{e.status} {e.data['message']} (see"
+            f" {e.data['documentation_url']})"
+        )
+        sys.exit(1)
+    logger.log(log.SUCCESS, "done.")
     return cc
 
 

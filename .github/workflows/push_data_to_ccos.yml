@@ -1,7 +1,7 @@
 name: Push data to CC Open Source
-on: 
+on:
   schedule:
-  - cron: '15 0 * * *'
+    - cron: '15 0 * * *' # Daily at midnight:15 (00:15)
   push:
     branches:
       - main
@@ -11,19 +11,17 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.9
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: 3.9
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install pipenv
-        cd push_data_to_ccos
         pipenv sync
     - name: Export token to env and run script
       run: |
-        cd push_data_to_ccos
-        pipenv run python sync_data.py
+        pipenv run ./push_data_to_ccos.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         ADMIN_ASANA_TOKEN: ${{ secrets.ADMIN_ASANA_TOKEN }}

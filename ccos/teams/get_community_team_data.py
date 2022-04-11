@@ -8,10 +8,16 @@ This file intentionally has an external API identical to that of
 """
 
 # Standard library
+import inspect
+import logging
+import os.path
 import re
 
 # Third-party
 import requests
+
+# First-party/Local
+from ccos import log
 
 # Constants should match 'push_data_to_ccos/push_data_via_git.py'
 GITHUB_ORGANIZATION = "creativecommons"
@@ -24,6 +30,10 @@ DATABAG_URL = (
     f"https://raw.githubusercontent.com/{GITHUB_ORGANIZATION}/"
     f"{GITHUB_REPO_NAME}/main/databags/{CT_MEMBERS}"
 )
+
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
+log.reset_handler()
 
 
 def fetch_databag():
@@ -53,15 +63,15 @@ def fetch_databag():
         ]
     }
     """
-    print("Pulling from OS@CC...")
+    logging.log(logging.INFO, "Pulling from OS@CC...")
     databag = {"projects": []}
 
     request = requests.get(DATABAG_URL)
     request.raise_for_status()
     projects = request.json()["projects"]
-    print("    Team members pulled.")
+    logging.log(logging.INFO, "Team members pulled.")
 
-    print("    Processing team members...")
+    logging.log(logging.INFO, "Processing team members...")
     for project in projects:
         formatted_project = {
             "name": project["name"],
@@ -77,8 +87,8 @@ def fetch_databag():
             formatted_project["roles"][role].append(member)
         databag["projects"].append(formatted_project)
 
-    print("    Done.")
-    print("Pull successful.")
+    logging.log(log.SUCCESS, "Done.")
+    logging.log(log.SUCCESS, "Pull successful.")
     return databag
 
 

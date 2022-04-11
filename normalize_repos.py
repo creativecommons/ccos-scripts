@@ -9,6 +9,7 @@ organization are consistent. Please see README.md.
 # Standard library
 import argparse
 import logging
+import os.path
 import sys
 import traceback
 
@@ -17,17 +18,14 @@ import yaml  # For converting .cc-metadata.yml to Python dictionary
 from github import GithubException, UnknownObjectException
 
 # First-party/Local
-import branch_protections
-import log
-
-# Local/library specific
-from get_labels import get_groups, get_labels
-from set_labels import set_labels
-from utils import get_cc_organization, set_up_github_client
-from validate_issues import validate_issues
+from ccos import gh_utils, log
+from ccos.norm import branch_protections
+from ccos.norm.get_labels import get_groups, get_labels
+from ccos.norm.set_labels import set_labels
+from ccos.norm.validate_issues import validate_issues
 
 log.set_up_logging()
-logger = logging.getLogger("normalize_repos")
+logger = logging.getLogger(os.path.basename(__file__))
 log.reset_handler()
 
 
@@ -72,12 +70,12 @@ def setup():
 
 
 def get_cc_repos(github):
-    cc = get_cc_organization(github)
+    cc = gh_utils.get_cc_organization(github)
     return cc.get_repos()
 
 
 def get_select_repos(args):
-    github = set_up_github_client()
+    github = gh_utils.set_up_github_client()
     repos = list(get_cc_repos(github))
     if args.repos:
         repos_selected = []

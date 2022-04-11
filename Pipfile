@@ -10,9 +10,12 @@ ipython = "*"
 isort = "*"
 
 [packages]
-PyGithub = "*"
-requests = "*"
+asana = "*"
+emoji = "*"
 GitPython = "*"
+PyGithub = "*"
+PyYAML = "*"
+requests = "*"
 
 [requires]
 python_version = "3.9"

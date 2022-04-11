@@ -1,6 +1,9 @@
 # Standard library
 import datetime
+import inspect
+import logging
 import os
+import os.path
 import shutil
 from pathlib import Path
 
@@ -8,23 +11,26 @@ from pathlib import Path
 import git
 
 # First-party/Local
-from set_teams_on_github import map_role_to_team
-from utils import (
+from ccos import log
+from ccos.gh_utils import (
     GITHUB_ORGANIZATION,
     GITHUB_TOKEN,
     GITHUB_USERNAME,
     get_cc_organization,
     set_up_github_client,
 )
+from ccos.teams.set_teams_on_github import map_role_to_team
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
 
-
 WORKING_DIRECTORY = Path("/tmp").resolve()
 
-
 SYNC_BRANCH = "ct_codeowners"
+
+log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
+logger = logging.getLogger(log_name)
+log.reset_handler()
 
 
 def create_codeowners_for_data(databag):
@@ -33,25 +39,29 @@ def create_codeowners_for_data(databag):
     client = set_up_github_client()
     organization = get_cc_organization(client)
 
-    print("Identifying and fixing CODEOWNER issues...")
+    logging.log(logging.INFO, "Identifying and fixing CODEOWNER issues...")
     projects = databag["projects"]
     for project in projects:
         project_name = project["name"]
-        print(
-            "    Identifying and fixing CODEOWNER issues for project"
-            f" {project_name}..."
+        logging.log(
+            logging.INFO,
+            "Identifying and fixing CODEOWNER issues for project"
+            f" {project_name}...",
         )
 
-        print("        Finding all teams...")
+        logging.log(logging.INFO, "Finding all teams...")
         roles = project["roles"]
         teams = get_teams(organization, project_name, roles)
-        print(f"        Found {len(teams)} teams for project {project_name}.")
+        logging.log(
+            logging.INFO,
+            f"        Found {len(teams)} teams for project {project_name}.",
+        )
 
-        print("        Checking all projects...")
+        logging.log(logging.INFO, "Checking all projects...")
         repos = project["repos"]
         for repo in repos:
             check_and_fix_repo(organization, repo, teams)
-    print("Done")
+    logging.log(log.SUCCESS, "Done")
 
 
 def set_up_git_user():
@@ -60,7 +70,7 @@ def set_up_git_user():
     being set on the OS-level, do not need to be configured on a per-repo
     basis.
     """
-    print("Setting up git user...")
+    logging.log(logging.INFO, "Setting up git user...")
     os.environ["GIT_AUTHOR_NAME"] = GIT_USER_NAME
     os.environ["GIT_AUTHOR_EMAIL"] = GIT_USER_EMAIL
     os.environ["GIT_COMMITTER_NAME"] = GIT_USER_NAME
@@ -95,39 +105,39 @@ def check_and_fix_repo(organization, repo, teams):
     @param repo: the repo to which the CODEOWNERS file being modified belongs
     """
 
-    print(f"            Checking and fixing {repo}...")
+    logging.log(logging.INFO, f"Checking and fixing {repo}...")
     set_up_repo(repo)
     fix_required = False
 
     if not is_codeowners_present(repo):
         fix_required = True
         codeowners_path = get_codeowners_path(repo)
-        print("                CODEOWNERS does not exist, creating...")
+        logging.log(logging.INFO, " CODEOWNERS does not exist, creating...")
         os.makedirs(codeowners_path.parent, exist_ok=True)
         open(codeowners_path, "a").close()
-        print("                Done.")
+        logging.log(log.SUCCESS, "                Done.")
 
     team_mention_map = get_team_mention_map(repo, teams)
     if not all(team_mention_map.values()):
         fix_required = True
-        print("                CODEOWNERS is incomplete, populating...")
+        logging.log(logging.INFO, "CODEOWNERS is incomplete, populating...")
         add_missing_teams(repo, team_mention_map)
-        print("                Done.")
+        logging.log(log.SUCCESS, "                Done.")
 
     if fix_required:
-        print("                Pushing to GitHub...")
+        logging.log(logging.INFO, "Pushing to GitHub...")
         branch_name = commit_and_push_changes(repo)
-        print(f"                Pushed to {branch_name}.")
+        logging.log(log.SUCCESS, f"Pushed to {branch_name}.")
 
-        print("                Opening a PR...")
+        logging.log(logging.INFO, "Opening a PR...")
         pr = create_pull_request(organization, repo, branch_name)
-        print(f"                PR at {pr.url}.")
+        logging.log(log.SUCCESS, f"                PR at {pr.url}.")
 
-    print("                Deleting clone...")
+    logging.log(logging.INFO, "Deleting clone...")
     shutil.rmtree(get_repo_path(repo))
-    print("                Done.")
+    logging.log(log.SUCCESS, "Done.")
 
-    print("            All is well.")
+    logging.log(log.SUCCESS, "All is well.")
 
 
 def commit_and_push_changes(repo):
@@ -187,16 +197,16 @@ def set_up_repo(repo):
     """
     destination_path = get_repo_path(repo)
     if not os.path.isdir(destination_path):
-        print("                Cloning repo...")
+        logging.log(logging.INFO, "Cloning repo...")
         repo = git.Repo.clone_from(
             url=get_github_repo_url_with_credentials(repo),
             to_path=destination_path,
         )
     else:
-        print("                Setting up repo...")
+        logging.log(logging.INFO, "Setting up repo...")
         repo = git.Repo(destination_path)
     origin = repo.remotes.origin
-    print("                Pulling latest code...")
+    logging.log(logging.INFO, "Pulling latest code...")
     origin.pull()
 
 

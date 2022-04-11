@@ -1,8 +1,7 @@
 name: Add Community PRs to Project
 on:
   schedule:
-  # cron schedule expression to run at 5 minutes past every hour 
-    - cron: "5 * * * *"
+    - cron: "5 * * * *" # Hourly at 5 minutes past the hour (**:05)
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,17 +13,3 @@ jobs:
         COLUMN_NAME: "In Progress"
         PROJECT_URL: https://github.com/orgs/creativecommons/projects/13
         REPO_URL: https://github.com/creativecommons/vocabulary
-    - name: Handle vue-vocabulary Repo
-      uses: subhamX/github-project-bot@v1.0.0
-      with:
-        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-        COLUMN_NAME: "In Progress"
-        PROJECT_URL: https://github.com/orgs/creativecommons/projects/13
-        REPO_URL: https://github.com/creativecommons/vue-vocabulary
-    - name: Handle fonts Repo
-      uses: subhamX/github-project-bot@v1.0.0
-      with:
-        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-        COLUMN_NAME: "In Progress"
-        PROJECT_URL: https://github.com/orgs/creativecommons/projects/13
-        REPO_URL: https://github.com/creativecommons/fonts

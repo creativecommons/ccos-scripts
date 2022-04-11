@@ -85,7 +85,6 @@ class IndentFormatter(logging.Formatter):
         @param record: the log record to format with this formatter
         @return: the formatted log record
         """
-
         stack = inspect.stack(context=0)
         depth = len(stack)
         if self.baseline is None:
@@ -95,7 +94,7 @@ class IndentFormatter(logging.Formatter):
             self.cut = IndentFormatter.identify_cut(filenames)
 
         # Inject custom information into the record
-        record.indent = ". . " * (depth - self.baseline + self.manual_push)
+        record.indent = ". " * (depth - self.baseline + self.manual_push)
         record.function = stack[self.cut].function
 
         # Format the record using custom information
