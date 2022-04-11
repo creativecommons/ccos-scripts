@@ -7,15 +7,15 @@ infrastructure.
 ## Status
 
 - [![Add Community PRs to Project][prs_badge]][prs_link]
-- [![Sync Community Teams with GitHub][team_badge]][team_link]
+- [![Sync Community Teams with GitHub][teams_badge]][teams_link]
 - [![Track new issues in backlog][backlog_badge]][backlog_link]
 - [![Normalize Repos][norm_badge]][norm_link]
 - [![Push data to CC Open Source][data_badge]][data_link]
 
 [prs_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
 [prs_link]: #add-community-prs-to-project
-[team_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml/badge.svg
-[team_link]: #sync-community-teams-with-github
+[teams_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_teams.yml/badge.svg
+[teams_link]: #sync-community-teams-with-github
 [backlog_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
 [backlog_link]: #track-new-issues-in-backlog
 [norm_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml/badge.svg
@@ -73,9 +73,9 @@ Planning][vocab_plan] project.
 | **Workflow** | | |
 | -- | --: | --- |
 | | Schedule: | Hourly at 30 minutes past the hour (`**:30`) |
-| | YAML: | [`sync_community_team.yml`][sync_team_yml]  |
+| | YAML: | [`sync_community_team.yml`][sync_teams_yml]  |
 | **Script** | | |
-| | File: | [`sync_community_teams.py`][team_file] |
+| | File: | [`sync_community_teams.py`][teams_file] |
 | | Common Modules: | [`ccos/`](ccos/) |
 | | Specific Modules: | [`ccos/norm/`](ccos/norm/) |
 | **Env** | | |
@@ -87,8 +87,8 @@ This worflow creates GitHub teams for the Community teams and updates their memb
  - The databag is kept up-to-date by [Push data to CC Open
    Source](#push-data-to-cc-open-source), above
 
-[sync_team_yml]: .github/workflows/sync_community_team.yml
-[team_file]: sync_community_teams.py
+[sync_teams_yml]: .github/workflows/sync_community_teams.yml
+[teams_file]: sync_community_teams.py
 [databag]: https://github.com/creativecommons/creativecommons.github.io-source/blob/master/databags/community_team_members.json
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 
