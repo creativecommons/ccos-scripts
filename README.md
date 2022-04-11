@@ -13,15 +13,15 @@ infrastructure.
 - [![Push data to CC Open Source][data_badge]][data_link]
 
 [prs_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
-[prs_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml
+[prs_link]: #add-community-prs-to-project
 [team_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml/badge.svg
-[team_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml
+[team_link]: #sync-community-teams-with-github
 [backlog_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
-[backlog_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml
+[backlog_link]: #track-new-issues-in-backlog
 [norm_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml/badge.svg
-[norm_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml
+[norm_link]: #normalize-repos
 [data_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml/badge.svg
-[data_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml
+[data_link]: #push-data-to-cc-open-source
 
 
 ## Code of Conduct
