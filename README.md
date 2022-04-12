@@ -4,6 +4,44 @@ These are scripts used to maintain various pieces of CC's open source community
 infrastructure.
 
 
+## Status
+
+- [![Add Community PRs to Project][prs_badge]][prs_link]
+- [![Sync Community Teams with GitHub][teams_badge]][teams_link]
+- [![Track new issues in backlog][backlog_badge]][backlog_link]
+- [![Normalize Repos][norm_badge]][norm_link]
+- [![Push data to CC Open Source][data_badge]][data_link]
+
+[prs_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
+[prs_link]: #add-community-prs-to-project
+[teams_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_teams.yml/badge.svg
+[teams_link]: #sync-community-teams-with-github
+[backlog_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
+[backlog_link]: #track-new-issues-in-backlog
+[norm_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml/badge.svg
+[norm_link]: #normalize-repos
+[data_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml/badge.svg
+[data_link]: #push-data-to-cc-open-source
+
+
+## Code of Conduct
+
+[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md):
+> The Creative Commons team is committed to fostering a welcoming community.
+> This project and all other Creative Commons open source projects are governed
+> by our [Code of Conduct][code_of_conduct]. Please report unacceptable
+> behavior to [conduct@creativecommons.org](mailto:conduct@creativecommons.org)
+> per our [reporting guidelines][reporting_guide].
+
+[code_of_conduct]: https://opensource.creativecommons.org/community/code-of-conduct/
+[reporting_guide]: https://opensource.creativecommons.org/community/code-of-conduct/enforcement/
+
+
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+
 ## Workflows
 
 The following workflows are ordered by schedule frequency and start time.
@@ -13,7 +51,6 @@ The following workflows are ordered by schedule frequency and start time.
 
 | **Workflow** | | |
 | -- | --: | --- |
-| | Status: | [![Add Community PRs to Project][prs_badge]][prs_link] |
 | | Schedule: | Hourly at 5 minutes past the hour (`**:05`) |
 | | YAML: | [`add_community_pr.yml`][community_pr_yml] |
 | **Action** | | |
@@ -25,8 +62,6 @@ This workflow adds community PRs in the
 [creativecommons/vocabulary][vocab_repo] repository to [Vocabulary
 Planning][vocab_plan] project.
 
-[prs_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
-[prs_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml
 [community_pr_yml]: .github/workflows/add_community_pr.yml
 [proj_bot]: https://github.com/subhamX/github-project-bot
 [vocab_repo]: https://github.com/creativecommons/vocabulary
@@ -37,11 +72,10 @@ Planning][vocab_plan] project.
 
 | **Workflow** | | |
 | -- | --: | --- |
-| | Status: | [![Sync Community Teams with GitHub][team_badge]][team_link] |
 | | Schedule: | Hourly at 30 minutes past the hour (`**:30`) |
-| | YAML: | [`sync_community_team.yml`][sync_team_yml]  |
+| | YAML: | [`sync_community_team.yml`][sync_teams_yml]  |
 | **Script** | | |
-| | File: | [`sync_community_teams.py`][team_file] |
+| | File: | [`sync_community_teams.py`][teams_file] |
 | | Common Modules: | [`ccos/`](ccos/) |
 | | Specific Modules: | [`ccos/norm/`](ccos/norm/) |
 | **Env** | | |
@@ -53,10 +87,8 @@ This worflow creates GitHub teams for the Community teams and updates their memb
  - The databag is kept up-to-date by [Push data to CC Open
    Source](#push-data-to-cc-open-source), above
 
-[team_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml/badge.svg
-[team_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_team.yml
-[sync_team_yml]: .github/workflows/sync_community_team.yml
-[team_file]: sync_community_teams.py
+[sync_teams_yml]: .github/workflows/sync_community_teams.yml
+[teams_file]: sync_community_teams.py
 [databag]: https://github.com/creativecommons/creativecommons.github.io-source/blob/master/databags/community_team_members.json
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 
@@ -65,7 +97,6 @@ This worflow creates GitHub teams for the Community teams and updates their memb
 
 | **Workflow** | | |
 | -- | --: | --- |
-| | Status: | [![Track new issues in backlog][backlog_badge]][backlog_link] |
 | | Schedule: | Hourly at 45 minutes past the hour (`**:45`) |
 | | YAML: | [`track_backlog.yml`][track_backlog] |
 | **Action** | | |
@@ -75,8 +106,6 @@ This worflow creates GitHub teams for the Community teams and updates their memb
 
 This workflow adds PRs to [Active Sprint: Code Review][active_sprint] and new issues to [Backlog: Pending Review][backlog_pending].
 
-[backlog_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
-[backlog_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml
 [track_backlog]: .github/workflows/track_backlog.yml
 [issue_bot]: https://github.com/dhruvkb/issue-projector
 [active_sprint]: https://github.com/orgs/creativecommons/projects/7
@@ -87,7 +116,6 @@ This workflow adds PRs to [Active Sprint: Code Review][active_sprint] and new is
 
 | **Workflow** | | |
 | -- | --: | --- |
-| | Status: | [![Normalize Repos][norm_badge]][norm_link] |
 | | Schedule: | Hourly at 45 minutes past the hour (`**:45`) |
 | | YAML: | [`normalize_repos.yml`][norm_pr_yml] |
 | **Script** | | |
@@ -105,8 +133,6 @@ GitHub organization are consistent in the following ways:
 This script will only update color and description of existing labels or create
 new labels. It will never delete labels.
 
-[norm_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml/badge.svg
-[norm_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml
 [norm_pr_yml]: .github/workflows/normalize_repos.yml
 [norm_file]: normalize_repos.py
 
@@ -115,7 +141,6 @@ new labels. It will never delete labels.
 
 | **Workflow** | | |
 | -- | --: | --- |
-| | Status: | [![Push data to CC Open Source][data_badge]][data_link] |
 | | Schedule: | Daily at midnight:15 (`00:15`) |
 | | YAML: | [`push_data_to_ccos.yml`][push_ccos_yml] |
 | **Script** | | |
@@ -138,8 +163,6 @@ The destination data is used by the following pages:
 - [Community Team Members — Creative Commons Open Source][ctlistpage]
 - [Open Source Projects — Creative Commons Open Source][osproj]
 
-[data_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml/badge.svg
-[data_link]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml
 [push_ccos_yml]: .github/workflows/push_data_to_ccos.yml
 [data_file]: push_data_to_ccos.py
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
