@@ -81,7 +81,8 @@ Planning][vocab_plan] project.
 | **Env** | | |
 | | Required: | `ADMIN_GITHUB_TOKEN` |
 
-This worflow creates GitHub teams for the Community teams and updates their membership based on the [`community_team_members.json`][databag] Lektor databag.
+This creates GitHub teams for the Community teams and updates their membership
+based on the [`community_team_members.json`][databag] Lektor databag.
  - The databag is used to create the [Community Team Members — Creative
    Commons Open Source][ctlistpage] page
  - The databag is kept up-to-date by [Push data to CC Open
@@ -104,7 +105,8 @@ This worflow creates GitHub teams for the Community teams and updates their memb
 | **Env** | | |
 | | Required: | `ADMIN_GITHUB_TOKEN` |
 
-This workflow adds PRs to [Active Sprint: Code Review][active_sprint] and new issues to [Backlog: Pending Review][backlog_pending].
+This adds PRs to [Active Sprint: Code Review][active_sprint] and new issues to
+[Backlog: Pending Review][backlog_pending].
 
 [track_backlog]: .github/workflows/track_backlog.yml
 [issue_bot]: https://github.com/dhruvkb/issue-projector
@@ -122,19 +124,22 @@ This workflow adds PRs to [Active Sprint: Code Review][active_sprint] and new is
 | | File: | [`normalize_repos.py`][norm_file] |
 | | Common Modules: | [`ccos/`](ccos/) |
 | | Specific Modules: | [`ccos/norm/`](ccos/norm/) |
+| **Action** | | |
+| | | [gautamkrishnar/keepalive-workflow][keepalive] |
 | **Env** | | |
 | | Required: | `ADMIN_GITHUB_TOKEN` |
 
-This workflow ensures that all active repositories in the creativecommons
+This ensures that all active repositories in the creativecommons
 GitHub organization are consistent in the following ways:
 - They have all the labels defined in `labels.yml` present.
 - They have standard branch protections set up (with some exceptions).
 
-This script will only update color and description of existing labels or create
+This will only update color and description of existing labels or create
 new labels. It will never delete labels.
 
 [norm_pr_yml]: .github/workflows/normalize_repos.yml
 [norm_file]: normalize_repos.py
+[keepalive]: https://github.com/gautamkrishnar/keepalive-workflow
 
 
 ### Push data to CC Open Source
@@ -151,8 +156,8 @@ new labels. It will never delete labels.
 | | Required: | `ADMIN_ASANA_TOKEN` |
 | | Required: | `ADMIN_GITHUB_TOKEN` |
 
-This workflow retreives data from Asana, formats it as a lektor databag, and
-pushes it to CC Open Source website source repository:
+This retreives data from Asana, formats it as a lektor databag, and pushes it
+to CC Open Source website source repository:
 - Data Source: [Community Team Tracking - Asana][asana] (limited access)
 - Data Destination:
   - [`creativecommons/creativecommons.github.io-source`][ccos_source]
