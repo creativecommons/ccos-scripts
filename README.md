@@ -73,7 +73,7 @@ Planning][vocab_plan] project.
 | **Workflow** | | |
 | -- | --: | --- |
 | | Schedule: | Hourly at 30 minutes past the hour (`**:30`) |
-| | YAML: | [`sync_community_team.yml`][sync_teams_yml]  |
+| | YAML: | [`sync_community_teams.yml`][sync_teams_yml]  |
 | **Script** | | |
 | | File: | [`sync_community_teams.py`][teams_file] |
 | | Common Modules: | [`ccos/`](ccos/) |
