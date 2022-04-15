@@ -30,7 +30,7 @@ jobs:
       with:
         name: invalid-issue-report
         path: /tmp/invalid_issues.yml
-    - uses: gautamkrishnar/keepalive-workflow@1.07
+    - uses: gautamkrishnar/keepalive-workflow@master
       with:
         committer_username: cc-open-source-bot
         committer_email: opensource@creativecommons.org
