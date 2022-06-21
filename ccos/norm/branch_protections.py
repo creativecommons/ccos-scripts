@@ -1,18 +1,8 @@
 EXEMPT_REPOSITORIES = [
     # non-engineering repo
     "australian-chapter",
-    # non-engineering repo
-    "cc-cert-core",
-    # non-engineering repo
-    "cc-cert-edu",
-    # non-engineering repo
-    "cc-cert-gov",
-    # non-engineering repo
-    "cc-cert-lib",
     # exempted to allow transifex updates
     "cc.i18n",
-    # exempted to allow community maintainer to self-merge PRs
-    "ccsearch-browser-extension",
     # exempted for bot pushes to default branch
     "creativecommons.github.io-source",
     # exempted for bot pushes to default branch
@@ -28,25 +18,11 @@ EXEMPT_REPOSITORIES = [
 ]
 
 REQUIRED_STATUS_CHECK_MAP = {
-    "cccatalog-api": ["Style", "Tests"],
-    "cccatalog-frontend": ["Run CI tests"],
-    "creativecommons.github.io-source": ["continuous-integration/travis-ci"],
-    "fonts": [
-        "Lint",
-        "Unit tests",
-        "Build",
-        "netlify/cc-fonts/deploy-preview",
-    ],
+    "creativecommons.github.io-source": ["Build and Deploy CC Open Source"],
     "vocabulary": [
         "Lint",
         "Unit tests",
         "Build",
         "netlify/cc-vocabulary/deploy-preview",
-    ],
-    "vue-vocabulary": [
-        "Lint",
-        "Unit tests",
-        "Build",
-        "netlify/cc-vue-vocabulary/deploy-preview",
     ],
 }
