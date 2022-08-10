@@ -218,6 +218,26 @@ GitHub Action:
 ```
 
 
+## Python Dependencies
+
+- [Asana/python-asana][python-asana]: Official Python client library for the
+  Asana API v1
+- [carpedm20/emoji][emoji]: emoji terminal output for Python
+- [gitpython-developers/GitPython][gitpython]: GitPython is a python library
+  used to interact with Git repositories.
+- [PyGithub/PyGithub][pygithub]: Typed interactions with the GitHub API v3
+- [PyYAML][pyyaml] is a full-featured YAML framework for the Python programming
+  language
+- [Requests][requests]: HTTP for Humans™
+
+[python-asana]: https://github.com/asana/python-asana
+[emoji]: https://github.com/carpedm20/emoji/
+[gitpython]: https://github.com/gitpython-developers/GitPython
+[pygithub]: https://github.com/pygithub/pygithub
+[pyyaml]: https://pyyaml.org/
+[requests]: https://requests.readthedocs.io/en/latest/
+
+
 ## License
 
 - [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
