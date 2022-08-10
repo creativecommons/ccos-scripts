@@ -3,8 +3,6 @@ EXEMPT_REPOSITORIES = [
     "australian-chapter",
     # exempted to allow transifex updates
     "cc.i18n",
-    # to allow gautamkrishnar/keepalive-workflow
-    "ccos-scripts",
     # exempted for bot pushes to default branch
     "creativecommons.github.io-source",
     # exempted for bot pushes to default branch
