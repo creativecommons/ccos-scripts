@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+      with:
+        token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
     - name: Set up Python 3.9
       uses: actions/setup-python@v4
       with:
