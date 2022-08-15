@@ -22,7 +22,7 @@ jobs:
       with:
         token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
     - name: Install app dependencies
-        run: |
+      run: |
         pipenv sync
     - name: Run script with token in env
       run: |
