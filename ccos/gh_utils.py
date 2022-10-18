@@ -26,7 +26,7 @@ def set_up_github_client():
     try:
         GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
     except KeyError:
-        logger.critical("missin ADMIN_GITHUB_TOKEN environment variable")
+        logger.critical("missing ADMIN_GITHUB_TOKEN environment variable")
         sys.exit(1)
     logger.log(logging.INFO, "Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
