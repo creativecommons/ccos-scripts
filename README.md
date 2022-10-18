@@ -94,22 +94,28 @@ based on the [`community_team_members.json`][databag] Lektor databag.
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 
 
-### Track new issues in backlog
+### Manage Issues in Projects
 
 | **Workflow** | | |
 | -- | --: | --- |
 | | Schedule: | Hourly at 45 minutes past the hour (`**:45`) |
-| | YAML: | [`track_backlog.yml`][track_backlog] |
+| | YAML: | [`manage_issues.yml`][manage_issues] |
 | **Action** | | |
 | | | [dhruvkb/issue-projector][issue_bot] |
+| **Script** | | |
+| | File: | [`move_closed_issues.py`][move_file] |
+| | Common Modules: | [`ccos/`](ccos/) |
 | **Env** | | |
 | | Required: | `ADMIN_GITHUB_TOKEN` |
 
-This adds PRs to [Active Sprint: Code Review][active_sprint] and new issues to
-[Backlog: Pending Review][backlog_pending].
+This manages issues within the [Active Sprint][active_sprint] and [Backlog][backlog_pending] projects:
+- Action: Track new issues in Backlog: Pending Review
+- Action: Track PRs in Active Sprint: Code Review
+- Script: Move closed issues from Backlog to Active Sprint: Done
 
-[track_backlog]: .github/workflows/track_backlog.yml
+[manage_issues]: .github/workflows/manage_issues.yml
 [issue_bot]: https://github.com/dhruvkb/issue-projector
+[move_file]: move_closed_issues.py
 [active_sprint]: https://github.com/orgs/creativecommons/projects/7
 [backlog_pending]: https://github.com/orgs/creativecommons/projects/10
 
