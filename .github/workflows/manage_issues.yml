@@ -65,3 +65,5 @@ jobs:
     - name: run script to move closed issues to Done
       run: |
         ./move_closed_issues.py
+      env:
+        ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
