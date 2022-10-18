@@ -1,14 +1,16 @@
-name: Track new issues in backlog
+name: Manage Issues in Projects
 on:
   workflow_dispatch:
   schedule:
     - cron: "45 * * * *" # Hourly at 45 minutes past the hour (**:45)
 jobs:
+
   add_issues_to_project:
-    name: Track all issues
+    name: Track new issues in Backlog
     runs-on: ubuntu-latest
     steps:
-    - name: Track all issues
+
+      - name: Track all issues
       uses: dhruvkb/issue-projector@0.0.7
       with:
         ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
@@ -19,10 +21,12 @@ jobs:
         ISSUE_TYPE: 'issue'
         INTERVAL: 1
         INTERVAL_UNIT: 'h'
+
   add_prs_to_project:
-    name: Track all PRs
+    name: Track PRs in Active Sprint
     runs-on: ubuntu-latest
     steps:
+
     - name: Track all PRs
       uses: dhruvkb/issue-projector@0.0.7
       with:
@@ -33,3 +37,31 @@ jobs:
         ISSUE_TYPE: 'pr'
         INTERVAL: 1
         INTERVAL_UNIT: 'd'
+
+  move_closed_to_done:
+    name: Move closed issues to Done
+    runs-on: ubuntu-latest
+    steps:
+
+    # https://github.com/actions/setup-python
+    - name: Install Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install pipenv
+      run: |
+        pip install --upgrade pip
+        pip install pipenv
+
+    # https://github.com/actions/checkout
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Python dependencies
+      run: |
+        pipenv sync --dev --system
+
+    - name: run script to move closed issues to Done
+      run: |
+        ./move_closed_issues.py
