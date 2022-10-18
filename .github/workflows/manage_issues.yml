@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Track all issues
+    - name: Track all issues
       uses: dhruvkb/issue-projector@0.0.7
       with:
         ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
