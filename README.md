@@ -8,7 +8,7 @@ infrastructure.
 
 - [![Add Community PRs to Project][prs_badge]][prs_link]
 - [![Sync Community Teams with GitHub][teams_badge]][teams_link]
-- [![Track new issues in backlog][backlog_badge]][backlog_link]
+- [![Manage Issues in Projects][issues_badge]][issues_link]
 - [![Normalize Repos][norm_badge]][norm_link]
 - [![Push data to CC Open Source][data_badge]][data_link]
 
@@ -16,8 +16,8 @@ infrastructure.
 [prs_link]: #add-community-prs-to-project
 [teams_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_teams.yml/badge.svg
 [teams_link]: #sync-community-teams-with-github
-[backlog_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/track_backlog.yml/badge.svg
-[backlog_link]: #track-new-issues-in-backlog
+[issues_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/manage_issues.yml/badge.svg
+[issues_link]: #manage-issues-in-projects
 [norm_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml/badge.svg
 [norm_link]: #normalize-repos
 [data_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml/badge.svg
