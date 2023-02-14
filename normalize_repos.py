@@ -136,7 +136,6 @@ def update_branch_protection(repo):
         repo.name not in branch_protections.EXEMPT_REPOSITORIES
         and is_engineering_project(repo)
     ):
-
         logger.log(logging.INFO, f"{repo.name}: updating branch protections")
         if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             default_branch.edit_protection(
