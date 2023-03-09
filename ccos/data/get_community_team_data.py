@@ -175,6 +175,23 @@ def prune_databag(databag):
     return pruned
 
 
+def verify_databag(databag, repo_names):
+    """
+    Ensure all repository names are accurate.
+    """
+    for project in databag["projects"]:
+        databag_repos = project["repos"].split(",")
+        for databag_repo in databag_repos:
+            if databag_repo not in repo_names:
+                logger.log(
+                    logging.ERROR,
+                    f'"{project["name"]}" contains invalid reposiotry:'
+                    f' "{databag_repo}"',
+                )
+                sys.exit(1)
+    return databag
+
+
 def get_custom_field(task, field_name):
     """
     Gets the value of a custom field
@@ -187,5 +204,9 @@ def get_custom_field(task, field_name):
                 return field["text_value"]
 
 
-def get_community_team_data(asana_client):
-    return prune_databag(sort_databag(generate_databag(asana_client)))
+def get_community_team_data(asana_client, repo_names):
+    databag = generate_databag(asana_client)
+    databag = prune_databag(databag)
+    databag = verify_databag(databag, repo_names)
+    databag = sort_databag(databag)
+    return databag

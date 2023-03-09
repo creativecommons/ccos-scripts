@@ -14,7 +14,7 @@ from ccos.data.get_community_team_data import (
     get_community_team_data,
     setup_asana_client,
 )
-from ccos.data.get_repo_data import get_repo_data
+from ccos.data.get_repo_data import get_repo_data, get_repo_names
 from ccos.data.push_data_via_git import push_data
 
 DAILY_DATABAGS = ["repos", "community_team_members"]
@@ -57,10 +57,9 @@ def main():
         push_data(get_repo_data(), "repos.json")
     if "community_team_members" in args.databags:
         logger.log(logging.INFO, "community_team_members.json")
-        push_data(
-            get_community_team_data(asana_client),
-            "community_team_members.json",
-        )
+        repo_names = get_repo_names()
+        community_data = get_community_team_data(asana_client, repo_names)
+        push_data(community_data, "community_team_members.json")
 
 
 if __name__ == "__main__":
