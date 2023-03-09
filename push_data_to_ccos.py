@@ -53,8 +53,10 @@ def main():
     args = setup()
     asana_client = setup_asana_client()
     if "repos" in args.databags:
+        logger.log(logging.INFO, "updating repos.json")
         push_data(get_repo_data(), "repos.json")
     if "community_team_members" in args.databags:
+        logger.log(logging.INFO, "community_team_members.json")
         push_data(
             get_community_team_data(asana_client),
             "community_team_members.json",
