@@ -83,10 +83,12 @@ Planning][vocab_plan] project.
 
 This creates GitHub teams for the Community teams and updates their membership
 based on the [`community_team_members.json`][databag] Lektor databag.
- - The databag is used to create the [Community Team Members — Creative
-   Commons Open Source][ctlistpage] page
+ - The databag is used to:
+   - create the [Community Team Members — Creative Commons Open
+     Source][ctlistpage] page
+   - configure GitHub team memberships and repository permissions
  - The databag is kept up-to-date by [Push data to CC Open
-   Source](#push-data-to-cc-open-source), above
+   Source](#push-data-to-cc-open-source), below
 
 [sync_teams_yml]: .github/workflows/sync_community_teams.yml
 [teams_file]: sync_community_teams.py

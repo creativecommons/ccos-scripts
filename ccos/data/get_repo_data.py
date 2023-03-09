@@ -124,3 +124,13 @@ def get_repo_data():
     repo_data_list = get_repo_data_list(repos)
     data = get_repo_data_dict(repo_data_list)
     return data
+
+
+def get_repo_names():
+    github_client = set_up_github_client()
+    cc = get_cc_organization(github_client)
+    repos = get_repositories(cc)
+    names = []
+    for repo in repos:
+        names.append(repo.name)
+    return names
