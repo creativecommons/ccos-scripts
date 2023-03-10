@@ -18,15 +18,16 @@ import yaml  # For converting .cc-metadata.yml to Python dictionary
 from github import GithubException, UnknownObjectException
 
 # First-party/Local
-from ccos import gh_utils, log
+import ccos.log
+from ccos import gh_utils
 from ccos.norm import branch_protections
 from ccos.norm.get_labels import get_groups, get_labels
 from ccos.norm.set_labels import set_labels
 from ccos.norm.validate_issues import validate_issues
 
-log.set_up_logging()
-logger = logging.getLogger(os.path.basename(__file__))
-log.reset_handler()
+ccos.log.set_up_logging()
+LOG = logging.getLogger(os.path.basename(__file__))
+ccos.log.reset_handler()
 
 
 class ScriptError(Exception):
@@ -95,18 +96,18 @@ def get_select_repos(args):
 def set_repo_labels(args, repos):
     if args.skip_labels:
         return
-    logger.log(logging.INFO, "Syncing labels...")
+    LOG.info("Syncing labels...")
     set_labels(repos, *get_labels())
-    logger.log(log.SUCCESS, "done.")
+    LOG.log(ccos.log.SUCCESS, "done.")
 
 
 def validate_issue_labels(args, repos):
     if args.skip_issues:
         return
-    logger.log(logging.INFO, "Checking issues...")
+    LOG.info("Checking issues...")
     groups = get_groups()
     validate_issues(repos, groups)
-    logger.log(log.SUCCESS, "done.")
+    LOG.log(ccos.log.SUCCESS, "done.")
 
 
 def is_engineering_project(repo):
@@ -125,10 +126,7 @@ def update_branch_protection(repo):
         default_branch = repo.get_branch(repo.default_branch)
     except GithubException as e:
         if e.data["message"] == "Branch not found":
-            logger.log(
-                logging.WARNING,
-                f"{repo.name}: skipping: default branch not found",
-            )
+            LOG.warning(f"{repo.name}: skipping: default branch not found")
             return
         else:
             raise
@@ -136,7 +134,7 @@ def update_branch_protection(repo):
         repo.name not in branch_protections.EXEMPT_REPOSITORIES
         and is_engineering_project(repo)
     ):
-        logger.log(logging.INFO, f"{repo.name}: updating branch protections")
+        LOG.info(f"{repo.name}: updating branch protections")
         if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             default_branch.edit_protection(
                 required_approving_review_count=1,
@@ -150,26 +148,25 @@ def update_branch_protection(repo):
                 required_approving_review_count=1, user_push_restrictions=[]
             )
     else:
-        logger.log(logging.INFO, f"{repo.name}: skipping: exempt")
+        LOG.info(f"{repo.name}: skipping: exempt")
 
 
 def update_branches(args, repos):
     if args.skip_branches:
         return
-    logger.log(
-        logging.INFO,
-        "Evaluting repositories for branch protections...",
-    )
+    LOG.info("Evaluting repositories for branch protections...")
     for repo in repos:
         # TODO: Set up automatic deletion of merged branches
         update_branch_protection(repo)
-    logger.log(log.SUCCESS, "done.")
+    LOG.log(ccos.log.SUCCESS, "done.")
 
 
 def main():
     args = setup()
-    logger.log(logging.INFO, "Starting normalization")
+    LOG.info("Starting normalization")
+    ccos.log.change_indent(-1)
     repos = get_select_repos(args)
+    ccos.log.change_indent(+1)
     set_repo_labels(args, repos)
     validate_issue_labels(args, repos)
     update_branches(args, repos)
@@ -181,14 +178,12 @@ if __name__ == "__main__":
     except SystemExit as e:
         sys.exit(e.code)
     except KeyboardInterrupt:
-        logger.log(logging.INFO, "Halted via KeyboardInterrupt.")
+        LOG.info("Halted via KeyboardInterrupt.")
         sys.exit(130)
     except ScriptError:
         error_type, error_value, error_traceback = sys.exc_info()
-        logger.log(logging.CRITICAL, f"{error_value}")
+        LOG.critical(f"{error_value}")
         sys.exit(error_value.code)
     except Exception:
-        logger.log(
-            logging.ERROR, f"Unhandled exception: {traceback.format_exc()}"
-        )
+        LOG.error(f"Unhandled exception: {traceback.format_exc()}")
         sys.exit(1)

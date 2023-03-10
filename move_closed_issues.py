@@ -10,11 +10,12 @@ import sys
 import traceback
 
 # First-party/Local
-from ccos import gh_utils, log
+import ccos.log
+from ccos import gh_utils
 
-log.set_up_logging()
-logger = logging.getLogger(os.path.basename(__file__))
-log.reset_handler()
+ccos.log.set_up_logging()
+LOG = logging.getLogger(os.path.splitext(os.path.basename(__file__))[0])
+ccos.log.reset_handler()
 
 
 class ScriptError(Exception):
@@ -61,23 +62,20 @@ def get_cards(cc):
 
 def move_cards(args, github, backlog, done):
     for column in backlog.get_columns():
-        logger.log(logging.INFO, f"{backlog.name}: {column.name}")
+        LOG.info(f"{backlog.name}: {column.name}")
         for card in column.get_cards():
             if not card.content_url or "/issues/" not in card.content_url:
                 continue
             content = card.get_content(content_type="Issue")
             if content.state != "closed":
                 continue
-            logger.log(logging.INFO, f"  {content.title}")
+            LOG.info(f"  {content.title}")
             try:
                 if not args.dryrun:
                     done.create_card(
                         content_id=content.id, content_type="Issue"
                     )
-                logger.log(
-                    logging.INFO,
-                    f"    -> added to Active Sprint: {done.name}",
-                )
+                LOG.info(f"    -> added to Active Sprint: {done.name}")
             except github.GithubException as e:
                 if e.data["errors"][0]["message"] != (
                     "Project already has the associated issue"
@@ -85,7 +83,7 @@ def move_cards(args, github, backlog, done):
                     raise
             if not args.dryrun:
                 card.delete()
-            logger.log(logging.INFO, "    -> removed.")
+            LOG.info("    -> removed.")
 
 
 def main():
@@ -102,14 +100,12 @@ if __name__ == "__main__":
     except SystemExit as e:
         sys.exit(e.code)
     except KeyboardInterrupt:
-        logger.log(logging.INFO, "Halted via KeyboardInterrupt.")
+        LOG.info("Halted via KeyboardInterrupt.")
         sys.exit(130)
     except ScriptError:
         error_type, error_value, error_traceback = sys.exc_info()
-        logger.log(logging.CRITICAL, f"{error_value}")
+        LOG.critical(f"{error_value}")
         sys.exit(error_value.code)
     except Exception:
-        logger.log(
-            logging.ERROR, f"Unhandled exception: {traceback.format_exc()}"
-        )
+        LOG.error(f"Unhandled exception: {traceback.format_exc()}")
         sys.exit(1)

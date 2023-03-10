@@ -13,36 +13,36 @@ from github import Github
 from github.GithubException import GithubException, UnknownObjectException
 
 # First-party/Local
-from ccos import log
+import ccos.log
 from ccos.data.push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
 
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-logger = logging.getLogger(log_name)
-log.reset_handler()
+LOG = logging.getLogger(log_name)
+ccos.log.reset_handler()
 
 
 def set_up_github_client():
-    logger.log(logging.INFO, "Setting up GitHub client...")
+    LOG.info("Setting up GitHub client...")
     github_client = Github(GITHUB_TOKEN)
     return github_client
 
 
 def get_cc_organization(github_client):
-    logger.log(logging.INFO, "Getting CC's GitHub organization...")
+    LOG.info("Getting CC's GitHub organization...")
     cc = github_client.get_organization(GITHUB_ORGANIZATION)
     return cc
 
 
 def get_repositories(organization):
-    logger.log(logging.INFO, "Getting CC's repos...")
+    LOG.info("Getting CC's repos...")
     repos = organization.get_repos()
     return repos
 
 
 def get_repo_github_data(repo):
-    logger.log(logging.INFO, "Getting data for this repo...")
+    LOG.info("Getting data for this repo...")
     repo_github_data = {
         "id": repo.id,
         "name": repo.name,
@@ -69,7 +69,7 @@ def get_repo_github_data(repo):
 
 
 def get_repo_cc_metadata(repo):
-    logger.log(logging.INFO, "Getting CC metadata for this repo...")
+    LOG.info("Getting CC metadata for this repo...")
     try:
         cc_metadata_file = repo.get_contents(CC_METADATA_FILE_NAME)
     except (UnknownObjectException, GithubException):
@@ -89,9 +89,7 @@ def get_repo_data_list(repos):
     total = repos.totalCount
 
     for repo in repos:
-        logger.log(
-            logging.INFO, f"Processing {count} of {total} – {repo.name}"
-        )
+        LOG.info(f"Processing {count} of {total} – {repo.name}")
         if not repo.private:
             repo_cc_metadata = get_repo_cc_metadata(repo)
             is_engineering_project = repo_cc_metadata.get(
@@ -104,9 +102,7 @@ def get_repo_data_list(repos):
                 repo_data = {**repo_github_data, **repo_cc_metadata}
                 repo_data_list.append(repo_data)
             else:
-                logger.log(
-                    logging.INFO, "Not an active engineering project, skipping"
-                )
+                LOG.info("Not an active engineering project, skipping")
         count += 1
     return sorted(repo_data_list, key=lambda k: k["name"].lower())
 

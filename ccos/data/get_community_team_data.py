@@ -15,33 +15,31 @@ import sys
 import asana
 
 # First-party/Local
-from ccos import log
+import ccos.log
 
 ASANA_WORKSPACE_GID = "133733285600979"
 ASANA_PROJECT_GID = "1172465506923661"
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-logger = logging.getLogger(log_name)
-log.reset_handler()
+LOG = logging.getLogger(log_name)
+ccos.log.reset_handler()
 
 
 def setup_asana_client():
-    logger.log(logging.INFO, "Setting up Asana client...")
+    LOG.info("Setting up Asana client...")
     try:
         asana_token = os.environ["ADMIN_ASANA_TOKEN"]
     except KeyError:
-        logger.critical("missin ADMIN_ASANA_TOKEN environment variable")
+        LOG.critical("missin ADMIN_ASANA_TOKEN environment variable")
         sys.exit(1)
     asana_client = asana.Client.access_token(asana_token)
     try:
         # Perform simple API operation to test authentication
         asana_client.workspaces.get_workspace(ASANA_WORKSPACE_GID)
     except asana.error.NoAuthorizationError as e:
-        logger.critical(
-            f"{e.status} {e.message} (is ADMIN_ASANA_TOKEN valid?)"
-        )
+        LOG.critical(f"{e.status} {e.message} (is ADMIN_ASANA_TOKEN valid?)")
         sys.exit(1)
-    logger.log(logging.INFO, "done.")
+    LOG.info("done.")
     return asana_client
 
 
@@ -80,15 +78,15 @@ def generate_databag(asana_client):
     }
     """
 
-    logger.log(logging.INFO, "Pulling from Asana and generating databag...")
+    LOG.info("Pulling from Asana and generating databag...")
     databag = {"projects": [], "community_builders": []}
 
     members = asana_client.tasks.find_by_section(
         ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
     )
-    logger.log(logging.INFO, "Team members pulled.")
+    LOG.info("Team members pulled.")
 
-    logger.log(logging.INFO, "Processing team members...")
+    LOG.info("Processing team members...")
     for member in members:
         if member["name"] == "":
             continue  # Sometimes blank names come up
@@ -123,7 +121,7 @@ def generate_databag(asana_client):
                     )
                     break
 
-    logger.log(logging.INFO, "Done.")
+    LOG.info("Done.")
     return databag
 
 
@@ -183,8 +181,7 @@ def verify_databag(databag, repo_names):
         databag_repos = project["repos"].split(",")
         for databag_repo in databag_repos:
             if databag_repo not in repo_names:
-                logger.log(
-                    logging.ERROR,
+                LOG.error(
                     f'"{project["name"]}" contains invalid reposiotry:'
                     f' "{databag_repo}"',
                 )

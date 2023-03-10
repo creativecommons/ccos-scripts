@@ -9,7 +9,7 @@ import sys
 import traceback
 
 # First-party/Local
-from ccos import log
+import ccos.log
 from ccos.data.get_community_team_data import (
     get_community_team_data,
     setup_asana_client,
@@ -19,9 +19,9 @@ from ccos.data.push_data_via_git import push_data
 
 DAILY_DATABAGS = ["repos", "community_team_members"]
 
-log.set_up_logging()
-logger = logging.getLogger(os.path.basename(__file__))
-log.reset_handler()
+ccos.log.set_up_logging()
+LOG = logging.getLogger(os.path.basename(__file__))
+ccos.log.reset_handler()
 
 
 class ScriptError(Exception):
@@ -53,10 +53,10 @@ def main():
     args = setup()
     asana_client = setup_asana_client()
     if "repos" in args.databags:
-        logger.log(logging.INFO, "updating repos.json")
+        LOG.info("updating repos.json")
         push_data(get_repo_data(), "repos.json")
     if "community_team_members" in args.databags:
-        logger.log(logging.INFO, "community_team_members.json")
+        LOG.info("community_team_members.json")
         repo_names = get_repo_names()
         community_data = get_community_team_data(asana_client, repo_names)
         push_data(community_data, "community_team_members.json")
@@ -68,14 +68,12 @@ if __name__ == "__main__":
     except SystemExit as e:
         sys.exit(e.code)
     except KeyboardInterrupt:
-        logger.log(logging.INFO, "Halted via KeyboardInterrupt.")
+        LOG.info("Halted via KeyboardInterrupt.")
         sys.exit(130)
     except ScriptError:
         error_type, error_value, error_traceback = sys.exc_info()
-        logger.log(logging.CRITICAL, f"{error_value}")
+        LOG.critical(f"{error_value}")
         sys.exit(error_value.code)
     except Exception:
-        logger.log(
-            logging.ERROR, f"Unhandled exception: {traceback.format_exc()}"
-        )
+        LOG.error(f"Unhandled exception: {traceback.format_exc()}")
         sys.exit(1)
