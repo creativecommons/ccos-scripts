@@ -54,7 +54,7 @@ def create_codeowners_for_data(databag):
         teams = get_teams(organization, project_name, roles)
         logging.log(
             logging.INFO,
-            f"        Found {len(teams)} teams for project {project_name}.",
+            f"Found {len(teams)} teams for project {project_name}.",
         )
 
         logging.log(logging.INFO, "Checking all projects...")
