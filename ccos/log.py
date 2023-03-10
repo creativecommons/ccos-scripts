@@ -64,10 +64,14 @@ class IndentFormatter(logging.Formatter):
             "%(asctime)s │ "
             f"{prefix}{color}%(levelname)-8s{prefix}{reset} │ "
         )
-        self._style._fmt += (
-            f"%(indent)s{prefix}{bold}%(function)s{prefix}{reset}: "
-            "%(message)s"
-        )
+        if hasattr(record, "function"):
+            self._style._fmt += (
+                f"%(indent)s{prefix}{bold}%(function)s{prefix}{reset}: "
+                "%(message)s"
+            )
+        else:
+            self._style._fmt += f"%(indent)s%(message)s"
+
 
     def format(self, record):
         """
@@ -81,11 +85,12 @@ class IndentFormatter(logging.Formatter):
             self.baseline = depth
         if self.cut is None:
             filenames = map(lambda x: x.filename, stack)
-            self.cut = IndentFormatter.identify_cut(filenames)
+            self.cut = self.identify_cut(filenames)
 
         # Inject custom information into the record
         record.indent = ". " * (depth - self.baseline + self.manual_push)
-        record.function = stack[self.cut].function
+        if depth > self.cut:
+            record.function = stack[self.cut].function
 
         # Format the record using custom information
         self.update_format(record)
@@ -93,7 +98,8 @@ class IndentFormatter(logging.Formatter):
 
         # Remove custom information from the record
         del record.indent
-        del record.function
+        if hasattr(record, "function"):
+            del record.function
 
         return out
 
