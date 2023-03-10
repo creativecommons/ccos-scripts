@@ -18,6 +18,7 @@ class IndentFormatter(logging.Formatter):
         logging.WARNING: 33,  # yellow
         SUCCESS: 32,  # green
         logging.INFO: 34,  # blue
+        logging.DEBUG: 35,  # magenta
     }
 
     @staticmethod
