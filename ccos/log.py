@@ -70,7 +70,7 @@ class IndentFormatter(logging.Formatter):
                 "%(message)s"
             )
         else:
-            self._style._fmt += f"%(indent)s%(message)s"
+            self._style._fmt += "%(indent)s%(message)s"
 
     def format(self, record):
         """
