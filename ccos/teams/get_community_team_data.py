@@ -17,7 +17,7 @@ import re
 import requests
 
 # First-party/Local
-from ccos import log
+import ccos.log
 
 # Constants should match 'push_data_to_ccos/push_data_via_git.py'
 GITHUB_ORGANIZATION = "creativecommons"
@@ -32,8 +32,8 @@ DATABAG_URL = (
 )
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-logger = logging.getLogger(log_name)
-log.reset_handler()
+LOG = logging.getLogger(log_name)
+ccos.log.reset_handler()
 
 
 def fetch_databag():
@@ -63,15 +63,15 @@ def fetch_databag():
         ]
     }
     """
-    logging.log(logging.INFO, "Pulling from OS@CC...")
+    LOG.info("Pulling from OS@CC...")
     databag = {"projects": []}
 
     request = requests.get(DATABAG_URL)
     request.raise_for_status()
     projects = request.json()["projects"]
-    logging.log(logging.INFO, "Team members pulled.")
+    LOG.info("Team members pulled.")
 
-    logging.log(logging.INFO, "Processing team members...")
+    LOG.info("Processing team members...")
     for project in projects:
         formatted_project = {
             "name": project["name"],
@@ -87,8 +87,8 @@ def fetch_databag():
             formatted_project["roles"][role].append(member)
         databag["projects"].append(formatted_project)
 
-    logging.log(log.SUCCESS, "Done.")
-    logging.log(log.SUCCESS, "Pull successful.")
+    LOG.log(ccos.log.SUCCESS, "Done.")
+    LOG.log(ccos.log.SUCCESS, "Pull successful.")
     return databag
 
 

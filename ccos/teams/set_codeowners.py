@@ -11,7 +11,7 @@ from tempfile import TemporaryDirectory
 import git
 
 # First-party/Local
-from ccos import log
+import ccos.log
 from ccos.gh_utils import (
     GITHUB_ORGANIZATION,
     get_cc_organization,
@@ -22,43 +22,42 @@ from ccos.teams.set_teams_on_github import map_role_to_team
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
-
 SYNC_BRANCH = "ct_codeowners"
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-logger = logging.getLogger(log_name)
-log.reset_handler()
+LOG = logging.getLogger(log_name)
+ccos.log.reset_handler()
 
 
-def create_codeowners_for_data(databag):
+def create_codeowners_for_data(args, databag):
     set_up_git_user()
     github_client = set_up_github_client()
     organization = get_cc_organization(github_client)
 
-    logging.log(logging.INFO, "Identifying and fixing CODEOWNER issues...")
+    LOG.info("Identifying and fixing CODEOWNER issues...")
     projects = databag["projects"]
     for project in projects:
         project_name = project["name"]
-        logging.log(
-            logging.INFO,
+        LOG.info(
             "Identifying and fixing CODEOWNER issues for project"
             f" {project_name}...",
         )
 
-        logging.log(logging.INFO, "Finding all teams...")
+        LOG.info("Finding all teams...")
         roles = project["roles"]
         teams = get_teams(organization, project_name, roles)
-        logging.log(
-            logging.INFO,
+        LOG.info(
             f"Found {len(teams)} teams for project {project_name}.",
         )
 
-        logging.log(logging.INFO, "Checking all projects...")
+        LOG.info("Checking all projects...")
         repos = project["repos"]
         with TemporaryDirectory() as temp_dir:
             for repo_name in repos:
-                check_and_fix_repo(organization, repo_name, teams, temp_dir)
-    logging.log(log.SUCCESS, "Done")
+                check_and_fix_repo(
+                    args, organization, repo_name, teams, temp_dir
+                )
+    LOG.log(ccos.log.SUCCESS, "Done")
 
 
 def set_up_git_user():
@@ -67,7 +66,7 @@ def set_up_git_user():
     being set on the OS-level, do not need to be configured on a per-repo
     basis.
     """
-    logging.log(logging.INFO, "Setting up git user...")
+    LOG.info("Setting up git user...")
     os.environ["GIT_AUTHOR_NAME"] = GIT_USER_NAME
     os.environ["GIT_AUTHOR_EMAIL"] = GIT_USER_EMAIL
     os.environ["GIT_COMMITTER_NAME"] = GIT_USER_NAME
@@ -89,10 +88,14 @@ def get_teams(organization, project_name, roles):
         role: map_role_to_team(organization, project_name, role, False)
         for role in roles.keys()
     }
-    return [team for team in role_team_map.values() if team is not None]
+    teams = []
+    for team in role_team_map.values():
+        if team:
+            teams.append(team)
+    return teams
 
 
-def check_and_fix_repo(organization, repo_name, teams, temp_dir):
+def check_and_fix_repo(args, organization, repo_name, teams, temp_dir):
     """
     Identify issues with the CODEOWNERS file and rectify them. Missing
     CODEOWNERS files will be created. Incomplete CODEOWNERS files will be
@@ -102,7 +105,7 @@ def check_and_fix_repo(organization, repo_name, teams, temp_dir):
     @param repo: the repo to which the CODEOWNERS file being modified belongs
     """
 
-    logging.log(logging.INFO, f"Checking and fixing {repo_name}...")
+    LOG.info(f"Checking and fixing {repo_name}...")
     repo_dir = os.path.join(temp_dir, repo_name)
     gh_repo = organization.get_repo(repo_name)
     clone_url = get_github_repo_url_with_credentials(repo_name)
@@ -112,33 +115,39 @@ def check_and_fix_repo(organization, repo_name, teams, temp_dir):
 
     if not codeowners_path.exists() and codeowners_path.is_file():
         fix_required = True
-        logging.log(logging.INFO, "CODEOWNERS does not exist, creating...")
+        LOG.info("CODEOWNERS does not exist, creating...")
         os.makedirs(codeowners_path.parent, exist_ok=True)
         open(codeowners_path, "a").close()
-        logging.log(log.SUCCESS, "Done.")
+        LOG.log(ccos.log.SUCCESS, "Done.")
 
+    teams = filter_valid_teams(gh_repo, teams)
     team_mention_map = get_team_mention_map(codeowners_path, teams)
     if not all(team_mention_map.values()):
         fix_required = True
-        logging.log(logging.INFO, "CODEOWNERS is incomplete, populating...")
         add_missing_teams(codeowners_path, team_mention_map)
-        logging.log(log.SUCCESS, "Done.")
 
     if fix_required:
-        logging.log(logging.INFO, "Pushing to GitHub...")
-        branch_name = commit_and_push_changes(local_repo, codeowners_path)
-        logging.log(log.SUCCESS, f"Pushed to {branch_name}.")
+        branch_name = create_branch(local_repo)
+        commit_or_display_changes(args, local_repo, codeowners_path)
+        push_changes(args, local_repo, branch_name)
+        create_pull_request(args, gh_repo, branch_name)
 
-        logging.log(logging.INFO, "Opening a PR...")
-        pr = create_pull_request(gh_repo, branch_name)
-        logging.log(log.SUCCESS, f"PR at {pr.url}.")
+    LOG.log(ccos.log.SUCCESS, "Done.")
 
-    logging.log(log.SUCCESS, "Done.")
-
-    logging.log(log.SUCCESS, "All is well.")
+    LOG.log(ccos.log.SUCCESS, "All is well.")
 
 
-def commit_and_push_changes(local_repo, codeowners_path):
+def filter_valid_teams(gh_repo, teams):
+    """
+    Remove teams that do not have write/push permissions.
+    """
+    for index, team in enumerate(teams):
+        if not team.get_repo_permission(gh_repo).push:
+            del teams[index]
+    return teams
+
+
+def create_branch(local_repo):
     """
     Create a new branch and push the CODEOWNER to it. This branch will be named
     in a particular format.
@@ -148,23 +157,34 @@ def commit_and_push_changes(local_repo, codeowners_path):
 
     @param local_repo: GitPython Repo instance for the repo to which the
                        CODEOWNERS file being modified belongs
-    @param codeowners_path: the path of the CODEOWNERS file
     @return: the name of the branch to which the changes were pushed
     """
     timestamp = int(datetime.datetime.now().timestamp())
     branch_name = f"{SYNC_BRANCH}_{timestamp}"
     local_repo.git.checkout("HEAD", b=branch_name)
 
-    local_repo.index.add(items=codeowners_path)
-    local_repo.index.commit(message="Sync Community Team(s) to CODEOWNERS")
-
-    origin = local_repo.remotes.origin
-    origin.push(f"{branch_name}:{branch_name}")
-
     return branch_name
 
 
-def create_pull_request(gh_repo, branch_name):
+def commit_or_display_changes(args, local_repo, codeowners_path):
+    if args.debug:
+        LOG.debug(local_repo.git.diff())
+    else:
+        local_repo.index.add(items=codeowners_path)
+        local_repo.index.commit(message="Sync Community Team(s) to CODEOWNERS")
+
+
+def push_changes(args, local_repo, branch_name):
+    if args.debug:
+        LOG.debug("Skipping: Pushing to GitHub")
+    else:
+        LOG.info("Pushing to GitHub...")
+        origin = local_repo.remotes.origin
+        origin.push(f"{branch_name}:{branch_name}")
+        LOG.log(ccos.log.SUCCESS, f"Pushed to {branch_name}.")
+
+
+def create_pull_request(args, gh_repo, branch_name):
     """
     Create a PR from the newly created branch to the base branch of the
     repository containing the required changes to the CODEOWNERS.
@@ -173,16 +193,21 @@ def create_pull_request(gh_repo, branch_name):
     @param branch_name: the name of the branch containing the CODEOWNERS
                         changes
     """
-    return gh_repo.create_pull(
-        title="Sync Community Team to CODEOWNERS",
-        body=(
-            "This _automated PR_ updates your CODEOWNERS file to mention all "
-            "GitHub teams associated with Community Team roles."
-        ),
-        head=branch_name,
-        # default branch could be 'main', 'master', 'prod', or something else
-        base=gh_repo.default_branch,
-    )
+    if args.debug:
+        LOG.debug("Skipping: Opening a PR")
+    else:
+        LOG.info("Opening a PR...")
+        pr = gh_repo.create_pull(
+            title="Sync Community Team to CODEOWNERS",
+            body=(
+                "This _automated PR_ updates your CODEOWNERS file to mention"
+                " all GitHub teams associated with Community Team roles."
+            ),
+            head=branch_name,
+            # default branch could be 'main', 'master', 'prod', etc.
+            base=gh_repo.default_branch,
+        )
+        LOG.log(ccos.log.SUCCESS, f"PR at {pr.url}.")
 
 
 def set_up_repo(clone_url, repo_dir):
@@ -193,7 +218,7 @@ def set_up_repo(clone_url, repo_dir):
     @param repo_dir: the local directory for the repository
     @return: GitPython Repo instance
     """
-    logging.log(logging.INFO, "Cloning repo...")
+    LOG.info("Cloning repo...")
     local_repo = git.Repo.clone_from(url=clone_url, to_path=repo_dir)
     return local_repo
 
@@ -219,6 +244,7 @@ def add_missing_teams(codeowners_path, team_mention_map):
     @param codeowners_path: the path of the CODEOWNERS file
     @param team_mention_map: the dictionary of team slugs and their mentions
     """
+    LOG.info("CODEOWNERS is incomplete, populating...")
     missing_team_slugs = [
         team_slug
         for team_slug in team_mention_map.keys()
@@ -228,6 +254,7 @@ def add_missing_teams(codeowners_path, team_mention_map):
         addendum = generate_ideal_codeowners_rule(missing_team_slugs)
         codeowners_file.write(addendum)
         codeowners_file.write("\n")
+    LOG.log(ccos.log.SUCCESS, "Done.")
 
 
 def generate_ideal_codeowners_rule(team_slugs):
