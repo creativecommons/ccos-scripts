@@ -72,7 +72,6 @@ class IndentFormatter(logging.Formatter):
         else:
             self._style._fmt += f"%(indent)s%(message)s"
 
-
     def format(self, record):
         """
         Format the log message with additional data extracted from the stack.
