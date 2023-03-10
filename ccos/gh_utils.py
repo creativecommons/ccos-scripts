@@ -13,23 +13,30 @@ from github.GithubException import BadCredentialsException
 from ccos import log
 
 GITHUB_ORGANIZATION = "creativecommons"
-GITHUB_USERNAME = "cc-creativecommons-github-io-bot"
-GITHUB_TOKEN = None
+GITHUB_USERNAME_DEFAULT = "cc-creativecommons-github-io-bot"
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
 logger = logging.getLogger(log_name)
 log.reset_handler()
 
 
-def set_up_github_client():
-    global GITHUB_TOKEN
+def get_credentials():
     try:
-        GITHUB_TOKEN = os.environ["ADMIN_GITHUB_TOKEN"]
+        github_token = os.environ["ADMIN_GITHUB_TOKEN"]
     except KeyError:
         logger.critical("missing ADMIN_GITHUB_TOKEN environment variable")
         sys.exit(1)
+    try:
+        github_username = os.environ["ADMIN_GITHUB_USERNAME"]
+    except KeyError:
+        github_username = GITHUB_USERNAME_DEFAULT
+    return github_username, github_token
+
+
+def set_up_github_client():
+    _, github_token = get_credentials()
     logger.log(logging.INFO, "Setting up GitHub client...")
-    github_client = Github(GITHUB_TOKEN)
+    github_client = Github(github_token)
     logger.log(log.SUCCESS, "done.")
     return github_client
 
