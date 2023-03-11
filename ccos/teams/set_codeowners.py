@@ -23,6 +23,13 @@ from ccos.teams.set_teams_on_github import map_role_to_team
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
 SYNC_BRANCH = "ct_codeowners"
+CODEOWNERS_TEMPLATE = """\
+# https://help.github.com/en/articles/about-code-owners
+# If you want to match two or more code owners with the same pattern, all the
+# code owners must be on the same line. If the code owners are not on the same
+# line, the pattern matches only the last mentioned code owner.
+* @creativecommons/technology
+"""
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
 LOG = logging.getLogger(log_name)
@@ -35,7 +42,7 @@ def create_codeowners_for_data(args, databag):
     organization = get_cc_organization(github_client)
 
     LOG.info("Identifying and fixing CODEOWNER issues...")
-    projects = databag["projects"]
+    projects = sorted(databag["projects"], key=lambda d: d["name"])
     for project in projects:
         project_name = project["name"]
         LOG.info(
@@ -51,7 +58,7 @@ def create_codeowners_for_data(args, databag):
         )
 
         LOG.info("Checking all projects...")
-        repos = project["repos"]
+        repos = sorted(project["repos"])
         with TemporaryDirectory() as temp_dir:
             for repo_name in repos:
                 check_and_fix_repo(
@@ -113,18 +120,16 @@ def check_and_fix_repo(args, organization, repo_name, teams, temp_dir):
     codeowners_path = Path(os.path.join(repo_dir, ".github", "CODEOWNERS"))
     fix_required = False
 
-    if not codeowners_path.exists() and codeowners_path.is_file():
+    if not codeowners_path.exists():
         fix_required = True
         LOG.info("CODEOWNERS does not exist, creating...")
         os.makedirs(codeowners_path.parent, exist_ok=True)
-        open(codeowners_path, "a").close()
+        with open(codeowners_path, "w") as codeowners_file:
+            codeowners_file.write(CODEOWNERS_TEMPLATE)
         LOG.log(ccos.log.SUCCESS, "Done.")
 
     teams = filter_valid_teams(gh_repo, teams)
-    team_mention_map = get_team_mention_map(codeowners_path, teams)
-    if not all(team_mention_map.values()):
-        fix_required = True
-        add_missing_teams(codeowners_path, team_mention_map)
+    fix_required = add_missing_teams(codeowners_path, teams)
 
     if fix_required:
         branch_name = create_branch(local_repo)
@@ -133,8 +138,6 @@ def check_and_fix_repo(args, organization, repo_name, teams, temp_dir):
         create_pull_request(args, gh_repo, branch_name)
 
     LOG.log(ccos.log.SUCCESS, "Done.")
-
-    LOG.log(ccos.log.SUCCESS, "All is well.")
 
 
 def filter_valid_teams(gh_repo, teams):
@@ -167,10 +170,10 @@ def create_branch(local_repo):
 
 
 def commit_or_display_changes(args, local_repo, codeowners_path):
+    local_repo.index.add(items=codeowners_path)
     if args.debug:
-        LOG.debug(local_repo.git.diff())
+        LOG.debug(local_repo.git.diff(staged=True))
     else:
-        local_repo.index.add(items=codeowners_path)
         local_repo.index.commit(message="Sync Community Team(s) to CODEOWNERS")
 
 
@@ -223,50 +226,40 @@ def set_up_repo(clone_url, repo_dir):
     return local_repo
 
 
-def get_team_mention_map(codeowners_path, teams):
-    """
-    Map the team slugs to whether they have been mentioned in the CODEOWNERS
-    file in any capacity.
-
-    @param codeowners_path: the path of the CODEOWNERS file
-    @param teams: all the GitHub teams for all Community Teams of a project
-    @return: a dictionary of team slugs and their mentions
-    """
-    with open(codeowners_path) as codeowners_file:
-        contents = codeowners_file.read()
-    return {team.slug: mentionified(team.slug) in contents for team in teams}
-
-
-def add_missing_teams(codeowners_path, team_mention_map):
+def add_missing_teams(codeowners_path, teams):
     """
     Add the mention forms for all missing teams in a new line.
 
     @param codeowners_path: the path of the CODEOWNERS file
     @param team_mention_map: the dictionary of team slugs and their mentions
     """
-    LOG.info("CODEOWNERS is incomplete, populating...")
-    missing_team_slugs = [
-        team_slug
-        for team_slug in team_mention_map.keys()
-        if not team_mention_map[team_slug]
-    ]
-    with open(codeowners_path, "a") as codeowners_file:
-        addendum = generate_ideal_codeowners_rule(missing_team_slugs)
-        codeowners_file.write(addendum)
-        codeowners_file.write("\n")
-    LOG.log(ccos.log.SUCCESS, "Done.")
-
-
-def generate_ideal_codeowners_rule(team_slugs):
-    """
-    Generate an ideal CODEOWNERS rule for the given set of roles. Assigns all
-    files using the wildcard expression '*' to the given roles.
-
-    @param team_slugs: the set of team slugs to be added to the CODEOWNERS file
-    @return: the line that should be added to the CODEOWNERS file
-    """
-    combined_team_slugs = " ".join(map(mentionified, team_slugs))
-    return f"* {combined_team_slugs}"
+    fix_required = False
+    community_teams = []
+    for team in teams:
+        community_teams.append(f"@{GITHUB_ORGANIZATION}/{team.slug}")
+    community_teams.sort()
+    new_codeowners = []
+    with open(codeowners_path, "r") as codeowners_file:
+        new_codeowners = codeowners_file.readlines()
+    for index, line in enumerate(new_codeowners):
+        if not line.startswith("* "):
+            continue
+        staff_teams = []
+        teams = line.split()[1:]
+        for team in teams:
+            if not team.startswith("@creativecommons/ct-"):
+                staff_teams.append(team)
+        staff_teams.sort()
+        new_line = f"* {' '.join(staff_teams)} {' '.join(community_teams)}\n"
+        if line.strip() != new_line.strip():
+            new_codeowners[index] = new_line
+            fix_required = True
+    if fix_required:
+        LOG.info("CODEOWNERS is incomplete, populating...")
+        with open(codeowners_path, "w") as codeowners_file:
+            codeowners_file.writelines(new_codeowners)
+        LOG.log(ccos.log.SUCCESS, "Done.")
+    return fix_required
 
 
 def get_github_repo_url_with_credentials(repo_name):
@@ -282,17 +275,3 @@ def get_github_repo_url_with_credentials(repo_name):
         f"https://{github_username}:{github_token}"
         f"@github.com/{GITHUB_ORGANIZATION}/{repo_name}.git"
     )
-
-
-def mentionified(team_slug):
-    """
-    Get the mention form of the given team. Mention forms are generated by
-    prefixing the organization to the team slug.
-
-    mention form schema
-    @<organization>/<team slug>
-
-    @param team_slug: the slug of the team to mention
-    @return: the mentionable form of the given team slug
-    """
-    return f"@{GITHUB_ORGANIZATION}/{team_slug}"
