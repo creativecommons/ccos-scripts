@@ -7,11 +7,11 @@ import os.path
 import yaml
 
 # First-party/Local
-from ccos import log
+import ccos.log
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-logger = logging.getLogger(log_name)
-log.reset_handler()
+LOG = logging.getLogger(log_name)
+ccos.log.reset_handler()
 
 TRIAGE_LABEL = "🚦 status: awaiting triage"
 LABEL_WORK_REQUIRED_LABEL = "🏷 status: label work required"
@@ -29,10 +29,10 @@ def dump_invalid_issues(invalid_issues):
             invalid_issue["issue"] = issue.title
             invalid_issue["url"] = issue.html_url
 
-    logger.log(logging.INFO, "Dumping issues in a file...")
+    LOG.info("Dumping issues in a file...")
     with open("/tmp/invalid_issues.yml", "w") as file:
         yaml.dump(invalid_issues, file)
-    logger.log(log.SUCCESS, "done.")
+    LOG.log(ccos.log.SUCCESS, "done.")
 
 
 def are_issue_labels_valid(issue, required_groups):
@@ -47,12 +47,10 @@ def are_issue_labels_valid(issue, required_groups):
     labels = issue.get_labels()
     label_names = {label.name for label in labels}
     if issue.pull_request:
-        logger.log(
-            logging.INFO, f"Skipping '{issue.title}' because it is a PR."
-        )
+        LOG.log(logging.INFO, f"Skipping '{issue.title}' because it is a PR.")
         return True, None  # PRs are exempt
     if TRIAGE_LABEL in label_names:
-        logger.log(
+        LOG.log(
             logging.INFO,
             f"Skipping '{issue.title}' because it is awaiting triage.",
         )
@@ -65,7 +63,7 @@ def are_issue_labels_valid(issue, required_groups):
             missing_groups.append(group.name)
     if missing_groups:
         issue.add_to_labels(LABEL_WORK_REQUIRED_LABEL)
-        logger.log(logging.INFO, f"Issue '{issue.title}' has missing labels.")
+        LOG.info(f"Issue '{issue.title}' has missing labels.")
         return (
             False,
             f"Missing labels from groups: {', '.join(missing_groups)}",
@@ -74,7 +72,7 @@ def are_issue_labels_valid(issue, required_groups):
         if LABEL_WORK_REQUIRED_LABEL in label_names:
             issue.remove_from_labels(LABEL_WORK_REQUIRED_LABEL)
 
-    logger.log(logging.INFO, f"Issue '{issue.title}' is OK.")
+    LOG.info(f"Issue '{issue.title}' is OK.")
     return True, None
 
 
@@ -88,19 +86,19 @@ def get_invalid_issues_in_repo(repo, required_groups):
     @return: a list of invalid issues and their causes
     """
 
-    logger.log(logging.INFO, f"Getting issues for repo '{repo.name}'...")
+    LOG.info(f"Getting issues for repo '{repo.name}'...")
     issues = repo.get_issues(state="open")
-    logger.log(log.SUCCESS, "done.")
+    LOG.log(ccos.log.SUCCESS, "done.")
 
     invalid_issues = []
-    log.change_indent(+1)
+    ccos.log.change_indent(+1)
     for issue in issues:
-        logger.log(logging.INFO, f"Checking labels on '{issue.title}'...")
+        LOG.info(f"Checking labels on '{issue.title}'...")
         are_valid, reason = are_issue_labels_valid(issue, required_groups)
         if not are_valid:
             invalid_issues.append({"issue": issue, "reason": reason})
-        logger.log(log.SUCCESS, "done.")
-    log.change_indent(-1)
+        LOG.log(ccos.log.SUCCESS, "done.")
+    ccos.log.change_indent(-1)
     return invalid_issues
 
 
@@ -112,9 +110,9 @@ def get_required_groups(groups):
     @return: the filtered list of groups that that are required by definition
     """
 
-    logger.log(logging.INFO, f"Filtering {len(groups)} groups...")
+    LOG.info(f"Filtering {len(groups)} groups...")
     required_groups = [group for group in groups if group.is_required]
-    logger.log(log.SUCCESS, f"done. Required {len(required_groups)} groups.")
+    LOG.log(ccos.log.SUCCESS, f"done. Required {len(required_groups)} groups.")
     return required_groups
 
 
@@ -127,16 +125,16 @@ def validate_issues(repos, groups):
     required_groups = get_required_groups(groups)
     invalid_issues = {}
 
-    logger.log(logging.INFO, "Finding issues with invalid labels...")
-    log.change_indent(+1)
+    LOG.info("Finding issues with invalid labels...")
+    ccos.log.change_indent(+1)
     for repo in list(repos):
-        logger.log(logging.INFO, f"Checking issues in repo '{repo.name}'...")
+        LOG.info(f"Checking issues in repo '{repo.name}'...")
         invalid_issues[repo.name] = get_invalid_issues_in_repo(
             repo, required_groups
         )
-        logger.log(log.SUCCESS, "done.")
-    log.change_indent(-1)
-    logger.log(log.SUCCESS, "done.")
+        LOG.log(ccos.log.SUCCESS, "done.")
+    ccos.log.change_indent(-1)
+    LOG.log(ccos.log.SUCCESS, "done.")
 
     dump_invalid_issues(invalid_issues)
 

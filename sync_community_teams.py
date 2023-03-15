@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
+"""
+Create GitHub teams for the Community teams and update their membership based
+on the community_team_members.json Lektor databag.
+"""
 
 # Standard library
+import argparse
 import logging
 import os.path
 import sys
 import traceback
 
 # First-party/Local
-from ccos import log
+import ccos.log
 from ccos.teams.get_community_team_data import get_community_team_data
 from ccos.teams.set_codeowners import create_codeowners_for_data
 from ccos.teams.set_teams_on_github import create_teams_for_data
 
-log.set_up_logging()
-logger = logging.getLogger(os.path.basename(__file__))
-log.reset_handler()
+ccos.log.set_up_logging()
+LOG = logging.getLogger(os.path.splitext(os.path.basename(__file__))[0])
+ccos.log.reset_handler()
 
 
 class ScriptError(Exception):
@@ -24,11 +29,35 @@ class ScriptError(Exception):
         super(ScriptError, self).__init__(message)
 
 
+def setup():
+    """
+    Instantiate and configure argparse and logging.
+
+    Return argsparse namespace.
+    """
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "-d",
+        "--debug",
+        action="store_true",
+        help="Debug mode: show differences instead of pushing commits and"
+        "creating pull requests",
+    )
+    args = ap.parse_args()
+    return args
+
+
 def main():
-    exit_status = 0
-    exit_status = create_teams_for_data(get_community_team_data(), exit_status)
-    create_codeowners_for_data(get_community_team_data())
-    sys.exit(exit_status)
+    args = setup()
+    if args.debug:
+        LOG.setLevel(logging.DEBUG)
+        LOG.debug("Debug mode: no changes will be made to GitHub repositories")
+    community_team_data = get_community_team_data()
+    if not args.debug:
+        create_teams_for_data(community_team_data)
+    else:
+        LOG.debug("skipping team updates")
+    create_codeowners_for_data(args, community_team_data)
 
 
 if __name__ == "__main__":
@@ -37,14 +66,12 @@ if __name__ == "__main__":
     except SystemExit as e:
         sys.exit(e.code)
     except KeyboardInterrupt:
-        logger.log(logging.INFO, "Halted via KeyboardInterrupt.")
+        LOG.info("Halted via KeyboardInterrupt.")
         sys.exit(130)
     except ScriptError:
         error_type, error_value, error_traceback = sys.exc_info()
-        logger.log(logging.CRITICAL, f"{error_value}")
+        LOG.critical(f"{error_value}")
         sys.exit(error_value.code)
     except Exception:
-        logger.log(
-            logging.ERROR, f"Unhandled exception: {traceback.format_exc()}"
-        )
+        LOG.error(f"Unhandled exception: {traceback.format_exc()}")
         sys.exit(1)

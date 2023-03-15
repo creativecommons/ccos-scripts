@@ -6,13 +6,13 @@ import inspect
 import json
 import logging
 import os
-import tempfile
+from tempfile import TemporaryDirectory
 
 # Third-party
 import git
 
 # First-party/Local
-from ccos import log
+import ccos.log
 
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
@@ -30,26 +30,26 @@ GITHUB_REPO_URL_WITH_CREDENTIALS = (
 JSON_FILE_DIR = "databags"
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-logger = logging.getLogger(log_name)
-log.reset_handler()
+LOG = logging.getLogger(log_name)
+ccos.log.reset_handler()
 
 
 def set_up_repo(git_working_dir):
     if not os.path.isdir(git_working_dir):
-        logger.log(logging.INFO, "Cloning repo...")
+        LOG.info("Cloning repo...")
         repo = git.Repo.clone_from(
             url=GITHUB_REPO_URL_WITH_CREDENTIALS, to_path=git_working_dir
         )
     else:
-        logger.log(logging.INFO, "Setting up repo...")
+        LOG.info("Setting up repo...")
         repo = git.Repo(git_working_dir)
     origin = repo.remotes.origin
-    logger.log(logging.INFO, "Pulling latest code...")
+    LOG.info("Pulling latest code...")
     origin.pull()
 
 
 def set_up_git_user():
-    logger.log(logging.INFO, "Setting up git user...")
+    LOG.info("Setting up git user...")
     os.environ["GIT_AUTHOR_NAME"] = GIT_USER_NAME
     os.environ["GIT_AUTHOR_EMAIL"] = GIT_USER_EMAIL
     os.environ["GIT_COMMITTER_NAME"] = GIT_USER_NAME
@@ -57,7 +57,7 @@ def set_up_git_user():
 
 
 def generate_json_file(git_working_dir, data, filename):
-    logger.log(logging.INFO, "Generating JSON file...")
+    LOG.info("Generating JSON file...")
     json_filename = os.path.join(git_working_dir, JSON_FILE_DIR, filename)
     with open(json_filename, "w") as json_file:
         json.dump(data, json_file, sort_keys=True, indent=4)
@@ -71,14 +71,14 @@ def commit_and_push_changes(git_working_dir, json_filename):
         repo.index.add(items=f"{json_filename}")
         repo.index.commit(message="Syncing new data changes.")
         origin = repo.remotes.origin
-        logger.log(logging.INFO, "Pushing latest code...")
+        LOG.info("Pushing latest code...")
         origin.push()
     else:
-        logger.log(logging.INFO, "No changes to push...")
+        LOG.info("No changes to push...")
 
 
 def push_data(data, filename):
-    with tempfile.TemporaryDirectory() as temp_dir:
+    with TemporaryDirectory() as temp_dir:
         git_working_dir = os.path.join(temp_dir, GITHUB_REPO_NAME)
         set_up_repo(git_working_dir)
         set_up_git_user()

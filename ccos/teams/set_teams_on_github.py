@@ -2,12 +2,13 @@
 import inspect
 import logging
 import os.path
+import sys
 
 # Third-party
 from github import UnknownObjectException
 
 # First-party/Local
-from ccos import log
+import ccos.log
 from ccos.gh_utils import (
     get_cc_organization,
     get_team_slug_name,
@@ -22,15 +23,15 @@ PERMISSIONS = {
 }
 
 log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-logger = logging.getLogger(log_name)
-log.reset_handler()
+LOG = logging.getLogger(log_name)
+ccos.log.reset_handler()
 
 
-def create_teams_for_data(databag, exit_status):
+def create_teams_for_data(databag):
     client = set_up_github_client()
     organization = get_cc_organization(client)
 
-    logging.log(logging.INFO, "Creating and populating teams...")
+    LOG.info("Creating and populating teams...")
     projects = databag["projects"]
     for project in projects:
         project_name = project["name"]
@@ -46,33 +47,26 @@ def create_teams_for_data(databag, exit_status):
                 )
                 continue
 
-            logging.log(logging.INFO, f"Finding team for role {role}...")
+            LOG.info(f"Finding team for role {role}...")
             team = map_role_to_team(organization, project_name, role)
-            logging.log(log.SUCCESS, "Done.")
+            LOG.log(ccos.log.SUCCESS, "Done.")
 
-            logging.log(
-                logging.INFO, f"Populating repos for team {team.name}..."
-            )
+            LOG.info(f"Populating repos for team {team.name}...")
             repos = project["repos"]
             map_team_to_repos(organization, team, repos, True)
             set_team_repo_permissions(team, PERMISSIONS[role])
-            logging.log(log.SUCCESS, "Done.")
+            LOG.log(ccos.log.SUCCESS, "Done.")
 
-            logging.log(
-                logging.INFO, f"Populating members for team {team.name}..."
-            )
+            LOG.info(f"Populating members for team {team.name}...")
             members = [member["github"] for member in members]
-            exit_status = map_team_to_members(
-                client, team, members, exit_status, True
-            )
-            logging.log(log.SUCCESS, "Done.")
-        logging.log(log.SUCCESS, "Done.")
-    logging.log(log.SUCCESS, "Done.")
-    return exit_status
+            map_team_to_members(client, team, members, True)
+            LOG.log(ccos.log.SUCCESS, "Done.")
+        LOG.log(ccos.log.SUCCESS, "Done.")
+    LOG.log(ccos.log.SUCCESS, "Done.")
 
 
 def map_team_to_members(
-    client, team, final_user_logins, exit_status, non_destructive=False
+    client, team, final_user_logins, non_destructive=False
 ):
     """
     Map the team to the given set of members. Any members that are not already
@@ -101,16 +95,14 @@ def map_team_to_members(
             try:
                 user = client.get_user(login)
             except UnknownObjectException:
-                logging.log(logging.INFO, f"ERROR: User not found: {login}")
-                exit_status = 1
-                continue
+                LOG.info(f"ERROR: User not found: {login}")
+                sys.exit(1)
             team.add_membership(user)
 
     current_login = client.get_user().login
     if current_login not in final_user_logins:
         current_user = client.get_user(current_login)
         team.remove_membership(current_user)
-    return exit_status
 
 
 def map_team_to_repos(
@@ -161,7 +153,7 @@ def set_team_repo_permissions(team, permission):
             f"Populating {permission} permission on {repo.full_name} repo...",
         )
         team.set_repo_permission(repo, permission)
-        logging.log(log.SUCCESS, "Done.")
+        LOG.log(ccos.log.SUCCESS, "Done.")
 
 
 def map_role_to_team(organization, project_name, role, create_if_absent=True):
@@ -189,20 +181,20 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
     except UnknownObjectException:
         team = None
     if team:
-        logging.log(logging.INFO, f"Team exists ({team_name}), reconciling...")
+        LOG.info(f"Team exists ({team_name}), reconciling...")
         if team.description == properties["description"]:
             del properties["description"]
         if team.privacy == properties["privacy"]:
             del properties["privacy"]
         if properties and properties != {"name": team.name}:
             team.edit(**properties)
-        logging.log(log.SUCCESS, "Done.")
+        LOG.log(ccos.log.SUCCESS, "Done.")
     else:
         if not create_if_absent:
-            logging.log(logging.INFO, "Did not exist, not creating.")
+            LOG.info("Did not exist, not creating.")
             team = None
         else:
-            logging.log(logging.INFO, "Did not exist, creating...")
+            LOG.info("Did not exist, creating...")
             team = organization.create_team(**properties)
-            logging.log(log.SUCCESS, "Done.")
+            LOG.log(ccos.log.SUCCESS, "Done.")
     return team
