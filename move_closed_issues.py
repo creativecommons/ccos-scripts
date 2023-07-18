@@ -9,6 +9,9 @@ import os
 import sys
 import traceback
 
+# Third-party
+from github import GithubException
+
 # First-party/Local
 import ccos.log
 from ccos import gh_utils
@@ -76,7 +79,7 @@ def move_cards(args, github, backlog, done):
                         content_id=content.id, content_type="Issue"
                     )
                 LOG.info(f"    -> added to Active Sprint: {done.name}")
-            except github.GithubException as e:
+            except GithubException as e:
                 if e.data["errors"][0]["message"] != (
                     "Project already has the associated issue"
                 ):
