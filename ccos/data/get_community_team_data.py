@@ -1,10 +1,3 @@
-"""
-This script pulls the members of the "Community Team Tracking" Asana
-project, formats it a bit, then pushes it to a databag
-"databags/community_team_list.json"
-in creativecommons/creativecommons.github.io-source
-"""
-
 # Standard library
 import inspect
 import logging
@@ -33,6 +26,7 @@ def setup_asana_client():
         LOG.critical("missin ADMIN_ASANA_TOKEN environment variable")
         sys.exit(1)
     asana_client = asana.Client.access_token(asana_token)
+    asana_client.headers = {"asana-enable": "new_goal_memberships"}
     try:
         # Perform simple API operation to test authentication
         asana_client.workspaces.get_workspace(ASANA_WORKSPACE_GID)
