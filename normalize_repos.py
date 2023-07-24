@@ -135,6 +135,10 @@ def update_branch_protection(repo):
         and is_engineering_project(repo)
     ):
         LOG.info(f"{repo.name}: updating branch protections")
+        # The following empty *_bypass_pull_request_allowance arguments ensure
+        # the required bypass_pull_request_allowances API parameter is
+        # populated:
+        # https://docs.github.com/rest/branches/branch-protection#update-branch-protection
         if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
             default_branch.edit_protection(
                 required_approving_review_count=1,
@@ -142,10 +146,17 @@ def update_branch_protection(repo):
                 contexts=branch_protections.REQUIRED_STATUS_CHECK_MAP[
                     repo.name
                 ],
+                users_bypass_pull_request_allowances=[],
+                teams_bypass_pull_request_allowances=[],
+                apps_bypass_pull_request_allowances=[],
             )
         else:
             default_branch.edit_protection(
-                required_approving_review_count=1, user_push_restrictions=[]
+                required_approving_review_count=1,
+                user_push_restrictions=[],
+                users_bypass_pull_request_allowances=[],
+                teams_bypass_pull_request_allowances=[],
+                apps_bypass_pull_request_allowances=[],
             )
     else:
         LOG.info(f"{repo.name}: skipping: exempt")
