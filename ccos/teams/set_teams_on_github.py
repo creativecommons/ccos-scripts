@@ -1,30 +1,24 @@
 # Standard library
-import inspect
 import logging
-import os.path
 import sys
 
 # Third-party
 from github import UnknownObjectException
 
 # First-party/Local
-import ccos.log
 from ccos.gh_utils import (
     get_cc_organization,
     get_team_slug_name,
     set_up_github_client,
 )
 
+LOG = logging.root
 PERMISSIONS = {
     "Project Contributor": None,
     "Project Collaborator": "triage",
     "Project Core Committer": "push",
     "Project Maintainer": "maintain",
 }
-
-log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-LOG = logging.getLogger(log_name)
-ccos.log.reset_handler()
 
 
 def create_teams_for_data(databag):
@@ -49,20 +43,20 @@ def create_teams_for_data(databag):
 
             LOG.info(f"Finding team for role {role}...")
             team = map_role_to_team(organization, project_name, role)
-            LOG.log(ccos.log.SUCCESS, "Done.")
+            LOG.success("done.")
 
             LOG.info(f"Populating repos for team {team.name}...")
             repos = project["repos"]
             map_team_to_repos(organization, team, repos, True)
             set_team_repo_permissions(team, PERMISSIONS[role])
-            LOG.log(ccos.log.SUCCESS, "Done.")
+            LOG.success("done.")
 
             LOG.info(f"Populating members for team {team.name}...")
             members = [member["github"] for member in members]
             map_team_to_members(client, team, members, True)
-            LOG.log(ccos.log.SUCCESS, "Done.")
-        LOG.log(ccos.log.SUCCESS, "Done.")
-    LOG.log(ccos.log.SUCCESS, "Done.")
+            LOG.success("done.")
+        LOG.success("done.")
+    LOG.success("done.")
 
 
 def map_team_to_members(
@@ -153,7 +147,7 @@ def set_team_repo_permissions(team, permission):
             f"Populating {permission} permission on {repo.full_name} repo...",
         )
         team.set_repo_permission(repo, permission)
-        LOG.log(ccos.log.SUCCESS, "Done.")
+        LOG.success("done.")
 
 
 def map_role_to_team(organization, project_name, role, create_if_absent=True):
@@ -188,7 +182,7 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
             del properties["privacy"]
         if properties and properties != {"name": team.name}:
             team.edit(**properties)
-        LOG.log(ccos.log.SUCCESS, "Done.")
+        LOG.success("done.")
     else:
         if not create_if_absent:
             LOG.info("Did not exist, not creating.")
@@ -196,5 +190,5 @@ def map_role_to_team(organization, project_name, role, create_if_absent=True):
         else:
             LOG.info("Did not exist, creating...")
             team = organization.create_team(**properties)
-            LOG.log(ccos.log.SUCCESS, "Done.")
+            LOG.success("done.")
     return team

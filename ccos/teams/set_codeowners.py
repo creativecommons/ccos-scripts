@@ -1,9 +1,7 @@
 # Standard library
 import datetime
-import inspect
 import logging
 import os
-import os.path
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -11,7 +9,6 @@ from tempfile import TemporaryDirectory
 import git
 
 # First-party/Local
-import ccos.log
 from ccos.gh_utils import (
     GITHUB_ORGANIZATION,
     get_cc_organization,
@@ -20,9 +17,6 @@ from ccos.gh_utils import (
 )
 from ccos.teams.set_teams_on_github import map_role_to_team
 
-GIT_USER_NAME = "CC creativecommons.github.io Bot"
-GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
-SYNC_BRANCH = "ct_codeowners"
 CODEOWNERS_TEMPLATE = """\
 # https://help.github.com/en/articles/about-code-owners
 # If you want to match two or more code owners with the same pattern, all the
@@ -30,10 +24,10 @@ CODEOWNERS_TEMPLATE = """\
 # line, the pattern matches only the last mentioned code owner.
 * @creativecommons/technology
 """
-
-log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-LOG = logging.getLogger(log_name)
-ccos.log.reset_handler()
+GIT_USER_NAME = "CC creativecommons.github.io Bot"
+GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
+LOG = logging.root
+SYNC_BRANCH = "ct_codeowners"
 
 
 def create_codeowners_for_data(args, databag):
@@ -64,7 +58,7 @@ def create_codeowners_for_data(args, databag):
                 check_and_fix_repo(
                     args, organization, repo_name, teams, temp_dir
                 )
-    LOG.log(ccos.log.SUCCESS, "Done")
+    LOG.success("Done")
 
 
 def set_up_git_user():
@@ -126,7 +120,7 @@ def check_and_fix_repo(args, organization, repo_name, teams, temp_dir):
         os.makedirs(codeowners_path.parent, exist_ok=True)
         with open(codeowners_path, "w") as codeowners_file:
             codeowners_file.write(CODEOWNERS_TEMPLATE)
-        LOG.log(ccos.log.SUCCESS, "Done.")
+        LOG.success("done.")
 
     teams = filter_valid_teams(gh_repo, teams)
     fix_required = add_missing_teams(codeowners_path, teams)
@@ -137,7 +131,7 @@ def check_and_fix_repo(args, organization, repo_name, teams, temp_dir):
         push_changes(args, local_repo, branch_name)
         create_pull_request(args, gh_repo, branch_name)
 
-    LOG.log(ccos.log.SUCCESS, "Done.")
+    LOG.success("done.")
 
 
 def filter_valid_teams(gh_repo, teams):
@@ -184,7 +178,7 @@ def push_changes(args, local_repo, branch_name):
         LOG.info("Pushing to GitHub...")
         origin = local_repo.remotes.origin
         origin.push(f"{branch_name}:{branch_name}")
-        LOG.log(ccos.log.SUCCESS, f"Pushed to {branch_name}.")
+        LOG.success(f"Pushed to {branch_name}.")
 
 
 def create_pull_request(args, gh_repo, branch_name):
@@ -210,7 +204,7 @@ def create_pull_request(args, gh_repo, branch_name):
             # default branch could be 'main', 'master', 'prod', etc.
             base=gh_repo.default_branch,
         )
-        LOG.log(ccos.log.SUCCESS, f"PR at {pr.url}.")
+        LOG.success(f"PR at {pr.url}.")
 
 
 def set_up_repo(clone_url, repo_dir):
@@ -258,7 +252,7 @@ def add_missing_teams(codeowners_path, teams):
         LOG.info("CODEOWNERS is incomplete, populating...")
         with open(codeowners_path, "w") as codeowners_file:
             codeowners_file.writelines(new_codeowners)
-        LOG.log(ccos.log.SUCCESS, "Done.")
+        LOG.success("done.")
     return fix_required
 
 

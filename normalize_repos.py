@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# vim: set fileencoding=utf-8:
 
 """
 This script ensures that all active repositories in the creativecommons GitHub
@@ -8,8 +7,6 @@ organization are consistent. Please see README.md.
 
 # Standard library
 import argparse
-import logging
-import os.path
 import sys
 import traceback
 
@@ -21,13 +18,11 @@ from github import GithubException, UnknownObjectException
 import ccos.log
 from ccos import gh_utils
 from ccos.norm import branch_protections
-from ccos.norm.get_labels import get_groups, get_labels
+from ccos.norm.get_labels import get_labels, get_required_label_groups
 from ccos.norm.set_labels import set_labels
 from ccos.norm.validate_issues import validate_issues
 
-ccos.log.set_up_logging()
-LOG = logging.getLogger(os.path.basename(__file__))
-ccos.log.reset_handler()
+LOG = ccos.log.setup_logger()
 
 
 class ScriptError(Exception):
@@ -76,8 +71,11 @@ def get_cc_repos(github):
 
 
 def get_select_repos(args):
+    LOG.info("Get GitHub data")
     github = gh_utils.set_up_github_client()
+    LOG.change_indent(-1)
     repos = list(get_cc_repos(github))
+    LOG.change_indent(+1)
     if args.repos:
         repos_selected = []
         for repo in repos:
@@ -98,16 +96,16 @@ def set_repo_labels(args, repos):
         return
     LOG.info("Syncing labels...")
     set_labels(repos, *get_labels())
-    LOG.log(ccos.log.SUCCESS, "done.")
+    LOG.success("done.")
 
 
 def validate_issue_labels(args, repos):
     if args.skip_issues:
         return
     LOG.info("Checking issues...")
-    groups = get_groups()
-    validate_issues(repos, groups)
-    LOG.log(ccos.log.SUCCESS, "done.")
+    required_label_groups = get_required_label_groups()
+    validate_issues(repos, required_label_groups)
+    LOG.success("done.")
 
 
 def is_engineering_project(repo):
@@ -167,17 +165,14 @@ def update_branches(args, repos):
         return
     LOG.info("Evaluting repositories for branch protections...")
     for repo in repos:
-        # TODO: Set up automatic deletion of merged branches
         update_branch_protection(repo)
-    LOG.log(ccos.log.SUCCESS, "done.")
+    LOG.success("done.")
 
 
 def main():
     args = setup()
     LOG.info("Starting normalization")
-    ccos.log.change_indent(-1)
     repos = get_select_repos(args)
-    ccos.log.change_indent(+1)
     set_repo_labels(args, repos)
     validate_issue_labels(args, repos)
     update_branches(args, repos)

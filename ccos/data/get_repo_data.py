@@ -1,38 +1,13 @@
-#!/usr/bin/env python3
-# vim: set fileencoding=utf-8:
-
 # Standard library
-import inspect
 import logging
-import os.path
 
 # Third-party
 import emoji
 import yaml
-from github import Github
 from github.GithubException import GithubException, UnknownObjectException
 
-# First-party/Local
-import ccos.log
-from ccos.data.push_data_via_git import GITHUB_ORGANIZATION, GITHUB_TOKEN
-
 CC_METADATA_FILE_NAME = ".cc-metadata.yml"
-
-log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-LOG = logging.getLogger(log_name)
-ccos.log.reset_handler()
-
-
-def set_up_github_client():
-    LOG.info("Setting up GitHub client...")
-    github_client = Github(GITHUB_TOKEN)
-    return github_client
-
-
-def get_cc_organization(github_client):
-    LOG.info("Getting CC's GitHub organization...")
-    cc = github_client.get_organization(GITHUB_ORGANIZATION)
-    return cc
+LOG = logging.root
 
 
 def get_repositories(organization):
@@ -113,19 +88,15 @@ def get_repo_data_dict(repo_data_list):
     return {"repos": repo_data_list}
 
 
-def get_repo_data():
-    github_client = set_up_github_client()
-    cc = get_cc_organization(github_client)
-    repos = get_repositories(cc)
+def get_repo_data(gh_org_cc):
+    repos = get_repositories(gh_org_cc)
     repo_data_list = get_repo_data_list(repos)
     data = get_repo_data_dict(repo_data_list)
     return data
 
 
-def get_repo_names():
-    github_client = set_up_github_client()
-    cc = get_cc_organization(github_client)
-    repos = get_repositories(cc)
+def get_repo_names(gh_org_cc):
+    repos = get_repositories(gh_org_cc)
     names = []
     for repo in repos:
         names.append(repo.name)
