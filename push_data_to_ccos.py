@@ -3,25 +3,20 @@
 
 # Standard library
 import argparse
-import logging
-import os.path
 import sys
 import traceback
 
 # First-party/Local
 import ccos.log
-from ccos.data.get_community_team_data import (
-    get_community_team_data,
-    setup_asana_client,
-)
+from ccos import gh_utils
+from ccos.data.asana import get_asana_team_members, setup_asana_client
+from ccos.data.get_community_team_data import get_community_team_data
 from ccos.data.get_repo_data import get_repo_data, get_repo_names
 from ccos.data.push_data_via_git import push_data
 
 DAILY_DATABAGS = ["repos", "community_team_members"]
 
-ccos.log.set_up_logging()
-LOG = logging.getLogger(os.path.basename(__file__))
-ccos.log.reset_handler()
+LOG = ccos.log.setup_logger()
 
 
 class ScriptError(Exception):
@@ -51,15 +46,20 @@ def setup():
 
 def main():
     args = setup()
-    asana_client = setup_asana_client()
+    github_client = gh_utils.set_up_github_client()
+    gh_org_cc = gh_utils.get_cc_organization(github_client)
     if "repos" in args.databags:
         LOG.info("updating repos.json")
-        push_data(get_repo_data(), "repos.json")
+        push_data(get_repo_data(gh_org_cc), "repos.json")
+        LOG.success("done.")
     if "community_team_members" in args.databags:
         LOG.info("community_team_members.json")
-        repo_names = get_repo_names()
-        community_data = get_community_team_data(asana_client, repo_names)
+        asana_client = setup_asana_client()
+        team_members = get_asana_team_members(asana_client)
+        repo_names = get_repo_names(gh_org_cc)
+        community_data = get_community_team_data(team_members, repo_names)
         push_data(community_data, "community_team_members.json")
+        LOG.success("done.")
 
 
 if __name__ == "__main__":

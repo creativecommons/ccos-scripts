@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Create GitHub teams for the Community teams and update their membership based
 on the community_team_members.json Lektor databag.
@@ -7,7 +8,6 @@ on the community_team_members.json Lektor databag.
 # Standard library
 import argparse
 import logging
-import os.path
 import sys
 import traceback
 
@@ -17,9 +17,7 @@ from ccos.teams.get_community_team_data import get_community_team_data
 from ccos.teams.set_codeowners import create_codeowners_for_data
 from ccos.teams.set_teams_on_github import create_teams_for_data
 
-ccos.log.set_up_logging()
-LOG = logging.getLogger(os.path.splitext(os.path.basename(__file__))[0])
-ccos.log.reset_handler()
+LOG = ccos.log.setup_logger()
 
 
 class ScriptError(Exception):
@@ -52,6 +50,8 @@ def main():
     if args.debug:
         LOG.setLevel(logging.DEBUG)
         LOG.debug("Debug mode: no changes will be made to GitHub repositories")
+    else:
+        LOG.info("Synchronizing community teams")
     community_team_data = get_community_team_data()
     if not args.debug:
         create_teams_for_data(community_team_data)

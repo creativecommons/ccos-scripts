@@ -1,29 +1,15 @@
-"""
-This script pulls the members of the Community Team from the databag in the
-OS@CC repository, formats it to match the required structure for setting up
-GitHub teams and then syncs the teams to GitHub.
-
-This file intentionally has an external API identical to that of
-`push_data_to_ccos/get_community_team_data.py`.
-"""
-
 # Standard library
-import inspect
 import logging
-import os.path
 import re
 
 # Third-party
 import requests
 
-# First-party/Local
-import ccos.log
-
-# Constants should match 'push_data_to_ccos/push_data_via_git.py'
+# Constants should match 'ccos/data/push_data_via_git.py'
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_REPO_NAME = "creativecommons.github.io-source"
 
-# Constants should match 'push_data_to_ccos/sync_data.py'
+# Constants should match 'push_data_to_ccos.py'
 CT_MEMBERS = "community_team_members.json"
 
 DATABAG_URL = (
@@ -31,9 +17,7 @@ DATABAG_URL = (
     f"{GITHUB_REPO_NAME}/main/databags/{CT_MEMBERS}"
 )
 
-log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-LOG = logging.getLogger(log_name)
-ccos.log.reset_handler()
+LOG = logging.root
 
 
 def fetch_databag():
@@ -87,8 +71,7 @@ def fetch_databag():
             formatted_project["roles"][role].append(member)
         databag["projects"].append(formatted_project)
 
-    LOG.log(ccos.log.SUCCESS, "Done.")
-    LOG.log(ccos.log.SUCCESS, "Pull successful.")
+    LOG.success("done.")
     return databag
 
 

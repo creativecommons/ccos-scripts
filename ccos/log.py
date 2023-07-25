@@ -9,16 +9,16 @@ class IndentFormatter(logging.Formatter):
     """
     Format the given log messages with proper indentation based on the stack
     depth of the code invoking the logger. This removes the need for manual
-    indentation using ``'\t'`` characters.
+    indentation using tab characters.
     """
 
-    color_map = {
-        logging.CRITICAL: 31,  # red
-        logging.ERROR: 31,  # red
-        logging.WARNING: 33,  # yellow
-        SUCCESS: 32,  # green
-        logging.INFO: 34,  # blue
-        logging.DEBUG: 35,  # magenta
+    color_map = {  # ............. Level     ##    Color    ##
+        logging.CRITICAL: 31,  # . CRITICAL  50    red      31
+        logging.ERROR: 31,  # .... ERROR     40    red      31
+        logging.WARNING: 33,  # .. WARNING   30    yellow   33
+        SUCCESS: 32,  # .......... SUCCESS   21    green    32
+        logging.INFO: 34,  # ..... INFO      20    blue     34
+        logging.DEBUG: 35,  # .... DEBUG     10    magenta  35
     }
 
     @staticmethod
@@ -30,7 +30,6 @@ class IndentFormatter(logging.Formatter):
         @param filenames: the names of all files from which logs were pushed
         @return: the index of the filename from which the logger was called
         """
-
         lib_string = "lib/python"
         lib_started = False
         for index, filename in enumerate(filenames):
@@ -44,7 +43,6 @@ class IndentFormatter(logging.Formatter):
         Initialise the formatter with the fixed log format. The format is
         intentionally minimal to get clean and readable logs.
         """
-
         fmt = "%(message)s"
         super().__init__(fmt=fmt)
 
@@ -58,17 +56,19 @@ class IndentFormatter(logging.Formatter):
         @param record: the record based on whose level to update the formatting
         """
         prefix = "\u001b["
-        color = f"{self.color_map[record.levelno]}m"
-        bold = "1m"
-        reset = "0m"
+        color = f"{prefix}{self.color_map[record.levelno]}m"
+        bold = f"{prefix}1m"
+        gray = f"{prefix}1m{prefix}30m"
+        reset = f"{prefix}0m"
         self._style._fmt = (
-            "%(asctime)s │ "
-            f"{prefix}{color}%(levelname)-8s{prefix}{reset} │ "
+            f"%(asctime)s"
+            f" {gray}│{reset} {color}%(levelname)-8s{reset} {gray}│{reset} "
         )
         if hasattr(record, "function"):
             self._style._fmt += (
-                f"%(indent)s{prefix}{bold}%(function)s{prefix}{reset}: "
-                "%(message)s"
+                f"{gray}%(indent)s{reset}"
+                f"{bold}%(function)s{reset}{gray}:{reset}"
+                " %(message)s"
             )
         else:
             self._style._fmt += "%(indent)s%(message)s"
@@ -88,7 +88,7 @@ class IndentFormatter(logging.Formatter):
             self.cut = self.identify_cut(filenames)
 
         # Inject custom information into the record
-        record.indent = ". " * (depth - self.baseline + self.manual_push)
+        record.indent = "." * (depth - self.baseline + self.manual_push)
         if depth > self.cut:
             record.function = stack[self.cut].function
 
@@ -109,63 +109,59 @@ class IndentFormatter(logging.Formatter):
         the value indents the logs and decreasing it de-indents them.
         @param delta: the number of steps by which to indent/de-indent the logs
         """
-
         self.manual_push += delta
-        if self.manual_push < 0:
-            self.manual_push = 0
 
     def reset(self):
         """
         Reset the baseline and cut attributes so that the next call to the
         logger can repopulate them to the new values for the particular file.
         """
-
         self.baseline = None
         self.cut = None
         self.manual_push = 0
 
 
-def set_up_logging():
+def setup_logger():
     """
-    Configure logging with some first-run configuration. This method must be
-    called only once from the main process.
+    Configure RootLogger. This method must be called only once from the main
+    script (not from modules/libraries included by that script).
     """
+
+    def log_success_class(self, message, *args, **kwargs):
+        if self.isEnabledFor(SUCCESS):
+            # The 'args' below (instead of '*args') is correct
+            self._log(SUCCESS, message, args, **kwargs)
+
+    def log_success_root(message, *args, **kwargs):
+        logging.log(SUCCESS, message, *args, **kwargs)
+
+    def change_indent_class(self, delta=1):
+        """
+        Indent the output of the logger by the given number of steps. If
+        positive, the indentation increases and if negative, it decreases.
+        @param delta: the number of steps by which to indent/de-indent the logs
+        """
+        handlers = self.handlers
+        if len(handlers) > 0:
+            formatter = handlers[-1].formatter
+            if isinstance(formatter, IndentFormatter):
+                formatter.delta_indent(delta)
+
+    logging.addLevelName(SUCCESS, "SUCCESS")
+    setattr(logging.getLoggerClass(), "success", log_success_class)
+    setattr(logging, "success", log_success_root)
+    setattr(logging.getLoggerClass(), "change_indent", change_indent_class)
 
     formatter = IndentFormatter()
 
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
 
-    logging.basicConfig(level=logging.INFO, handlers=(handler,))
-    logging.addLevelName(SUCCESS, "SUCCESS")
+    logger = logging.root
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
+    return logger
 
 
-def reset_handler():
-    """
-    Reset the formatter on the handler on the root logger. This causes the next
-    call to the logger can repopulate them based on the new stack in a new
-    file.
-    """
-
-    handlers = logging.root.handlers
-    if len(handlers) > 0:
-        formatter = handlers[-1].formatter
-        if isinstance(formatter, IndentFormatter):
-            formatter.reset()
-
-
-def change_indent(delta=1):
-    """
-    Indent the output of the logger by the given number of steps. If positive,
-    the indentation increases and if negative, it decreases.
-    @param delta: the number of steps by which to indent/de-indent the logs
-    """
-
-    handlers = logging.root.handlers
-    if len(handlers) > 0:
-        formatter = handlers[-1].formatter
-        if isinstance(formatter, IndentFormatter):
-            formatter.delta_indent(delta)
-
-
-__all__ = ["set_up_logging", "reset_handler", "change_indent", "SUCCESS"]
+__all__ = ["setup_logger"]

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+
 """
 Move closed Issues out of Backlog and into Active Sprint: Done.
 """
+
 # Standard library
 import argparse
-import logging
-import os
 import sys
 import traceback
 
@@ -16,9 +16,7 @@ from github import GithubException
 import ccos.log
 from ccos import gh_utils
 
-ccos.log.set_up_logging()
-LOG = logging.getLogger(os.path.splitext(os.path.basename(__file__))[0])
-ccos.log.reset_handler()
+LOG = ccos.log.setup_logger()
 
 
 class ScriptError(Exception):
@@ -87,6 +85,7 @@ def move_cards(args, github, backlog, done):
             if not args.dryrun:
                 card.delete()
             LOG.info("    -> removed.")
+    LOG.success("done.")
 
 
 def main():

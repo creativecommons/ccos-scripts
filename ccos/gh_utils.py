@@ -1,5 +1,4 @@
 # Standard library
-import inspect
 import logging
 import os
 import re
@@ -9,15 +8,9 @@ import sys
 from github import Github
 from github.GithubException import BadCredentialsException
 
-# First-party/Local
-import ccos.log
-
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_USERNAME_DEFAULT = "cc-creativecommons-github-io-bot"
-
-log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-LOG = logging.getLogger(log_name)
-ccos.log.reset_handler()
+LOG = logging.root
 
 
 def get_credentials():
@@ -37,22 +30,22 @@ def set_up_github_client():
     _, github_token = get_credentials()
     LOG.info("Setting up GitHub client...")
     github_client = Github(github_token)
-    LOG.log(ccos.log.SUCCESS, "done.")
+    LOG.success("done.")
     return github_client
 
 
 def get_cc_organization(github_client):
     LOG.info("Getting CC's GitHub organization...")
     try:
-        cc = github_client.get_organization(GITHUB_ORGANIZATION)
+        gh_org_cc = github_client.get_organization(GITHUB_ORGANIZATION)
     except BadCredentialsException as e:
         LOG.critical(
             f"{e.status} {e.data['message']} (see"
             f" {e.data['documentation_url']})"
         )
         sys.exit(1)
-    LOG.log(ccos.log.SUCCESS, "done.")
-    return cc
+    LOG.success("done.")
+    return gh_org_cc
 
 
 def get_team_slug_name(project_name, role):

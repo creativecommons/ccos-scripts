@@ -1,43 +1,11 @@
 # Standard library
-import inspect
 import logging
-import os
 import sys
 
-# Third-party
-import asana
-
-# First-party/Local
-import ccos.log
-
-ASANA_WORKSPACE_GID = "133733285600979"
-ASANA_PROJECT_GID = "1172465506923661"
-
-log_name = os.path.basename(os.path.splitext(inspect.stack()[-1].filename)[0])
-LOG = logging.getLogger(log_name)
-ccos.log.reset_handler()
+LOG = logging.root
 
 
-def setup_asana_client():
-    LOG.info("Setting up Asana client...")
-    try:
-        asana_token = os.environ["ADMIN_ASANA_TOKEN"]
-    except KeyError:
-        LOG.critical("missin ADMIN_ASANA_TOKEN environment variable")
-        sys.exit(1)
-    asana_client = asana.Client.access_token(asana_token)
-    asana_client.headers = {"asana-enable": "new_goal_memberships"}
-    try:
-        # Perform simple API operation to test authentication
-        asana_client.workspaces.get_workspace(ASANA_WORKSPACE_GID)
-    except asana.error.NoAuthorizationError as e:
-        LOG.critical(f"{e.status} {e.message} (is ADMIN_ASANA_TOKEN valid?)")
-        sys.exit(1)
-    LOG.info("done.")
-    return asana_client
-
-
-def generate_databag(asana_client):
+def generate_databag(team_members):
     """
     This method pulls the team members from Asana and
     loads them into the databag after a little
@@ -71,17 +39,9 @@ def generate_databag(asana_client):
         ]
     }
     """
-
-    LOG.info("Pulling from Asana and generating databag...")
     databag = {"projects": [], "community_builders": []}
-
-    members = asana_client.tasks.find_by_section(
-        ASANA_PROJECT_GID, opt_fields=["name", "custom_fields"]
-    )
-    LOG.info("Team members pulled.")
-
     LOG.info("Processing team members...")
-    for member in members:
+    for member in team_members:
         if member["name"] == "":
             continue  # Sometimes blank names come up
         role = get_custom_field(member, "Role")
@@ -115,7 +75,7 @@ def generate_databag(asana_client):
                     )
                     break
 
-    LOG.info("Done.")
+    LOG.success("done.")
     return databag
 
 
@@ -195,8 +155,8 @@ def get_custom_field(task, field_name):
                 return field["text_value"]
 
 
-def get_community_team_data(asana_client, repo_names):
-    databag = generate_databag(asana_client)
+def get_community_team_data(team_members, repo_names):
+    databag = generate_databag(team_members)
     databag = prune_databag(databag)
     databag = verify_databag(databag, repo_names)
     databag = sort_databag(databag)
