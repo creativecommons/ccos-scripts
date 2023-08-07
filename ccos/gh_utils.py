@@ -7,6 +7,7 @@ import sys
 # Third-party
 from github import Github
 from github.GithubException import BadCredentialsException
+from urllib3.util.retry import Retry
 
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_USERNAME_DEFAULT = "cc-creativecommons-github-io-bot"
@@ -29,7 +30,26 @@ def get_credentials():
 def set_up_github_client():
     _, github_token = get_credentials()
     LOG.info("Setting up GitHub client...")
-    github_client = Github(github_token)
+    # TODO: Remove retry parameter (urllib3.util.retry.Retry object) once we
+    # are using PyGithub v2.0
+    # https://github.com/creativecommons/ccos-scripts/issues/179
+    retry = Retry(
+        # try again after 5, 10, 20, 40, 80 seconds
+        # for specified HTTP status codes
+        total=5,
+        backoff_factor=10,
+        status_forcelist=list(range(500, 600)),
+        allowed_methods={
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE",
+        },
+    )
+    github_client = Github(login_or_token=github_token, retry=retry)
     LOG.success("done.")
     return github_client
 
