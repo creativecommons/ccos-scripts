@@ -76,6 +76,13 @@ def get_select_repos(args):
     LOG.change_indent(-1)
     repos = list(get_cc_repos(github))
     LOG.change_indent(+1)
+    # Skip archived repos
+    repos_selected = []
+    for repo in repos:
+        if not repo.archived:
+            repos_selected.append(repo)
+    repos = repos_selected
+    # Skip non-selected repos
     if args.repos:
         repos_selected = []
         for repo in repos:
