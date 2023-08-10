@@ -82,7 +82,7 @@ def get_select_repos(args):
         if not repo.archived:
             repos_selected.append(repo)
     repos = repos_selected
-    # Skip un-selected repos
+    # Skip non-selected repos
     if args.repos:
         repos_selected = []
         for repo in repos:
