@@ -54,7 +54,9 @@ def set_up_github_client():
     return github_client
 
 
-def get_cc_organization(github_client):
+def get_cc_organization(github_client=None):
+    if github_client is None:
+        github_client = set_up_github_client()
     LOG.info("Getting CC's GitHub organization...")
     try:
         gh_org_cc = github_client.get_organization(GITHUB_ORGANIZATION)
@@ -66,6 +68,35 @@ def get_cc_organization(github_client):
         sys.exit(1)
     LOG.success("done.")
     return gh_org_cc
+
+
+def get_select_repos(args, gh_org_cc=None):
+    if gh_org_cc is None:
+        gh_org_cc = get_cc_organization()
+    LOG.info("Get select GitHub repositories")
+    LOG.change_indent(-1)
+    repos = list(gh_org_cc.get_repos())
+    LOG.change_indent(+1)
+    # Skip archived repos
+    repos_selected = []
+    for repo in repos:
+        if not repo.archived:
+            repos_selected.append(repo)
+    repos = repos_selected
+    # Skip non-selected repos
+    if args.repos:
+        repos_selected = []
+        for repo in repos:
+            if repo.name in args.repos:
+                repos_selected.append(repo)
+        repos = repos_selected
+        if not repos:
+            raise Exception(
+                "Specified repositories do not include any valid"
+                f" repositories: {args.repos}"
+            )
+    repos.sort(key=lambda repo: repo.name)
+    return repos
 
 
 def get_team_slug_name(project_name, role):
