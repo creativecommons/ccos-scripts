@@ -29,7 +29,7 @@ jobs:
       run: |
         pipenv sync --dev --system
 
-    - name: run script to move closed issues to Active Sprint: Done
+    - name: 'run script to move closed issues to Active Sprint: Done'
       run: |
         ./move_closed_issues.py
       env:
