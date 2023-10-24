@@ -65,39 +65,6 @@ def setup():
     return args
 
 
-def get_cc_repos(github):
-    cc = gh_utils.get_cc_organization(github)
-    return cc.get_repos()
-
-
-def get_select_repos(args):
-    LOG.info("Get GitHub data")
-    github = gh_utils.set_up_github_client()
-    LOG.change_indent(-1)
-    repos = list(get_cc_repos(github))
-    LOG.change_indent(+1)
-    # Skip archived repos
-    repos_selected = []
-    for repo in repos:
-        if not repo.archived:
-            repos_selected.append(repo)
-    repos = repos_selected
-    # Skip non-selected repos
-    if args.repos:
-        repos_selected = []
-        for repo in repos:
-            if repo.name in args.repos:
-                repos_selected.append(repo)
-        repos = repos_selected
-        if not repos:
-            raise ScriptError(
-                "Specified repositories do not include any valid"
-                f" repositories: {args.repos}"
-            )
-    repos.sort(key=lambda repo: repo.name)
-    return repos
-
-
 def set_repo_labels(args, repos):
     if args.skip_labels:
         return
@@ -179,7 +146,7 @@ def update_branches(args, repos):
 def main():
     args = setup()
     LOG.info("Starting normalization")
-    repos = get_select_repos(args)
+    repos = gh_utils.get_select_repos(args)
     set_repo_labels(args, repos)
     validate_issue_labels(args, repos)
     update_branches(args, repos)

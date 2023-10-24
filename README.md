@@ -8,7 +8,7 @@ infrastructure.
 
 - [![Add Community PRs to Project][prs_badge]][prs_link]
 - [![Sync Community Teams with GitHub][teams_badge]][teams_link]
-- [![Manage Issues in Projects][issues_badge]][issues_link]
+- [![Manage issues and pull requests in projects][issues_badge]][issues_link]
 - [![Normalize Repos][norm_badge]][norm_link]
 - [![Push data to CC Open Source][data_badge]][data_link]
 
@@ -17,7 +17,7 @@ infrastructure.
 [teams_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_teams.yml/badge.svg
 [teams_link]: #sync-community-teams-with-github
 [issues_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/manage_issues.yml/badge.svg
-[issues_link]: #manage-issues-in-projects
+[issues_link]: #manage-issues-and-pull-requests-in-projects
 [norm_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/normalize_repos.yml/badge.svg
 [norm_link]: #normalize-repos
 [data_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml/badge.svg
@@ -96,30 +96,31 @@ based on the [`community_team_members.json`][databag] Lektor databag.
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 
 
-### Manage Issues in Projects
+### Manage issues and pull requests in projects
 
 | **Workflow** | | |
 | -- | --: | --- |
 | | Schedule: | Hourly at 45 minutes past the hour (`**:45`) |
 | | YAML: | [`manage_issues.yml`][manage_issues] |
-| **Action** | | |
-| | | [dhruvkb/issue-projector][issue_bot] |
 | **Script** | | |
 | | File: | [`move_closed_issues.py`][move_file] |
+| | File: | [`track_issues_and_pull_requests.py`][track_issues] |
 | | Common Modules: | [`ccos/`](ccos/) |
 | **Env** | | |
 | | Required: | `ADMIN_GITHUB_TOKEN` |
 
-This manages issues within the [Active Sprint][active_sprint] and [Backlog][backlog_pending] projects:
-- Action: Track new issues in Backlog: Pending Review
-- Action: Track PRs in Active Sprint: Code Review
-- Script: Move closed issues from Backlog to Active Sprint: Done
+This manages issues and pull requests to ensure they are properly tracked
+within the [Active Sprint][active_sprint] and [Backlog][backlog] projects:
+  - Move closed issues from [Backlog][backlog] to [Active
+    Sprint][active_sprint]: Done
+  - Track open issues in [Backlog][backlog]: Pending Review
+  - Track open pull requests in [Active Sprint][active_sprint]: Code Review
 
 [manage_issues]: .github/workflows/manage_issues.yml
-[issue_bot]: https://github.com/dhruvkb/issue-projector
 [move_file]: move_closed_issues.py
+[track_issues]: track_issues_and_pull_requests.py
 [active_sprint]: https://github.com/orgs/creativecommons/projects/7
-[backlog_pending]: https://github.com/orgs/creativecommons/projects/10
+[backlog]: https://github.com/orgs/creativecommons/projects/10
 
 
 ###  Normalize Repos

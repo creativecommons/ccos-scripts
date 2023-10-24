@@ -1,45 +1,12 @@
-name: Manage Issues in Projects
+name: Manage issues and pull requests in projects
 on:
   workflow_dispatch:
   schedule:
     - cron: "45 * * * *" # Hourly at 45 minutes past the hour (**:45)
 jobs:
 
-  add_issues_to_project:
-    name: Track new issues in Backlog
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Track all issues
-      uses: dhruvkb/issue-projector@0.0.7
-      with:
-        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-        ORG_NAME: 'creativecommons'
-        PROJECT_NUMBER: 10 # Backlog
-        COLUMN_NAME: 'Pending Review'
-        EXCLUDED_PROJECT_NUMBER: 7 # Active sprint
-        ISSUE_TYPE: 'issue'
-        INTERVAL: 1
-        INTERVAL_UNIT: 'h'
-
-  add_prs_to_project:
-    name: Track PRs in Active Sprint
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Track all PRs
-      uses: dhruvkb/issue-projector@0.0.7
-      with:
-        ACCESS_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-        ORG_NAME: 'creativecommons'
-        PROJECT_NUMBER: 7 # Active sprint
-        COLUMN_NAME: 'Code Review'
-        ISSUE_TYPE: 'pr'
-        INTERVAL: 1
-        INTERVAL_UNIT: 'd'
-
-  move_closed_to_done:
-    name: Move closed issues to Done
+  manage_issues_and_pull_requests:
+    name: Manage issues and pull requests
     runs-on: ubuntu-latest
     steps:
 
@@ -62,8 +29,14 @@ jobs:
       run: |
         pipenv sync --dev --system
 
-    - name: run script to move closed issues to Done
+    - name: 'run script to move closed issues to Active Sprint: Done'
       run: |
         ./move_closed_issues.py
+      env:
+        ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+
+    - name: run script to track open issues and pull requests
+      run: |
+        ./track_issues_and_pull_requests.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
