@@ -47,7 +47,10 @@ def setup():
 def get_untracked_issues(github_client):
     LOG.info("Searching for untracked open issues")
     # https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests
-    query = "org:creativecommons state:open no:project type:issue"
+    query = (
+        "org:creativecommons state:open -project:creativecommons/7"
+        " -project:creativecommons/10 type:issue"
+    )
     LOG.debug(f"issues query: {query}")
     untracked_issues = list(github_client.search_issues(query=query))
     untracked_issues.sort(key=lambda x: f"{x.repository.name}{x.number:09}")
@@ -90,7 +93,10 @@ def track_issues(args, gh_org_cc, untracked_issues):
 def get_untracked_pull_requests(github_client):
     LOG.info("Searching for untracked open pull requests")
     # https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests
-    query = "org:creativecommons state:open no:project type:pr"
+    query = (
+        "org:creativecommons state:open -project:creativecommons/7"
+        " -project:creativecommons/10 type:pr"
+    )
     LOG.debug(f"pull request query: {query}")
     untracked_pull_requests = list(github_client.search_issues(query=query))
     untracked_pull_requests.sort(
