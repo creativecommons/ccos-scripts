@@ -3,7 +3,7 @@ on:
   schedule:
     - cron: "5 * * * *" # Hourly at 5 minutes past the hour (**:05)
 jobs:
-  build:
+  add_community_prs:
     runs-on: ubuntu-latest
     steps:
     - name: Handle vocabulary Repo

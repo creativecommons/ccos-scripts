@@ -7,7 +7,7 @@ on:
     branches:
       - main
 jobs:
-  build:
+  normalize_repos:
     runs-on: ubuntu-latest
     steps:
     - name: Setup Python 3.11

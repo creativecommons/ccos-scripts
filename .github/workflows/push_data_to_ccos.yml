@@ -6,7 +6,7 @@ on:
     branches:
       - main
 jobs:
-  build:
+  push_data:
     runs-on: ubuntu-latest
     steps:
     - name: Setup Python 3.11
