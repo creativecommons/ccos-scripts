@@ -206,7 +206,7 @@ purpose. This is useful for a few reasons:
   talking to a bot instead of a human.
 - It makes it easy to audit our automations in the future, because all commits
   and messages will be associated with the single @cc-open-source-bot user
-account via the GitHub search, api, etc.
+  account via the GitHub search, api, etc.
 - We won't need to  update automations when there are changes to staff or
   volunteers.
 
@@ -245,6 +245,21 @@ GitHub Action:
 [pygithub]: https://github.com/pygithub/pygithub
 [pyyaml]: https://pyyaml.org/
 [requests]: https://requests.readthedocs.io/en/latest/
+
+
+## Local GitHub Action testing
+
+The GitHub Actions can be tested locally using:
+- [nektos/act](https://github.com/nektos/act): _Run your GitHub Actions locally
+  🚀_
+
+On ARM laptops (ex. M1 MacBook Pros), there may not be docker images available.
+You may have to specify the linux/amd64 architecture. For example:
+```shell
+act --secret ADMIN_GITHUB_TOKEN --container-architecture linux/amd64 --rm \
+    --job manage_issues_and_pull_requests
+```
+(this assumes that the `ADMIN_GITHUB_TOKEN` environment variable has been set)
 
 
 ## License
