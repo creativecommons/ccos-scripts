@@ -6,14 +6,11 @@ infrastructure.
 
 ## Status
 
-- [![Add Community PRs to Project][prs_badge]][prs_link]
 - [![Sync Community Teams with GitHub][teams_badge]][teams_link]
 - [![Manage issues and pull requests in projects][issues_badge]][issues_link]
 - [![Normalize Repos][norm_badge]][norm_link]
 - [![Push data to CC Open Source][data_badge]][data_link]
 
-[prs_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/add_community_pr.yml/badge.svg
-[prs_link]: #add-community-prs-to-project
 [teams_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_teams.yml/badge.svg
 [teams_link]: #sync-community-teams-with-github
 [issues_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/manage_issues.yml/badge.svg
@@ -45,27 +42,6 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 ## Workflows
 
 The following workflows are ordered by schedule frequency and start time.
-
-
-### Add Community PRs to Project
-
-| **Workflow** | | |
-| -- | --: | --- |
-| | Schedule: | Hourly at 5 minutes past the hour (`**:05`) |
-| | YAML: | [`add_community_pr.yml`][community_pr_yml] |
-| **Action** | | |
-| | | [subhamX/github-project-bot][proj_bot] |
-| **Env** | | |
-| | Required: | `ADMIN_GITHUB_TOKEN` |
-
-This workflow adds community PRs in the
-[creativecommons/vocabulary][vocab_repo] repository to [Vocabulary
-Planning][vocab_plan] project.
-
-[community_pr_yml]: .github/workflows/add_community_pr.yml
-[proj_bot]: https://github.com/subhamX/github-project-bot
-[vocab_repo]: https://github.com/creativecommons/vocabulary
-[vocab_plan]: https://github.com/orgs/creativecommons/projects/13
 
 
 ### Sync Community Teams with GitHub
