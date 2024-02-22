@@ -11,8 +11,9 @@ tomli = "*"
 
 [packages]
 asana = "*"
+cryptography = ">=42.0.4"  # dependency, pinned for security
 emoji = "*"
-GitPython = "*"
+GitPython = ">=3.1.41"
 PyGithub = "*"
 PyYAML = "*"
 requests = "*"
