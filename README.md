@@ -223,19 +223,13 @@ GitHub Action:
 [requests]: https://requests.readthedocs.io/en/latest/
 
 
-## Local GitHub Action testing
+## Development
 
-The GitHub Actions can be tested locally using:
-- [nektos/act](https://github.com/nektos/act): _Run your GitHub Actions locally
-  🚀_
-
-On ARM laptops (ex. M1 MacBook Pros), there may not be docker images available.
-You may have to specify the linux/amd64 architecture. For example:
-```shell
-act --secret ADMIN_GITHUB_TOKEN --container-architecture linux/amd64 --rm \
-    --job manage_issues_and_pull_requests
-```
-(this assumes that the `ADMIN_GITHUB_TOKEN` environment variable has been set)
+Local development and testing is facilitated by helper scripts:
+- `./dev/tools.sh`: Checks and updates Python formatting
+- `.dev/test.sh`: Uses act and Docker to test workflows
+  - [nektos/act](https://github.com/nektos/act): _Run your GitHub Actions
+    locally 🚀_
 
 
 ## License
