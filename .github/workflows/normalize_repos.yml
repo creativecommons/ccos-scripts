@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Setup Python 3.11
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
     - name: Install system dependencies
@@ -30,7 +30,7 @@ jobs:
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
     - name: Export a report of invalid issues
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: invalid-issue-report
         path: /tmp/invalid_issues.yml
