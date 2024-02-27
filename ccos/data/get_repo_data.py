@@ -22,9 +22,9 @@ def get_repo_github_data(repo):
         "id": repo.id,
         "name": repo.name,
         "url": repo.html_url,
-        "description": emoji.emojize(repo.description)
-        if repo.description
-        else "",
+        "description": (
+            emoji.emojize(repo.description) if repo.description else ""
+        ),
         "website": repo.homepage,
         "language": repo.language,
         "created": repo.created_at.isoformat(),
