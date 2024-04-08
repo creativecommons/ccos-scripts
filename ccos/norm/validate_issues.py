@@ -60,11 +60,8 @@ def are_issue_labels_valid(issue, required_label_groups):
             f" {', '.join(missing_label_groups)}",
         )
     else:
-        if LABEL_WORK_REQUIRED_LABEL in label_names:
-            issue.remove_from_labels(LABEL_WORK_REQUIRED_LABEL)
-
-    LOG.info(f"Issue '{issue.title}' is OK.")
-    return True, None
+        LOG.info(f"Issue '{issue.title}' is OK.")
+        return True, None
 
 
 def get_invalid_issues_in_repo(repo, required_label_groups):
