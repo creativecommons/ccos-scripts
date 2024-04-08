@@ -76,7 +76,7 @@ class Label:
         color = self.own_color
         if color is None and self.group is not None:
             color = self.group.color
-        if color is None:
+        elif color is None:
             color = COLORS["BLACK"]
         elif color in COLORS:
             color = COLORS[color]
