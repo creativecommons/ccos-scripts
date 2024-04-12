@@ -27,7 +27,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install Python dependencies
-      run: pipenv sync --dev --system
+      run: pipenv sync --system
 
     - name: 'run script to move closed issues to Active Sprint: Done'
       run: ./move_closed_issues.py

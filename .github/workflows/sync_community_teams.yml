@@ -25,10 +25,10 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install app dependencies
-      run: pipenv sync
+      run: pipenv sync --system
 
     - name: Run script with tokens in env
-      run: pipenv run ./sync_community_teams.py
+      run: ./sync_community_teams.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         ADMIN_ASANA_TOKEN: ${{ secrets.ADMIN_ASANA_TOKEN }}

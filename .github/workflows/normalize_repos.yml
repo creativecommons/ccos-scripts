@@ -26,13 +26,14 @@ jobs:
         token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
 
     - name: Install app dependencies
-      run: pipenv sync
+      run: pipenv sync --system
 
     - name: Run script with token in env
-      run: pipenv run ./normalize_repos.py
+      run: ./normalize_repos.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
 
+    # https://github.com/actions/upload-artifact
     - name: Export a report of invalid issues
       uses: actions/upload-artifact@v4
       with:
