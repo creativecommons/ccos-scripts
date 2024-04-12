@@ -4,10 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "*"
+black = ">=24.3.0"
 flake8 = "*"
 isort = "*"
-tomli = "*"
 
 [packages]
 asana = ">=3.2,<4"  # "Please use v3.2.X for stable / production environments"
@@ -17,6 +16,7 @@ GitPython = ">=3.1.41"
 PyGithub = "*"
 PyYAML = "*"
 requests = "*"
+urllib3 = ">=2.0.6"  # dependency, pinned for security
 
 [requires]
 python_version = "3.11"
