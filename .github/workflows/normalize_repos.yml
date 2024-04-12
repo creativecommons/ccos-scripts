@@ -1,40 +1,46 @@
 name: Normalize Repos
 on:
-  workflow_dispatch:
   schedule:
     - cron: '0 0 * * *' # Daily at midnight (00:00)
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+
 jobs:
   normalize_repos:
     runs-on: ubuntu-latest
     steps:
+
+    # https://github.com/actions/setup-python
     - name: Setup Python 3.11
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
+
     - name: Install system dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install pipenv
+
+    # https://github.com/actions/checkout
     - uses: actions/checkout@v4
       with:
         token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+
     - name: Install app dependencies
-      run: |
-        pipenv sync
+      run: pipenv sync
+
     - name: Run script with token in env
-      run: |
-        pipenv run ./normalize_repos.py
+      run: pipenv run ./normalize_repos.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+
     - name: Export a report of invalid issues
       uses: actions/upload-artifact@v4
       with:
         name: invalid-issue-report
         path: /tmp/invalid_issues.yml
-    - uses: gautamkrishnar/keepalive-workflow@v1
+
+    # https://github.com/gautamkrishnar/keepalive-workflow
+    - uses: gautamkrishnar/keepalive-workflow@v2
       with:
         committer_username: cc-open-source-bot
         committer_email: opensource@creativecommons.org
