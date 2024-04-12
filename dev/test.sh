@@ -13,7 +13,7 @@ set -o nounset
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 E0="$(printf "\e[0m")"          # reset
 E30="$(printf "\033[30m")"      # black foreground
-E31="$(printf "\e[31m")"      # red foreground
+E31="$(printf "\e[31m")"        # red foreground
 E107="$(printf "\033[107m")"    # bright white background
 
 

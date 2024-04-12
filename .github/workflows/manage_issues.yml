@@ -1,8 +1,9 @@
 name: Manage issues and pull requests in projects
 on:
-  workflow_dispatch:
   schedule:
     - cron: "45 * * * *" # Hourly at 45 minutes past the hour (**:45)
+  workflow_dispatch:
+
 jobs:
 
   manage_issues_and_pull_requests:
@@ -26,17 +27,14 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install Python dependencies
-      run: |
-        pipenv sync --dev --system
+      run: pipenv sync --system
 
     - name: 'run script to move closed issues to Active Sprint: Done'
-      run: |
-        ./move_closed_issues.py
+      run: ./move_closed_issues.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
 
-    - name: run script to track open issues and pull requests
-      run: |
-        ./track_issues_and_pull_requests.py
+    - name: run script to track open untriaged issues and pull requests
+      run: ./track_issues_and_pull_requests.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
