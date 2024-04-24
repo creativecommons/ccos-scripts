@@ -100,11 +100,14 @@ def validate_issues(repos, required_label_groups):
     invalid_issues = {}
     LOG.change_indent(+1)
     for repo in list(repos):
-        LOG.info(f"Checking issues in repo '{repo.name}'...")
-        invalid_issues[repo.name] = get_invalid_issues_in_repo(
-            repo, required_label_groups
-        )
-        LOG.success("done.")
+        if repo.private:
+            LOG.info(f"{repo.name}: skipping: repository is private")
+        else:
+            LOG.info(f"Checking issues in repo '{repo.name}'...")
+            invalid_issues[repo.name] = get_invalid_issues_in_repo(
+                repo, required_label_groups
+            )
+            LOG.success("done.")
     LOG.change_indent(-1)
     LOG.success("done.")
 
