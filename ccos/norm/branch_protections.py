@@ -1,5 +1,3 @@
-# The following repositories are exempt from both branch protections and issue
-# label validation:
 EXEMPT_REPOSITORIES = [
     # special purpose repo
     "australian-chapter",
