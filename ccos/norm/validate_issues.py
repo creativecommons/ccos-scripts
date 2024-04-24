@@ -93,8 +93,9 @@ def get_invalid_issues_in_repo(repo, required_label_groups):
 
 def validate_issues(repos, required_label_groups):
     """
-    Validate the labels on all issues in all repos for the organisation. This
-    is the main entrypoint of the module.
+    Validate the labels on all issues in all public repos for the organisation.
+
+    This is the main entrypoint of the module.
     """
     LOG.info("Finding issues with invalid labels...")
     invalid_issues = {}
