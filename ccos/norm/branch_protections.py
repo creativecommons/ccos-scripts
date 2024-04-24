@@ -1,28 +1,22 @@
+# The following repositories are exempt from both branch protections and issue
+# label validation:
 EXEMPT_REPOSITORIES = [
-    # non-engineering repo
+    # special purpose repo
     "australian-chapter",
-    # exempted to allow transifex updates
-    "cc.i18n",
     # exempted for bot pushes to default branch
     "creativecommons.github.io-source",
     # exempted for bot pushes to default branch
     "creativecommons.github.io",
-    # non-engineering repo
+    # special purpose repo
     "global-network-strategy",
-    # non-engineering repo
+    # special purpose repo
     "network-platforms",
-    # non-engineering repo
+    # special purpose repo
     "sre-wiki-js",
-    # non-engineering repo
+    # special purpose repo
     "tech-support",
 ]
 
 REQUIRED_STATUS_CHECK_MAP = {
     "creativecommons.github.io-source": ["Build and Deploy CC Open Source"],
-    "vocabulary": [
-        "Lint",
-        "Unit tests",
-        "Build",
-        "netlify/cc-vocabulary/deploy-preview",
-    ],
 }
