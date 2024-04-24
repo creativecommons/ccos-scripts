@@ -93,18 +93,22 @@ def get_invalid_issues_in_repo(repo, required_label_groups):
 
 def validate_issues(repos, required_label_groups):
     """
-    Validate the labels on all issues in all repos for the organisation. This
-    is the main entrypoint of the module.
+    Validate the labels on all issues in all public repos for the organisation.
+
+    This is the main entrypoint of the module.
     """
     LOG.info("Finding issues with invalid labels...")
     invalid_issues = {}
     LOG.change_indent(+1)
     for repo in list(repos):
-        LOG.info(f"Checking issues in repo '{repo.name}'...")
-        invalid_issues[repo.name] = get_invalid_issues_in_repo(
-            repo, required_label_groups
-        )
-        LOG.success("done.")
+        if repo.private:
+            LOG.info(f"{repo.name}: skipping: repository is private")
+        else:
+            LOG.info(f"Checking issues in repo '{repo.name}'...")
+            invalid_issues[repo.name] = get_invalid_issues_in_repo(
+                repo, required_label_groups
+            )
+            LOG.success("done.")
     LOG.change_indent(-1)
     LOG.success("done.")
 
