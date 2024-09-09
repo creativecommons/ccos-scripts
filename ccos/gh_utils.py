@@ -7,11 +7,15 @@ import sys
 # Third-party
 from github import Github
 from github.GithubException import BadCredentialsException
+from gql import Client, gql
+from gql.transport.requests import RequestsHTTPTransport
+from gql.transport.requests import log as gql_requests_log
 from urllib3.util.retry import Retry
 
 GITHUB_ORGANIZATION = "creativecommons"
 GITHUB_USERNAME_DEFAULT = "cc-creativecommons-github-io-bot"
 LOG = logging.root
+gql_requests_log.setLevel(logging.WARNING)
 
 
 def get_credentials():
@@ -27,9 +31,13 @@ def get_credentials():
     return github_username, github_token
 
 
-def set_up_github_client():
+def gql_query(query):
+    return gql(query)
+
+
+def setup_github_rest_client():
     _, github_token = get_credentials()
-    LOG.info("Setting up GitHub client...")
+    LOG.info("Setting up GitHub Rest API client...")
     # TODO: Remove retry parameter (urllib3.util.retry.Retry object) once we
     # are using PyGithub v2.0
     # https://github.com/creativecommons/ccos-scripts/issues/179
@@ -54,9 +62,22 @@ def set_up_github_client():
     return github_client
 
 
+def setup_github_gql_client():
+    _, github_token = get_credentials()
+    LOG.info("Setting up GitHub GraphQL API client...")
+    transport = RequestsHTTPTransport(
+        url="https://api.github.com/graphql",
+        headers={"Authorization": f"bearer {github_token}"},
+    )
+    with open("ccos/schema.docs.graphql") as file_obj:
+        gh_schema = file_obj.read()
+    github_gql_client = Client(transport=transport, schema=gh_schema)
+    return github_gql_client
+
+
 def get_cc_organization(github_client=None):
     if github_client is None:
-        github_client = set_up_github_client()
+        github_client = setup_github_rest_client()
     LOG.info("Getting CC's GitHub organization...")
     try:
         gh_org_cc = github_client.get_organization(GITHUB_ORGANIZATION)
