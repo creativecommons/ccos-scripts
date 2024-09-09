@@ -13,6 +13,14 @@ from gql.transport.requests import log as gql_requests_log
 from urllib3.util.retry import Retry
 
 GITHUB_ORGANIZATION = "creativecommons"
+GITHUB_RETRY_STATUS_FORCELIST = [
+    408,  # Request Timeout
+    429,  # Too Many Requests
+    500,  # Internal Server Error
+    502,  # Bad Gateway
+    503,  # Service Unavailable
+    504,  # Gateway Timeout
+]
 GITHUB_USERNAME_DEFAULT = "cc-creativecommons-github-io-bot"
 LOG = logging.root
 gql_requests_log.setLevel(logging.WARNING)
@@ -37,7 +45,7 @@ def gql_query(query):
 
 def setup_github_rest_client():
     _, github_token = get_credentials()
-    LOG.info("Setting up GitHub Rest API client...")
+    LOG.info("Setting up GitHub Rest API client")
     # TODO: Remove retry parameter (urllib3.util.retry.Retry object) once we
     # are using PyGithub v2.0
     # https://github.com/creativecommons/ccos-scripts/issues/179
@@ -46,7 +54,7 @@ def setup_github_rest_client():
         # for specified HTTP status codes
         total=5,
         backoff_factor=10,
-        status_forcelist=list(range(500, 600)),
+        status_forcelist=GITHUB_RETRY_STATUS_FORCELIST,
         allowed_methods={
             "DELETE",
             "GET",
@@ -57,17 +65,20 @@ def setup_github_rest_client():
             "TRACE",
         },
     )
-    github_client = Github(login_or_token=github_token, retry=retry)
-    LOG.success("done.")
-    return github_client
+    github_rest_client = Github(login_or_token=github_token, retry=retry)
+    return github_rest_client
 
 
 def setup_github_gql_client():
     _, github_token = get_credentials()
-    LOG.info("Setting up GitHub GraphQL API client...")
+    LOG.info("Setting up GitHub GraphQL API client")
     transport = RequestsHTTPTransport(
         url="https://api.github.com/graphql",
         headers={"Authorization": f"bearer {github_token}"},
+        timeout=10,
+        retries=5,
+        retry_backoff_factor=10,
+        retry_status_forcelist=GITHUB_RETRY_STATUS_FORCELIST,
     )
     with open("ccos/schema.docs.graphql") as file_obj:
         gh_schema = file_obj.read()
