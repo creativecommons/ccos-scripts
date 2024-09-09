@@ -1,0 +1,77 @@
+---
+Applications:
+  repos:
+  - .github
+  - cc-legal-tools-app
+  - cc-legal-tools-data
+  - ccos-scripts
+  - ccrel
+  - ccrel-guide
+  - creativecommons.github.io
+  - creativecommons.github.io-source
+  - creativecommons.org
+  - data-science-playground
+  - eng-misc-scripts
+  - faq
+  - legaldb
+  - licensebuttons
+  - magical-pony
+  - mp
+  - quantifying
+  - scholars-addenda
+  - sre-report-to-wikijs
+  - sre-wp-pull
+  - stateof
+Systems:
+  repos:
+  - ansible-dev
+  - CCID-cas
+  - CCID-MediaWiki
+  - index-performance-testing
+  - rubycas-client-rails
+  - sre-salt
+  - sre-salt-prime
+  - sre-wiki-js
+  - tech-support
+WebDev:
+  repos:
+  - attribution-license-plugin
+  - australian-chapter
+  - business-toolkit-files
+  - candela-utility
+  - cc-accidenz-commons
+  - cc-assets
+  - cc-license-chooser
+  - cc-resource-archive
+  - cc-usability-prototypes
+  - certificates-landing-page-theme
+  - chapters
+  - chooser
+  - commoners
+  - Creative-Commons-Post-Republisher
+  - creativecommons-base
+  - creativecommons-certificate
+  - global-network-strategy
+  - index-dev-env
+  - index-prototype
+  - network-platforms
+  - og-image-generator
+  - open4us.org
+  - queulat
+  - reversionary-rights
+  - search
+  - taaccct
+  - team-open
+  - termination-of-transfer
+  - the-power-of-open
+  - vocabulary
+  - vocabulary-theme
+  - wp-plugin-cc-global-network
+  - wp-plugin-creativecommons
+  - wp-plugin-creativecommons-website
+  - wp-theme-cc-chapter
+  - wp-theme-cc-commoners
+  - wp-theme-cctoolkit
+  - wp-theme-creativecommons.org
+  - wp-theme-openglam
+  - wp-theme-summit
