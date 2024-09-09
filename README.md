@@ -206,26 +206,6 @@ GitHub Action:
 ```
 
 
-## Python Dependencies
-
-- [Asana/python-asana][python-asana]: Official Python client library for the
-  Asana API v1
-- [carpedm20/emoji][emoji]: emoji terminal output for Python
-- [gitpython-developers/GitPython][gitpython]: GitPython is a python library
-  used to interact with Git repositories.
-- [PyGithub/PyGithub][pygithub]: Typed interactions with the GitHub API v3
-- [PyYAML][pyyaml] is a full-featured YAML framework for the Python programming
-  language
-- [Requests][requests]: HTTP for Humans™
-
-[python-asana]: https://github.com/asana/python-asana
-[emoji]: https://github.com/carpedm20/emoji/
-[gitpython]: https://github.com/gitpython-developers/GitPython
-[pygithub]: https://github.com/pygithub/pygithub
-[pyyaml]: https://pyyaml.org/
-[requests]: https://requests.readthedocs.io/en/latest/
-
-
 ## Development
 
 Local development and testing is facilitated by helper scripts:
@@ -235,8 +215,50 @@ Local development and testing is facilitated by helper scripts:
     locally 🚀_
 
 
+### Python Dependencies
+
+- [Asana/python-asana][python-asana]: _Official Python client library for the
+  Asana API v1_
+- [carpedm20/emoji][emoji]: _e_moji terminal output for Python_
+- [gitpython-developers/GitPython][gitpython]: _GitPython is a python library
+  used to interact with Git repositories._
+- [graphql-python/gql][pygql]: _A GraphQL client in Python_
+- [PyGithub/PyGithub][pygithub]: _Typed interactions with the GitHub API v3_
+- [PyYAML][pyyaml] _is a full-featured YAML framework for the Python
+  programming language_
+- [Requests][requests]: _HTTP for Humans™_
+
+[python-asana]: https://github.com/asana/python-asana
+[emoji]: https://github.com/carpedm20/emoji/
+[gitpython]: https://github.com/gitpython-developers/GitPython
+[pygql]: https://github.com/graphql-python/gql
+[pygithub]: https://github.com/pygithub/pygithub
+[pyyaml]: https://pyyaml.org/
+[requests]: https://requests.readthedocs.io/en/latest/
+
+
+### GitHub GraphQL API
+
+- [Using the API to manage Projects - GitHub Docs][projectsv2api]
+- [Forming calls with GraphQL - GitHub Docs][formingcalls]
+
+[projectsv2api]: https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-api-to-manage-projects
+[formingcalls]: https://docs.github.com/en/graphql/guides/forming-calls-with-graphql
+
+
 ## License
 
 - [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
 
 [mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
+
+
+### GitHub GraphQL API schema
+
+The GitHub GraphQL API public schema
+([`ccos/schema.docs.graphql`][graphqlschema]) was downloaded from [Public
+schema - GitHub Docs][publicschema] and is not within scope of the Expat/MIT
+license of this project.
+
+[graphqlschema]: ccos/schema.docs.graphql
+[publicschema]: https://docs.github.com/en/graphql/overview/public-schema
