@@ -9,7 +9,7 @@ from github import UnknownObjectException
 from ccos.gh_utils import (
     get_cc_organization,
     get_team_slug_name,
-    set_up_github_client,
+    setup_github_rest_client,
 )
 
 LOG = logging.root
@@ -22,7 +22,7 @@ PERMISSIONS = {
 
 
 def create_teams_for_data(databag):
-    client = set_up_github_client()
+    client = setup_github_rest_client()
     organization = get_cc_organization(client)
 
     LOG.info("Creating and populating teams...")

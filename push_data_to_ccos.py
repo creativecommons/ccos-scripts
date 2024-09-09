@@ -46,7 +46,7 @@ def setup():
 
 def main():
     args = setup()
-    github_client = gh_utils.set_up_github_client()
+    github_client = gh_utils.setup_github_rest_client()
     gh_org_cc = gh_utils.get_cc_organization(github_client)
     if "repos" in args.databags:
         LOG.info("updating repos.json")

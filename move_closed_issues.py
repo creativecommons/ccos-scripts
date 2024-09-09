@@ -90,7 +90,7 @@ def move_cards(args, github, backlog, done):
 
 def main():
     args = setup()
-    github = gh_utils.set_up_github_client()
+    github = gh_utils.setup_github_rest_client()
     cc = gh_utils.get_cc_organization(github)
     backlog, done = get_cards(cc)
     move_cards(args, github, backlog, done)
