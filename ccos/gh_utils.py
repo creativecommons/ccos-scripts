@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import sys
+import textwrap
 
 # Third-party
 from github import Github
@@ -10,6 +11,10 @@ from github.GithubException import BadCredentialsException
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport
 from gql.transport.requests import log as gql_requests_log
+from graphql.error.syntax_error import GraphQLSyntaxError
+from pygments import highlight
+from pygments.formatters import TerminalFormatter
+from pygments.lexers import GraphQLLexer
 from urllib3.util.retry import Retry
 
 GITHUB_ORGANIZATION = "creativecommons"
@@ -40,7 +45,37 @@ def get_credentials():
 
 
 def gql_query(query):
-    return gql(query)
+    try:
+        validated_query = gql(query)
+    except GraphQLSyntaxError as e:
+        query_formatted = highlight(
+            textwrap.indent(textwrap.dedent(query), "    "),
+            GraphQLLexer(),
+            TerminalFormatter(),
+        )
+        error_formatted = textwrap.indent(f"{e}", "    ")
+        LOG.error(
+            f"Invalid GraphQL syntax:\n{query_formatted}\n{error_formatted}"
+        )
+        sys.exit(1)
+    return validated_query
+
+
+def setup_github_gql_client():
+    _, github_token = get_credentials()
+    LOG.info("Setting up GitHub GraphQL API client")
+    transport = RequestsHTTPTransport(
+        url="https://api.github.com/graphql",
+        headers={"Authorization": f"bearer {github_token}"},
+        timeout=10,
+        retries=5,
+        retry_backoff_factor=10,
+        retry_status_forcelist=GITHUB_RETRY_STATUS_FORCELIST,
+    )
+    with open("ccos/schema.docs.graphql") as file_obj:
+        gh_schema = file_obj.read()
+    github_gql_client = Client(transport=transport, schema=gh_schema)
+    return github_gql_client
 
 
 def setup_github_rest_client():
@@ -67,23 +102,6 @@ def setup_github_rest_client():
     )
     github_rest_client = Github(login_or_token=github_token, retry=retry)
     return github_rest_client
-
-
-def setup_github_gql_client():
-    _, github_token = get_credentials()
-    LOG.info("Setting up GitHub GraphQL API client")
-    transport = RequestsHTTPTransport(
-        url="https://api.github.com/graphql",
-        headers={"Authorization": f"bearer {github_token}"},
-        timeout=10,
-        retries=5,
-        retry_backoff_factor=10,
-        retry_status_forcelist=GITHUB_RETRY_STATUS_FORCELIST,
-    )
-    with open("ccos/schema.docs.graphql") as file_obj:
-        gh_schema = file_obj.read()
-    github_gql_client = Client(transport=transport, schema=gh_schema)
-    return github_gql_client
 
 
 def get_cc_organization(github_client=None):
