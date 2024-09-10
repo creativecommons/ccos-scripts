@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-Ensure all open issues are tracked in the Backlog project in the Pending Review
-column and all open pull requests are tracked in the Active Sprint project in
-the Code Review column.
+Ensure all open issues and pull requests are tracked in an appropriate project
+and and status column.
 """
 
 # Standard library
@@ -10,7 +9,6 @@ import argparse
 import sys
 import textwrap
 import traceback
-from pprint import pprint  # DEBUG
 
 # Third-party
 import yaml
@@ -20,7 +18,7 @@ from pygments.lexers import PythonTracebackLexer
 
 # First-party/Local
 import ccos.log
-from ccos import ScriptError, gh_utils
+from ccos import gh_utils
 
 LOG = ccos.log.setup_logger()
 PROJECTS_YAML = "ccos/manage/projects.yml"
@@ -35,7 +33,7 @@ def setup():
     ap.add_argument(
         "-c",
         "--count",
-        default=-1,
+        default=None,
         type=int,
         help="only update specified number of issues and pull requests (COUNT"
         " of 3 may result in 6 updates)",
@@ -77,6 +75,11 @@ def update_project_data(github_gql_client, project_data):
                                     opt_triage: options(names: "Triage") {
                                         id
                                     }
+                                    opt_backlog: options(
+                                        names: "Backlog"
+                                    ) {
+                                        id
+                                    }
                                     opt_in_review: options(
                                         names: "In review"
                                     ) {
@@ -93,19 +96,17 @@ def update_project_data(github_gql_client, project_data):
     )
     result = github_gql_client.execute(query)
     for edge in result["organization"]["projectsV2"]["edges"]:
-        title = edge["node"]["title"]
+        node = edge["node"]
+        title = node["title"]
+        field = node["field"]
         if title in project_data.keys():
-            project_data[title]["id"] = edge["node"]["id"]
-            project_data[title]["number"] = edge["node"]["number"]
-            project_data[title]["status_field_id"] = edge["node"]["field"][
-                "id"
-            ]
-            project_data[title]["status_option_triage_id"] = edge["node"][
-                "field"
-            ]["opt_triage"][0]["id"]
-            project_data[title]["status_option_in_review_id"] = edge["node"][
-                "field"
-            ]["opt_in_review"][0]["id"]
+            project = project_data[title]
+            project["id"] = node["id"]
+            project["number"] = node["number"]
+            project["status_field_id"] = field["id"]
+            project["status_triage_id"] = field["opt_triage"][0]["id"]
+            project["status_backlog_id"] = field["opt_backlog"][0]["id"]
+            project["status_in_review_id"] = field["opt_in_review"][0]["id"]
     return project_data
 
 
@@ -138,6 +139,13 @@ def get_untracked_items(github_gql_client):
                             ... on Issue {
                                 createdAt
                                 id
+                                labels(first: 100) {
+                                    edges {
+                                        node {
+                                            name
+                                        }
+                                    }
+                                }
                                 number
                                 repository {
                                     name
@@ -166,17 +174,32 @@ def get_untracked_items(github_gql_client):
         edges += result["search"]["edges"]
         cursor = result["search"]["pageInfo"]["endCursor"]
         next_page = result["search"]["pageInfo"]["hasNextPage"]
+
     items = {"issues": [], "prs": []}
     for edge in edges:
-        created = edge["node"]["createdAt"]
-        id_ = edge["node"]["id"]
-        number = edge["node"]["number"]
-        repo = edge["node"]["repository"]["name"]
-        type_ = edge["node"]["__typename"]
+        node = edge["node"]
+        created = node["createdAt"]
+        item_id = node["id"]
+        number = node["number"]
+        repo = node["repository"]["name"]
+        type_ = node["__typename"]
         if type_ == "Issue":
-            items["issues"].append([repo, number, created, id_])
+            labels = []
+            for label_edge in node["labels"]["edges"]:
+                labels.append(label_edge["node"]["name"])
+            if (
+                "🚦 status: awaiting triage" in labels
+                or "🏷 status: label work required" in labels
+                or "🧹 status: ticket work required" in labels
+            ):
+                needs_triage = True
+            else:
+                needs_triage = False
+            items["issues"].append(
+                [repo, number, created, needs_triage, item_id]
+            )
         elif type_ == "PullRequest":
-            items["prs"].append([repo, number, created, id_])
+            items["prs"].append([repo, number, created, item_id])
     items["issues"].sort()
     items["prs"].sort()
     LOG.info(
@@ -188,12 +211,6 @@ def get_untracked_items(github_gql_client):
 
 
 def track_items(args, github_gql_client, project_data, items):
-    if not items:
-        LOG.info(
-            "No untracked open issues and/or pull requests, no action"
-            " necessary :)"
-        )
-        return
     if args.dryrun:
         noop = "dryrun (no-op): "
     else:
@@ -201,11 +218,11 @@ def track_items(args, github_gql_client, project_data, items):
 
     query_add_item_to_project = gh_utils.gql(
         """
-        mutation($project_id: ID!, $issue_id: ID!) {
+        mutation($project_id: ID!, $item_id: ID!) {
             addProjectV2ItemById(
                 input: {
                     projectId: $project_id
-                    contentId: $issue_id
+                    contentId: $item_id
                 }
             ) {
                 item {
@@ -242,54 +259,101 @@ def track_items(args, github_gql_client, project_data, items):
     )
 
     # Add issues to projects
-    if args.count == -1:
+    if args.count is None:
         count = len(items["issues"])
     else:
-        count = args.count
+        count = min(args.count, len(items["issues"]))
     LOG.info(f"{noop}Adding {count} open and untracked issues to projects")
     for item in items["issues"][0 : args.count]:  # noqa: E203
-        repo, number, _, node_id = item
+        repo, number, _, needs_triage, item_id = item
         # identify appropriate project
+        project_id = None
+        field_id = None
         for project in project_data.keys():
             if repo in project_data[project]["repos"]:
                 project_id = project_data[project]["id"]
                 field_id = project_data[project]["status_field_id"]
                 break
-        # add item to project
+        if not project_id:
+            LOG.error("missing project assignment for repository: {repo}")
+            sys.exit(1)
+        # add issue to project
         if not args.dryrun:
-            params = {"project_id": project_id, "issue_id": node_id}
+            params = {"project_id": project_id, "item_id": item_id}
             result = github_gql_client.execute(
                 query_add_item_to_project, variable_values=params
             )
             item_id = result["addProjectV2ItemById"]["item"]["id"]
             LOG.change_indent(+1)
             LOG.info(f"{repo}#{number} added to {project} project")
-        # move item to Status: Triage
+        # move issue to Status: Triage or Backlog
         if not args.dryrun:
+            if needs_triage:
+                option_id = project_data[project]["status_triage_id"]
+                status = "Triage"
+            else:
+                option_id = project_data[project]["status_backlog_id"]
+                status = "Backlog"
             params = {
                 "field_id": field_id,
                 "item_id": item_id,
                 "project_id": project_id,
-                "option_id": project_data[project]["status_option_triage_id"],
+                "option_id": option_id,
             }
             result = github_gql_client.execute(
                 query_set_status_option, variable_values=params
             )
-            LOG.info(f"{repo}#{number} moved to Status: Triage")
+            ditto = len(f"{repo}#{number}") * "^"
+            # 90 is bright black (gray)
+            LOG.info(f"\u001b[90m{ditto}\u001b[0m moved to Status: {status}")
         LOG.change_indent(-1)
-    return  # DEBUG
 
     # Add pull requests to projects
-    if args.count == -1:
-        count = len(items["issues"])
+    if args.count is None:
+        count = len(items["prs"])
     else:
-        count = args.count
+        count = min(args.count, len(items["prs"]))
     LOG.info(
         f"{noop}Adding {count} open and untracked pull requests to projects"
     )
-    for pr in items["prs"][0 : args.count]:  # noqa: E203
-        print(pr)
-    return
+    for item in items["prs"][0 : args.count]:  # noqa: E203
+        repo, number, _, item_id = item
+        # identify appropriate project
+        project_id = None
+        field_id = None
+        for project in project_data.keys():
+            if repo in project_data[project]["repos"]:
+                project_id = project_data[project]["id"]
+                field_id = project_data[project]["status_field_id"]
+                break
+        if not project_id:
+            LOG.error("missing project assignment for repository: {repo}")
+            sys.exit(1)
+        # add pull request to project
+        if not args.dryrun:
+            params = {"project_id": project_id, "item_id": item_id}
+            result = github_gql_client.execute(
+                query_add_item_to_project, variable_values=params
+            )
+            item_id = result["addProjectV2ItemById"]["item"]["id"]
+            LOG.change_indent(+1)
+            LOG.info(f"{repo}#{number} added to {project} project")
+        # move pull request to Status: In review
+        if not args.dryrun:
+            option_id = project_data[project]["status_in_review_id"]
+            params = {
+                "field_id": field_id,
+                "item_id": item_id,
+                "project_id": project_id,
+                "option_id": option_id,
+            }
+            result = github_gql_client.execute(
+                query_set_status_option, variable_values=params
+            )
+            ditto = len(f"{repo}#{number}") * "^"
+            # 90 is bright black (gray)
+            LOG.info(f"\u001b[90m{ditto}\u001b[0m moved to Status: In review")
+        LOG.change_indent(-1)
 
 
 def main():
