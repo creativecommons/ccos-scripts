@@ -222,7 +222,7 @@ Local development and testing is facilitated by helper scripts:
   used to interact with Git repositories._
 - [graphql-python/gql][pygql]: _A GraphQL client in Python_
 - [PyGithub/PyGithub][pygithub]: _Typed interactions with the GitHub API v3_
-- [PyYAML][pyyaml] _is a full-featured YAML framework for the Python
+- [PyYAML][pyyaml]: _a full-featured YAML framework for the Python
   programming language_
 - [Requests][requests]: _HTTP for Humans™_
 
