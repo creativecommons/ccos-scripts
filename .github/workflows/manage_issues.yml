@@ -29,12 +29,7 @@ jobs:
     - name: Install Python dependencies
       run: pipenv sync --system
 
-    - name: 'run script to move closed issues to Active Sprint: Done'
-      run: ./move_closed_issues.py
-      env:
-        ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-
-    - name: run script to track open untriaged issues and pull requests
-      run: ./track_issues_and_pull_requests.py
+    - name: run script to track open and untracked issues and pull requests
+      run: ./manage_new_issues_and_pull_requests.py
       env:
         ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}

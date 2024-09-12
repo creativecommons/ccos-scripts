@@ -13,10 +13,13 @@ asana = ">=3.2,<4"  # "Please use v3.2.X for stable / production environments"
 cryptography = ">=42.0.4"  # dependency, pinned for security
 emoji = "*"
 GitPython = ">=3.1.41"
+gql = "*"
 idna = ">=3.7"  # dependency, pinned for security
 PyGithub = "*"
+Pygments = "*"
 PyYAML = "*"
 requests = "*"
+requests_toolbelt = "*"
 urllib3 = ">=2.0.6"  # dependency, pinned for security
 
 [requires]

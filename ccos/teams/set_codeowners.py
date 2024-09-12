@@ -13,7 +13,7 @@ from ccos.gh_utils import (
     GITHUB_ORGANIZATION,
     get_cc_organization,
     get_credentials,
-    set_up_github_client,
+    setup_github_rest_client,
 )
 from ccos.teams.set_teams_on_github import map_role_to_team
 
@@ -32,7 +32,7 @@ SYNC_BRANCH = "ct_codeowners"
 
 def create_codeowners_for_data(args, databag):
     set_up_git_user()
-    github_client = set_up_github_client()
+    github_client = setup_github_rest_client()
     organization = get_cc_organization(github_client)
 
     LOG.info("Identifying and fixing CODEOWNER issues...")

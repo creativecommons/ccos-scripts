@@ -62,12 +62,12 @@ The following workflows are ordered by schedule frequency and start time.
 
 This creates GitHub teams for the Community teams and updates their membership
 based on the [`community_team_members.json`][databag] Lektor databag.
- - The databag is used to:
-   - create the [Community Team Members — Creative Commons Open
-     Source][ctlistpage] page
-   - configure GitHub team memberships and repository permissions
- - The databag is kept up-to-date by [Push data to CC Open
-   Source](#push-data-to-cc-open-source), below
+- The databag is used to:
+  - create the [Community Team Members — Creative Commons Open
+    Source][ctlistpage] page
+  - configure GitHub team memberships and repository permissions
+- The databag is kept up-to-date by [Push data to CC Open
+  Source](#push-data-to-cc-open-source), below
 
 [sync_teams_yml]: .github/workflows/sync_community_teams.yml
 [teams_file]: sync_community_teams.py
@@ -75,31 +75,29 @@ based on the [`community_team_members.json`][databag] Lektor databag.
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 
 
-### Manage issues and pull requests in projects
+### Manage new issues and pull requests in projects
 
 | **Workflow** | | |
 | -- | --: | --- |
 | | Schedule: | Hourly at 45 minutes past the hour (`**:45`) |
 | | YAML: | [`manage_issues.yml`][manage_issues] |
 | **Script** | | |
-| | File: | [`move_closed_issues.py`][move_file] |
-| | File: | [`track_issues_and_pull_requests.py`][track_issues] |
+| | File: | [`manage_new_issues_and_pull_requests.py`][manage_new_issues] |
 | | Common Modules: | [`ccos/`](ccos/) |
 | **Env** | | |
 | | Required: | `ADMIN_GITHUB_TOKEN` |
 
-This manages issues and pull requests to ensure they are properly tracked
-within the [Active Sprint][active_sprint] and [Backlog][backlog] projects:
-  - Move closed issues from [Backlog][backlog] to [Active
-    Sprint][active_sprint]: Done
-  - Track open issues in [Backlog][backlog]: Pending Review
-  - Track open pull requests in [Active Sprint][active_sprint]: Code Review
+This manages new issues and pull requests to ensure they are properly tracked
+in a GitHub project:
+- [Applications project][proj_applications]
+- [Systems project][proj_systems]
+- [WebDev project][proj_webdev]
 
 [manage_issues]: .github/workflows/manage_issues.yml
-[move_file]: move_closed_issues.py
-[track_issues]: track_issues_and_pull_requests.py
-[active_sprint]: https://github.com/orgs/creativecommons/projects/7
-[backlog]: https://github.com/orgs/creativecommons/projects/10
+[manage_new_issues]: manage_new_issues_and_pull_requests.py
+[proj_applications]: https://github.com/orgs/creativecommons/projects/15/views/1
+[proj_systems]: https://github.com/orgs/creativecommons/projects/22/views/1
+[proj_webdev]: https://github.com/orgs/creativecommons/projects/23/views/1
 
 
 ###  Normalize Repos
@@ -206,26 +204,6 @@ GitHub Action:
 ```
 
 
-## Python Dependencies
-
-- [Asana/python-asana][python-asana]: Official Python client library for the
-  Asana API v1
-- [carpedm20/emoji][emoji]: emoji terminal output for Python
-- [gitpython-developers/GitPython][gitpython]: GitPython is a python library
-  used to interact with Git repositories.
-- [PyGithub/PyGithub][pygithub]: Typed interactions with the GitHub API v3
-- [PyYAML][pyyaml] is a full-featured YAML framework for the Python programming
-  language
-- [Requests][requests]: HTTP for Humans™
-
-[python-asana]: https://github.com/asana/python-asana
-[emoji]: https://github.com/carpedm20/emoji/
-[gitpython]: https://github.com/gitpython-developers/GitPython
-[pygithub]: https://github.com/pygithub/pygithub
-[pyyaml]: https://pyyaml.org/
-[requests]: https://requests.readthedocs.io/en/latest/
-
-
 ## Development
 
 Local development and testing is facilitated by helper scripts:
@@ -235,8 +213,50 @@ Local development and testing is facilitated by helper scripts:
     locally 🚀_
 
 
+### Python Dependencies
+
+- [Asana/python-asana][python-asana]: _Official Python client library for the
+  Asana API v1_
+- [carpedm20/emoji][emoji]: _e_moji terminal output for Python_
+- [gitpython-developers/GitPython][gitpython]: _GitPython is a python library
+  used to interact with Git repositories._
+- [graphql-python/gql][pygql]: _A GraphQL client in Python_
+- [PyGithub/PyGithub][pygithub]: _Typed interactions with the GitHub API v3_
+- [PyYAML][pyyaml]: _a full-featured YAML framework for the Python
+  programming language_
+- [Requests][requests]: _HTTP for Humans™_
+
+[python-asana]: https://github.com/asana/python-asana
+[emoji]: https://github.com/carpedm20/emoji/
+[gitpython]: https://github.com/gitpython-developers/GitPython
+[pygql]: https://github.com/graphql-python/gql
+[pygithub]: https://github.com/pygithub/pygithub
+[pyyaml]: https://pyyaml.org/
+[requests]: https://requests.readthedocs.io/en/latest/
+
+
+### GitHub GraphQL API
+
+- [Using the API to manage Projects - GitHub Docs][projectsv2api]
+- [Forming calls with GraphQL - GitHub Docs][formingcalls]
+
+[projectsv2api]: https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-api-to-manage-projects
+[formingcalls]: https://docs.github.com/en/graphql/guides/forming-calls-with-graphql
+
+
 ## License
 
 - [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
 
 [mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
+
+
+### GitHub GraphQL API schema
+
+The GitHub GraphQL API public schema
+([`ccos/schema.docs.graphql`][graphqlschema]) was downloaded from [Public
+schema - GitHub Docs][publicschema] and is not within scope of the Expat/MIT
+license of this project.
+
+[graphqlschema]: ccos/schema.docs.graphql
+[publicschema]: https://docs.github.com/en/graphql/overview/public-schema

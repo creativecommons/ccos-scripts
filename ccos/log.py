@@ -12,6 +12,7 @@ class IndentFormatter(logging.Formatter):
     indentation using tab characters.
     """
 
+    # https://en.wikipedia.org/wiki/ANSI_escape_code
     color_map = {  # ............. Level     ##    Color    ##
         logging.CRITICAL: 31,  # . CRITICAL  50    red      31
         logging.ERROR: 31,  # .... ERROR     40    red      31

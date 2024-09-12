@@ -3,15 +3,32 @@ import logging
 import os
 import re
 import sys
+import textwrap
 
 # Third-party
 from github import Github
 from github.GithubException import BadCredentialsException
+from gql import Client, gql
+from gql.transport.requests import RequestsHTTPTransport
+from gql.transport.requests import log as gql_requests_log
+from graphql.error.syntax_error import GraphQLSyntaxError
+from pygments import highlight
+from pygments.formatters import TerminalFormatter
+from pygments.lexers import GraphQLLexer
 from urllib3.util.retry import Retry
 
 GITHUB_ORGANIZATION = "creativecommons"
+GITHUB_RETRY_STATUS_FORCELIST = [
+    408,  # Request Timeout
+    429,  # Too Many Requests
+    500,  # Internal Server Error
+    502,  # Bad Gateway
+    503,  # Service Unavailable
+    504,  # Gateway Timeout
+]
 GITHUB_USERNAME_DEFAULT = "cc-creativecommons-github-io-bot"
 LOG = logging.root
+gql_requests_log.setLevel(logging.WARNING)
 
 
 def get_credentials():
@@ -27,9 +44,43 @@ def get_credentials():
     return github_username, github_token
 
 
-def set_up_github_client():
+def gql_query(query):
+    try:
+        validated_query = gql(query)
+    except GraphQLSyntaxError as e:
+        query_formatted = highlight(
+            textwrap.indent(textwrap.dedent(query), "    "),
+            GraphQLLexer(),
+            TerminalFormatter(),
+        )
+        error_formatted = textwrap.indent(f"{e}", "    ")
+        LOG.error(
+            f"Invalid GraphQL syntax:\n{query_formatted}\n{error_formatted}"
+        )
+        sys.exit(1)
+    return validated_query
+
+
+def setup_github_gql_client():
     _, github_token = get_credentials()
-    LOG.info("Setting up GitHub client...")
+    LOG.info("Setting up GitHub GraphQL API client")
+    transport = RequestsHTTPTransport(
+        url="https://api.github.com/graphql",
+        headers={"Authorization": f"bearer {github_token}"},
+        timeout=10,
+        retries=5,
+        retry_backoff_factor=10,
+        retry_status_forcelist=GITHUB_RETRY_STATUS_FORCELIST,
+    )
+    with open("ccos/schema.docs.graphql") as file_obj:
+        gh_schema = file_obj.read()
+    github_gql_client = Client(transport=transport, schema=gh_schema)
+    return github_gql_client
+
+
+def setup_github_rest_client():
+    _, github_token = get_credentials()
+    LOG.info("Setting up GitHub Rest API client")
     # TODO: Remove retry parameter (urllib3.util.retry.Retry object) once we
     # are using PyGithub v2.0
     # https://github.com/creativecommons/ccos-scripts/issues/179
@@ -38,7 +89,7 @@ def set_up_github_client():
         # for specified HTTP status codes
         total=5,
         backoff_factor=10,
-        status_forcelist=list(range(500, 600)),
+        status_forcelist=GITHUB_RETRY_STATUS_FORCELIST,
         allowed_methods={
             "DELETE",
             "GET",
@@ -49,14 +100,13 @@ def set_up_github_client():
             "TRACE",
         },
     )
-    github_client = Github(login_or_token=github_token, retry=retry)
-    LOG.success("done.")
-    return github_client
+    github_rest_client = Github(login_or_token=github_token, retry=retry)
+    return github_rest_client
 
 
 def get_cc_organization(github_client=None):
     if github_client is None:
-        github_client = set_up_github_client()
+        github_client = setup_github_rest_client()
     LOG.info("Getting CC's GitHub organization...")
     try:
         gh_org_cc = github_client.get_organization(GITHUB_ORGANIZATION)
