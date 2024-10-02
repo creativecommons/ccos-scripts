@@ -9,6 +9,8 @@ EXEMPT_REPOSITORIES = [
     "global-network-strategy",
     # special purpose repo
     "network-platforms",
+    # exempted for bot pushes to default branch
+    "quantifying",
     # special purpose repo
     "sre-wiki-js",
     # special purpose repo
