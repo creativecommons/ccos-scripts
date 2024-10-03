@@ -17,7 +17,6 @@ from github import GithubException, UnknownObjectException
 # First-party/Local
 import ccos.log
 from ccos import gh_utils
-from ccos.norm import branch_protections
 from ccos.norm.get_labels import get_labels, get_required_label_groups
 from ccos.norm.set_labels import set_labels
 from ccos.norm.validate_issues import validate_issues
@@ -93,6 +92,12 @@ def is_engineering_project(repo):
     return metadata.get("engineering_project", False)
 
 
+def load_branch_protection_config():
+    with open("ccos/norm/branch_protections.yml", "r") as file:
+        config = yaml.safe_load(file)
+    return config
+
+
 def update_branch_protection(repo):
     try:
         default_branch = repo.get_branch(repo.default_branch)
@@ -102,22 +107,20 @@ def update_branch_protection(repo):
             return
         else:
             raise
-    if (
-        repo.name not in branch_protections.EXEMPT_REPOSITORIES
-        and is_engineering_project(repo)
-    ):
+    config = load_branch_protection_config()
+    exempt_repositories = config["EXEMPT_REPOSITORIES"]
+    required_status_check_map = config["REQUIRED_STATUS_CHECK_MAP"]
+    if repo.name not in exempt_repositories and is_engineering_project(repo):
         LOG.info(f"{repo.name}: updating branch protections")
         # The following empty *_bypass_pull_request_allowance arguments ensure
         # the required bypass_pull_request_allowances API parameter is
         # populated:
         # https://docs.github.com/rest/branches/branch-protection#update-branch-protection
-        if repo.name in branch_protections.REQUIRED_STATUS_CHECK_MAP:
+        if repo.name in required_status_check_map:
             default_branch.edit_protection(
                 required_approving_review_count=1,
                 user_push_restrictions=[],
-                contexts=branch_protections.REQUIRED_STATUS_CHECK_MAP[
-                    repo.name
-                ],
+                contexts=required_status_check_map[repo.name],
                 users_bypass_pull_request_allowances=[],
                 teams_bypass_pull_request_allowances=[],
                 apps_bypass_pull_request_allowances=[],
