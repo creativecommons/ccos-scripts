@@ -93,7 +93,7 @@ def is_engineering_project(repo):
 
 
 def load_branch_protection_config():
-    with open('branch_protections.yaml', 'r') as file:
+    with open("branch_protections.yml", "r") as file:
         config = yaml.safe_load(file)
     return config
 
@@ -108,12 +108,9 @@ def update_branch_protection(repo):
         else:
             raise
     config = load_branch_protection_config()
-    exempt_repositories = config['EXEMPT_REPOSITORIES']
-    required_status_check_map = config['REQUIRED_STATUS_CHECK_MAP']
-    if (
-        repo.name not in exempt_repositories
-        and is_engineering_project(repo)
-    ):
+    exempt_repositories = config["EXEMPT_REPOSITORIES"]
+    required_status_check_map = config["REQUIRED_STATUS_CHECK_MAP"]
+    if repo.name not in exempt_repositories and is_engineering_project(repo):
         LOG.info(f"{repo.name}: updating branch protections")
         # The following empty *_bypass_pull_request_allowance arguments ensure
         # the required bypass_pull_request_allowances API parameter is
@@ -123,9 +120,7 @@ def update_branch_protection(repo):
             default_branch.edit_protection(
                 required_approving_review_count=1,
                 user_push_restrictions=[],
-                contexts=required_status_check_map[
-                    repo.name
-                ],
+                contexts=required_status_check_map[repo.name],
                 users_bypass_pull_request_allowances=[],
                 teams_bypass_pull_request_allowances=[],
                 apps_bypass_pull_request_allowances=[],
