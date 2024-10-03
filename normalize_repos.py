@@ -93,7 +93,7 @@ def is_engineering_project(repo):
 
 
 def load_branch_protection_config():
-    with open("branch_protections.yml", "r") as file:
+    with open("ccos/norm/branch_protections.yml", "r") as file:
         config = yaml.safe_load(file)
     return config
 
