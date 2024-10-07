@@ -12,7 +12,10 @@ EXEMPT_REPOSITORIES:
   # exempted for bot pushes to default branch
   - quantifying
   # special purpose repo
-  - sre-wiki-js
+  - sre-wiki-js :
+    exempt_users:
+         - bot1
+         - bot2
   # special purpose repo
   - tech-support
 

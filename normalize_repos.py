@@ -110,6 +110,10 @@ def update_branch_protection(repo):
     config = load_branch_protection_config()
     exempt_repositories = config["EXEMPT_REPOSITORIES"]
     required_status_check_map = config["REQUIRED_STATUS_CHECK_MAP"]
+
+     # Fetch exempt users (bots) for the repo if specified
+    exempt_users = config.get("EXEMPT_USERS", {}).get(repo.name, [])
+
     if repo.name not in exempt_repositories and is_engineering_project(repo):
         LOG.info(f"{repo.name}: updating branch protections")
         # The following empty *_bypass_pull_request_allowance arguments ensure
@@ -121,7 +125,7 @@ def update_branch_protection(repo):
                 required_approving_review_count=1,
                 user_push_restrictions=[],
                 contexts=required_status_check_map[repo.name],
-                users_bypass_pull_request_allowances=[],
+                users_bypass_pull_request_allowances=exempt_users,
                 teams_bypass_pull_request_allowances=[],
                 apps_bypass_pull_request_allowances=[],
             )
@@ -129,7 +133,7 @@ def update_branch_protection(repo):
             default_branch.edit_protection(
                 required_approving_review_count=1,
                 user_push_restrictions=[],
-                users_bypass_pull_request_allowances=[],
+                users_bypass_pull_request_allowances=exempt_users,
                 teams_bypass_pull_request_allowances=[],
                 apps_bypass_pull_request_allowances=[],
             )
