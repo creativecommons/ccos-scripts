@@ -10,7 +10,10 @@ EXEMPT_REPOSITORIES:
   # special purpose repo
   - network-platforms
   # exempted for bot pushes to default branch
-  - quantifying
+  - quantifying:
+    exempt_users:
+      -bot1
+      -bot2
   # special purpose repo
   - sre-wiki-js
   # special purpose repo
