@@ -111,7 +111,7 @@ def update_branch_protection(repo):
     exempt_repositories = config["EXEMPT_REPOSITORIES"]
     required_status_check_map = config["REQUIRED_STATUS_CHECK_MAP"]
     
-    exempt_users = config.get["exempt_users, {}).get(repo.name, [])"]
+    exempt_users = config.get("EXEMP_USERS", {}).get(repo.name, [])
 
     if repo.name not in exempt_repositories and is_engineering_project(repo):
         LOG.info(f"{repo.name}: updating branch protections")
