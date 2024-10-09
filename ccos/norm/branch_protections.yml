@@ -9,16 +9,26 @@ EXEMPT_REPOSITORIES:
   - global-network-strategy
   # special purpose repo
   - network-platforms
-  # exempted for bot pushes to default branch
-  - quantifying:
-    exempt_users:
-      # - bot1 
-      # - bot2 
   # special purpose repo
   - sre-wiki-js
   # special purpose repo
   - tech-support
 
 REQUIRED_STATUS_CHECK_MAP:
+  # Non-exempt repository requiring specific status checks
   creativecommons.github.io-source:
     - Build and Deploy CC Open Source
+
+EXEMPT_USERS:
+  quantifying:
+    # List of users or bots that can bypass restrictions for this repository
+    # Uncomment below to enable these users
+    # - bot1 
+    # - bot2 
+
+# Other repositories and exempt users can be added below
+another-repo:
+  # Specify exempt users for this repository
+  # Uncomment and add users as needed
+  # - bot3
+  # - bot4
