@@ -1,3 +1,8 @@
+# Specify repositories that are excluded from branch protections.
+#
+# Format:
+#   # comment indicating reason for exclusion
+#   - REPOSITORY
 EXEMPT_REPOSITORIES:
   # special purpose repo
   - australian-chapter
@@ -9,13 +14,27 @@ EXEMPT_REPOSITORIES:
   - global-network-strategy
   # special purpose repo
   - network-platforms
-  # exempted for bot pushes to default branch
-  - quantifying
   # special purpose repo
   - sre-wiki-js
   # special purpose repo
   - tech-support
 
+# Specify non-exempt repositories requiring specific status checks
+#
+# Format:
+#   REPOSITORY:
+#     - STATUS_CHECK_NAME
 REQUIRED_STATUS_CHECK_MAP:
   creativecommons.github.io-source:
     - Build and Deploy CC Open Source
+
+# Specify non-exempt repositories and the  people, teams, or apps who are
+# allowed to bypass required pull requests (PRs)
+#
+# Format:
+#   REPOSITORY:
+#     - GITHUB_USER_TEAM_OR_APP
+#     - GITHUB_USER_TEAM_OR_APP
+EXEMPT_USERS:
+  quantifying:
+    - cc-quantifying-bot
