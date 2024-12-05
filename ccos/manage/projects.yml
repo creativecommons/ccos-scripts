@@ -1,39 +1,5 @@
 ---
-Applications:
-  repos:
-  - .github
-  - cc-legal-tools-app
-  - cc-legal-tools-data
-  - ccos-scripts
-  - ccrel
-  - ccrel-guide
-  - creativecommons.github.io
-  - creativecommons.github.io-source
-  - creativecommons.org
-  - data-science-playground
-  - eng-misc-scripts
-  - faq
-  - legaldb
-  - licensebuttons
-  - magical-pony
-  - mp
-  - quantifying
-  - scholars-addenda
-  - sre-report-to-wikijs
-  - sre-wp-pull
-  - stateof
-Systems:
-  repos:
-  - ansible-dev
-  - CCID-cas
-  - CCID-MediaWiki
-  - index-performance-testing
-  - rubycas-client-rails
-  - sre-salt
-  - sre-salt-prime
-  - sre-wiki-js
-  - tech-support
-WebDev:
+possumbilities:  # Web Development and Web Support
   repos:
   - attribution-license-plugin
   - australian-chapter
@@ -75,3 +41,39 @@ WebDev:
   - wp-theme-creativecommons.org
   - wp-theme-openglam
   - wp-theme-summit
+Shafiya-Heena:  # IT Support, Platforms, and Systems
+  repos:
+  - ansible-dev
+  - CCID-cas
+  - CCID-MediaWiki
+  - index-performance-testing
+  - rubycas-client-rails
+  - sre-salt
+  - sre-salt-prime
+  - sre-wiki-js
+  - tech-support
+
+TimidRobot:  # Application Programming and Management
+  repos:
+  - .github
+  - cc-legal-tools-app
+  - cc-legal-tools-data
+  - ccos-scripts
+  - ccrel
+  - ccrel-guide
+  - creativecommons.github.io
+  - creativecommons.github.io-source
+  - creativecommons.org
+  - data-science-playground
+  - eng-misc-scripts
+  - faq
+  - legaldb
+  - licensebuttons
+  - magical-pony
+  - mp
+  - quantifying
+  - scholars-addenda
+  - sre-report-to-wikijs
+  - sre-wp-pull
+  - stateof
+
