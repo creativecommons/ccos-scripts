@@ -52,7 +52,6 @@ Shafiya-Heena:  # IT Support, Platforms, and Systems
   - sre-salt-prime
   - sre-wiki-js
   - tech-support
-
 TimidRobot:  # Application Programming and Management
   repos:
   - .github
@@ -76,4 +75,3 @@ TimidRobot:  # Application Programming and Management
   - sre-report-to-wikijs
   - sre-wp-pull
   - stateof
-
