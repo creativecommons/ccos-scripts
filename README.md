@@ -89,15 +89,18 @@ based on the [`community_team_members.json`][databag] Lektor databag.
 
 This manages new issues and pull requests to ensure they are properly tracked
 in a GitHub project:
-- [Applications project][proj_applications]
-- [Systems project][proj_systems]
-- [WebDev project][proj_webdev]
+- [possumbilities project][proj_possumbilities]: _Web Development and Web
+  Support_
+- [Shafiya-Heena project][proj-shafiya-heena]: _IT Support, Platforms, and
+  Systems_
+- [TimidRobot project][proj_timidrobot]: _Application Programming and
+  Management_
 
 [manage_issues]: .github/workflows/manage_issues.yml
 [manage_new_issues]: manage_new_issues_and_pull_requests.py
-[proj_applications]: https://github.com/orgs/creativecommons/projects/15/views/1
-[proj_systems]: https://github.com/orgs/creativecommons/projects/22/views/1
-[proj_webdev]: https://github.com/orgs/creativecommons/projects/23/views/1
+[proj_possumbilities]: https://github.com/orgs/creativecommons/projects/23/views/1
+[proj-shafiya-heena]: https://github.com/orgs/creativecommons/projects/22/views/1
+[proj_timidrobot]: https://github.com/orgs/creativecommons/projects/15/views/1
 
 
 ###  Normalize Repos
