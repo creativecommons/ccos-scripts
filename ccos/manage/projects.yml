@@ -59,7 +59,7 @@ TimidRobot:  # Application Programming and Management
   - ccrel
   - ccrel-guide
   - creativecommons.github.io
-  - creativecommons.github.io-source
+  - ccos-website-source
   - creativecommons.org
   - data-science-playground
   - eng-misc-scripts

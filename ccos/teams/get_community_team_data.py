@@ -7,7 +7,7 @@ import requests
 
 # Constants should match 'ccos/data/push_data_via_git.py'
 GITHUB_ORGANIZATION = "creativecommons"
-GITHUB_REPO_NAME = "creativecommons.github.io-source"
+GITHUB_REPO_NAME = "ccos-website-source"
 
 # Constants should match 'push_data_to_ccos.py'
 CT_MEMBERS = "community_team_members.json"
