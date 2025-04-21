@@ -71,7 +71,7 @@ based on the [`community_team_members.json`][databag] Lektor databag.
 
 [sync_teams_yml]: .github/workflows/sync_community_teams.yml
 [teams_file]: sync_community_teams.py
-[databag]: https://github.com/creativecommons/creativecommons.github.io-source/blob/master/databags/community_team_members.json
+[databag]: https://github.com/creativecommons/ccos-website-source/blob/master/databags/community_team_members.json
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 
 
@@ -149,7 +149,7 @@ This retreives data from Asana, formats it as a lektor databag, and pushes it
 to CC Open Source website source repository:
 - Data Source: [Community Team Tracking - Asana][asana] (limited access)
 - Data Destination:
-  - [`creativecommons/creativecommons.github.io-source`][ccos_source]
+  - [`creativecommons/ccos-website-source`][ccos_source]
     - [`databags/community_team_members.json`][db_community]
     - [`databags/repos.json`][db_repos]
 
@@ -162,9 +162,9 @@ The destination data is used by the following pages:
 [ctlistpage]: https://opensource.creativecommons.org/community/community-team/members/
 [osproj]: https://opensource.creativecommons.org/contributing-code/projects/
 [asana]: https://app.asana.com/0/1172465506923657/list
-[ccos_source]: https://github.com/creativecommons/creativecommons.github.io-source
-[db_community]: https://github.com/creativecommons/creativecommons.github.io-source/blob/main/databags/community_team_members.json
-[db_repos]: https://github.com/creativecommons/creativecommons.github.io-source/blob/main/databags/repos.json
+[ccos_source]: https://github.com/creativecommons/ccos-website-source
+[db_community]: https://github.com/creativecommons/ccos-website-source/blob/main/databags/community_team_members.json
+[db_repos]: https://github.com/creativecommons/ccos-website-source/blob/main/databags/repos.json
 
 
 ## Environment Variables

@@ -10,7 +10,7 @@ import git
 # First-party/Local
 from ccos.gh_utils import GITHUB_ORGANIZATION, get_credentials
 
-GITHUB_REPO_NAME = "creativecommons.github.io-source"
+GITHUB_REPO_NAME = "ccos-website-source"
 GIT_USER_EMAIL = "cc-creativecommons-github-io-bot@creativecommons.org"
 GIT_USER_NAME = "CC creativecommons.github.io Bot"
 JSON_FILE_DIR = "databags"

@@ -7,7 +7,7 @@ EXEMPT_REPOSITORIES:
   # special purpose repo
   - australian-chapter
   # exempted for bot pushes to default branch
-  - creativecommons.github.io-source
+  - ccos-website-source
   # exempted for bot pushes to default branch
   - creativecommons.github.io
   # special purpose repo
@@ -25,7 +25,7 @@ EXEMPT_REPOSITORIES:
 #   REPOSITORY:
 #     - STATUS_CHECK_NAME
 REQUIRED_STATUS_CHECK_MAP:
-  creativecommons.github.io-source:
+  ccos-website-source:
     - Build and Deploy CC Open Source
 
 # Specify non-exempt repositories and the  people, teams, or apps who are
