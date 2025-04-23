@@ -15,7 +15,7 @@ emoji = "*"
 GitPython = ">=3.1.41"
 gql = "*"
 idna = ">=3.7"  # dependency, pinned for security
-PyGithub = "*"
+PyGithub = ">=2.6.0"
 Pygments = "*"
 PyYAML = "*"
 requests = "*"
