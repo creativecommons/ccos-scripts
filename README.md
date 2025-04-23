@@ -10,6 +10,7 @@ infrastructure.
 - [![Manage issues and pull requests in projects][issues_badge]][issues_link]
 - [![Normalize Repos][norm_badge]][norm_link]
 - [![Push data to CC Open Source][data_badge]][data_link]
+- [![Enable workflows][enable_badge]][enable_link]
 
 [teams_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/sync_community_teams.yml/badge.svg
 [teams_link]: #sync-community-teams-with-github
@@ -19,6 +20,8 @@ infrastructure.
 [norm_link]: #normalize-repos
 [data_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/push_data_to_ccos.yml/badge.svg
 [data_link]: #push-data-to-cc-open-source
+[enable_badge]: https://github.com/creativecommons/ccos-scripts/actions/workflows/enable_workflows.yml/badge.svg
+[enable_link]: #enable-workflows
 
 
 ## Code of conduct
@@ -113,8 +116,6 @@ in a GitHub project:
 | | File: | [`normalize_repos.py`][norm_file] |
 | | Common Modules: | [`ccos/`](ccos/) |
 | | Specific Modules: | [`ccos/norm/`](ccos/norm/) |
-| **Action** | | |
-| | | [gautamkrishnar/keepalive-workflow][keepalive] |
 | **Env** | | |
 | | Required: | `ADMIN_GITHUB_TOKEN` |
 
@@ -128,7 +129,6 @@ new labels. It will never delete labels.
 
 [norm_pr_yml]: .github/workflows/normalize_repos.yml
 [norm_file]: normalize_repos.py
-[keepalive]: https://github.com/gautamkrishnar/keepalive-workflow
 
 
 ### Push data to CC Open Source
@@ -165,6 +165,28 @@ The destination data is used by the following pages:
 [ccos_source]: https://github.com/creativecommons/ccos-website-source
 [db_community]: https://github.com/creativecommons/ccos-website-source/blob/main/databags/community_team_members.json
 [db_repos]: https://github.com/creativecommons/ccos-website-source/blob/main/databags/repos.json
+
+
+### Eanble Workflows
+
+| **Workflow** | | |
+| -- | --: | --- |
+| | Schedule: | Monthly on the 1st at 22:22 |
+| | YAML: | [`enable_workflows.yml`][enable_workflows_yml] |
+| **Script** | | |
+| | File: | [`enable_workflows.py`][enable_workflows_file] |
+| | Common Modules: | [`ccos/`](ccos/) |
+| **Env** | | |
+| | Required: | `ADMIN_GITHUB_TOKEN` |
+
+Enable GitHub Action workflows for specified repositories (ensures that they
+are not disabled due to inactivity).
+
+For more information, see [Prevent scheduled GitHub Actions from becoming disabled - Stack Overflow][prevent_scheduled].
+
+[enable_workflows_yml]: .github/workflows/enable_workflows.yml
+[enable_workflows_file]: enable_workflows.py
+[prevent_scheduled]: https://stackoverflow.com/questions/67184368/prevent-scheduled-github-actions-from-becoming-disabled
 
 
 ## Environment Variables
