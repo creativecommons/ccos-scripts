@@ -50,6 +50,8 @@ def setup():
         args.dryrun = ""
     if not args.repos:
         raise ap.error("at least one (1) REPOSITORY must be specified")
+    for i, repo in enumerate(args.repos):
+        args.repos[i] = repo.strip()
     return args
 
 
