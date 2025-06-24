@@ -275,7 +275,7 @@ def track_items(args, github_gql_client, project_data, items):
                 field_id = project_data[project]["status_field_id"]
                 break
         if not project_id:
-            LOG.error("missing project assignment for repository: {repo}")
+            LOG.error(f"missing project assignment for repository: {repo}")
             sys.exit(1)
         # add issue to project
         if not args.dryrun:
