@@ -55,11 +55,12 @@ TimidRobot:  # Application Programming and Management
   - .github
   - cc-legal-tools-app
   - cc-legal-tools-data
+  - cc-signals
   - ccos-scripts
+  - ccos-website-source
   - ccrel
   - ccrel-guide
   - creativecommons.github.io
-  - ccos-website-source
   - creativecommons.org
   - data-science-playground
   - eng-misc-scripts
