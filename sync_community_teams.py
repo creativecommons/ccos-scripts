@@ -39,7 +39,7 @@ def setup():
         "--debug",
         action="store_true",
         help="Debug mode: show differences instead of pushing commits and"
-        "creating pull requests",
+        " creating pull requests",
     )
     args = ap.parse_args()
     return args
