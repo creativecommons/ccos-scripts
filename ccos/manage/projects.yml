@@ -1,5 +1,5 @@
 ---
-possumbilities:  # Web Development and Web Support
+possumbilities:  # Web Development and support
   repos:
   - attribution-license-plugin
   - australian-chapter
@@ -38,20 +38,12 @@ possumbilities:  # Web Development and Web Support
   - wp-theme-cctoolkit
   - wp-theme-creativecommons.org
   - wp-theme-summit
-Shafiya-Heena:  # IT Support, Platforms, and Systems
-  repos:
-  - ansible-dev
-  - CCID-cas
-  - CCID-MediaWiki
-  - index-performance-testing
-  - public-wiki
-  - sre-salt
-  - sre-salt-prime
-  - sre-wiki-js
-  - tech-support
-TimidRobot:  # Application Programming and Management
+TimidRobot:  # Applications, systems, and management
   repos:
   - .github
+  - CCID-MediaWiki
+  - CCID-cas
+  - ansible-dev
   - cc-legal-tools-app
   - cc-legal-tools-data
   - cc-signals
@@ -64,12 +56,18 @@ TimidRobot:  # Application Programming and Management
   - data-science-playground
   - eng-misc-scripts
   - faq
+  - index-performance-testing
   - legaldb
   - licensebuttons
   - magical-pony
   - mp
+  - public-wiki
   - quantifying
   - scholars-addenda
   - sre-report-to-wikijs
+  - sre-salt
+  - sre-salt-prime
+  - sre-wiki-js
   - sre-wp-pull
   - stateof
+  - tech-support
