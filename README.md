@@ -3,6 +3,20 @@
 These are scripts used to maintain various pieces of CC's open source community
 infrastructure.
 
+## Who is this repository for?
+
+This repository contains internal automation scripts used by the
+Creative Commons team to manage their GitHub organization.
+
+It is not intended for general users or beginners to run locally.
+Most scripts are executed automatically via GitHub Actions and
+require organization-level permissions and access tokens.
+
+If you are new to this repository, you do not need to understand
+all workflows or scripts to contribute. Documentation improvements,
+clarifications, and small fixes are welcome.
+
+
 
 ## Status
 
