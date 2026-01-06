@@ -94,10 +94,8 @@ This manages new issues and pull requests to ensure they are properly tracked
 in a GitHub project:
 - [possumbilities project][proj_possumbilities]: _Web Development and Web
   Support_
-- [Shafiya-Heena project][proj-shafiya-heena]: _IT Support, Platforms, and
-  Systems_
-- [TimidRobot project][proj_timidrobot]: _Application Programming and
-  Management_
+- [TimidRobot project][proj_timidrobot]: _Application Programming, IT Support,
+  Management, Platforms, and Systems_
 
 [manage_issues]: .github/workflows/manage_issues.yml
 [manage_new_issues]: manage_new_issues_and_pull_requests.py

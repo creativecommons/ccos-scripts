@@ -110,14 +110,13 @@ def update_project_data(github_gql_client, project_data):
     return project_data
 
 
-def get_untracked_items(github_gql_client):
-    LOG.info("Searching for untracked open issues and/or pull requests")
+def get_shafiya_items(github_gql_client):
+    LOG.info("Searching for issues and/or pull requests in Shafiya project")
     # https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests
     search_query = (
         "org:creativecommons"
         " state:open"
-        " -project:creativecommons/15"  # TimidRobot project
-        " -project:creativecommons/23"  # possumbilities project
+        " project:creativecommons/22"  # Shafiya-Heena project
     )
     cursor = ""
     edges = []
@@ -186,16 +185,8 @@ def get_untracked_items(github_gql_client):
             labels = []
             for label_edge in node["labels"]["edges"]:
                 labels.append(label_edge["node"]["name"])
-            if (
-                "🚦 status: awaiting triage" in labels
-                or "🏷 status: label work required" in labels
-                or "🧹 status: ticket work required" in labels
-            ):
-                needs_triage = True
-            else:
-                needs_triage = False
             items["issues"].append(
-                [repo, number, created, needs_triage, item_id]
+                [repo, number, created, item_id]
             )
         elif type_ == "PullRequest":
             items["prs"].append([repo, number, created, item_id])
@@ -262,9 +253,9 @@ def track_items(args, github_gql_client, project_data, items):
         count = len(items["issues"])
     else:
         count = min(args.count, len(items["issues"]))
-    LOG.info(f"{noop}Adding {count} open and untracked issues to projects")
+    LOG.info(f"{noop}Adding {count} item(s) to projects")
     for item in items["issues"][0 : args.count]:  # noqa: E203
-        repo, number, _, needs_triage, item_id = item
+        repo, number, _, item_id = item
         # identify appropriate project
         project_id = None
         field_id = None
@@ -285,14 +276,10 @@ def track_items(args, github_gql_client, project_data, items):
             item_id = result["addProjectV2ItemById"]["item"]["id"]
             LOG.change_indent(+1)
             LOG.info(f"{repo}#{number} added to {project} project")
-        # move issue to Status: Triage or Backlog
+        # move issue to Status: Backlog
         if not args.dryrun:
-            if needs_triage:
-                option_id = project_data[project]["status_triage_id"]
-                status = "Triage"
-            else:
-                option_id = project_data[project]["status_backlog_id"]
-                status = "Backlog"
+            option_id = project_data[project]["status_backlog_id"]
+            status = "Backlog"
             params = {
                 "field_id": field_id,
                 "item_id": item_id,
@@ -363,7 +350,7 @@ def main():
     project_data = read_project_data()
     project_data = update_project_data(github_gql_client, project_data)
 
-    items = get_untracked_items(github_gql_client)
+    items = get_shafiya_items(github_gql_client)
 
     track_items(args, github_gql_client, project_data, items)
 
