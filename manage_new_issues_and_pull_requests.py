@@ -117,7 +117,6 @@ def get_untracked_items(github_gql_client):
         "org:creativecommons"
         " state:open"
         " -project:creativecommons/15"  # TimidRobot project
-        " -project:creativecommons/22"  # Shafiya-Heena project
         " -project:creativecommons/23"  # possumbilities project
     )
     cursor = ""
