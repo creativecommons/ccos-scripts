@@ -1,10 +1,7 @@
 ---
 possumbilities:  # Web Development and support
   repos:
-  - attribution-license-plugin
-  - australian-chapter
   - business-toolkit-files
-  - candela-utility
   - cc-accidenz-commons
   - cc-assets
   - cc-license-chooser
@@ -19,7 +16,6 @@ possumbilities:  # Web Development and support
   - index-dev-env
   - index-prototype
   - network-platforms
-  - og-image-generator
   - open4us.org
   - openglam
   - queulat
@@ -32,12 +28,9 @@ possumbilities:  # Web Development and support
   - vocabulary
   - vocabulary-theme
   - wp-plugin-cc-global-network
-  - wp-plugin-creativecommons-website
   - wp-theme-cc-chapter
   - wp-theme-cc-commoners
   - wp-theme-cctoolkit
-  - wp-theme-creativecommons.org
-  - wp-theme-summit
 TimidRobot:  # Applications, systems, and management
   repos:
   - .github
