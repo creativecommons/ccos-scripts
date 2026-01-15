@@ -4,8 +4,6 @@
 #   # comment indicating reason for exclusion
 #   - REPOSITORY
 EXEMPT_REPOSITORIES:
-  # special purpose repo
-  - australian-chapter
   # exempted for bot pushes to default branch
   - ccos-website-source
   # exempted for bot pushes to default branch
