@@ -114,7 +114,6 @@ in a GitHub project:
 [manage_issues]: .github/workflows/manage_issues.yml
 [manage_new_issues]: manage_new_issues_and_pull_requests.py
 [proj_possumbilities]: https://github.com/orgs/creativecommons/projects/23/views/1
-[proj-shafiya-heena]: https://github.com/orgs/creativecommons/projects/22/views/1
 [proj_timidrobot]: https://github.com/orgs/creativecommons/projects/15/views/1
 
 

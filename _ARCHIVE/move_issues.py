@@ -185,9 +185,7 @@ def get_shafiya_items(github_gql_client):
             labels = []
             for label_edge in node["labels"]["edges"]:
                 labels.append(label_edge["node"]["name"])
-            items["issues"].append(
-                [repo, number, created, item_id]
-            )
+            items["issues"].append([repo, number, created, item_id])
         elif type_ == "PullRequest":
             items["prs"].append([repo, number, created, item_id])
     items["issues"].sort()
