@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 
 # Third-party
 import git
+from github.GithubException import UnknownObjectException
 
 # First-party/Local
 from ccos.gh_utils import (
@@ -108,7 +109,11 @@ def check_and_fix_repo(args, organization, repo_name, teams, temp_dir):
 
     LOG.info(f"Checking and fixing {repo_name}...")
     repo_dir = os.path.join(temp_dir, repo_name)
-    gh_repo = organization.get_repo(repo_name)
+    try:
+        gh_repo = organization.get_repo(repo_name)
+    except UnknownObjectException:
+        LOG.error(f"Repository not found: {repo_name}")
+        raise
     clone_url = get_github_repo_url_with_credentials(repo_name)
     local_repo = set_up_repo(clone_url, repo_dir)
     codeowners_path = Path(os.path.join(repo_dir, ".github", "CODEOWNERS"))
