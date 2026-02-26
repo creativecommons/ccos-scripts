@@ -50,7 +50,7 @@ TimidRobot:  # Applications, systems, and management
   - eng-misc-scripts
   - faq
   - index-performance-testing
-  - legaldb
+  - legaldb-static
   - licensebuttons
   - magical-pony
   - mp
