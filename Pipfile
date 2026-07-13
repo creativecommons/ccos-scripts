@@ -24,4 +24,4 @@ requests_toolbelt = "*"
 urllib3 = ">=2.7.0"  # dependency, pinned for security
 
 [requires]
-python_version = "3.11"
+python_version = "3.12"

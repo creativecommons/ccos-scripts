@@ -12,10 +12,10 @@ jobs:
     steps:
 
     # https://github.com/actions/setup-python
-    - name: Install Python 3.11
-      uses: actions/setup-python@v5
+    - name: Install Python 3.12
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.11'
+        python-version: '3.12'
 
     - name: Install pipenv
       run: |
@@ -24,7 +24,7 @@ jobs:
 
     # https://github.com/actions/checkout
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Install Python dependencies
       run: pipenv sync --system
