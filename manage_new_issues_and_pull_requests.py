@@ -57,8 +57,7 @@ def read_project_data():
 
 def update_project_data(github_gql_client, project_data):
     LOG.info("Updating project data from GitHub GraphQL API")
-    query = gh_utils.gql_query(
-        """
+    query = gh_utils.gql_query("""
         query {
             organization(login:"creativecommons") {
                 projectsV2(first: 100) {
@@ -92,8 +91,7 @@ def update_project_data(github_gql_client, project_data):
                 }
             }
         }
-        """
-    )
+        """)
     result = github_gql_client.execute(query)
     for edge in result["organization"]["projectsV2"]["edges"]:
         node = edge["node"]
@@ -123,8 +121,7 @@ def get_untracked_items(github_gql_client):
     edges = []
     next_page = True
     while next_page is True:
-        query = gh_utils.gql_query(
-            """
+        query = gh_utils.gql_query("""
             query($cursor: String, $search_query: String!) {
                 search(
                     after: $cursor
@@ -166,8 +163,7 @@ def get_untracked_items(github_gql_client):
                     }
                 }
             }
-            """
-        )
+            """)
         params = {"cursor": cursor, "search_query": search_query}
         result = github_gql_client.execute(query, variable_values=params)
         edges += result["search"]["edges"]
@@ -215,8 +211,7 @@ def track_items(args, github_gql_client, project_data, items):
     else:
         noop = ""
 
-    query_add_item_to_project = gh_utils.gql(
-        """
+    query_add_item_to_project = gh_utils.gql("""
         mutation($project_id: ID!, $item_id: ID!) {
             addProjectV2ItemById(
                 input: {
@@ -229,10 +224,8 @@ def track_items(args, github_gql_client, project_data, items):
                 }
             }
         }
-        """
-    )
-    query_set_status_option = gh_utils.gql(
-        """
+        """)
+    query_set_status_option = gh_utils.gql("""
         mutation(
             $field_id: ID!
             $item_id: ID!
@@ -254,8 +247,7 @@ def track_items(args, github_gql_client, project_data, items):
                 }
             }
         }
-        """
-    )
+        """)
 
     # Add issues to projects
     if args.count is None:
