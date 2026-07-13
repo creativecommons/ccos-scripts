@@ -4,23 +4,24 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = ">=24.3.0"
+black = ">=26.3.1"
 flake8 = "*"
 isort = "*"
 
 [packages]
 asana = ">=3.2,<4"  # "Please use v3.2.X for stable / production environments"
-cryptography = ">=42.0.4"  # dependency, pinned for security
+cryptography = ">=48.0.1"  # dependency, pinned for security
 emoji = "*"
-GitPython = ">=3.1.41"
+GitPython = ">=3.1.50"
 gql = "*"
 idna = ">=3.7"  # dependency, pinned for security
 PyGithub = ">=2.6.0"
 Pygments = "*"
+pyjwt = ">=2.13.0"  # dependency, pinned for security
 PyYAML = "*"
 requests = "*"
 requests_toolbelt = "*"
-urllib3 = ">=2.0.6"  # dependency, pinned for security
+urllib3 = ">=2.7.0"  # dependency, pinned for security
 
 [requires]
 python_version = "3.11"
